@@ -1,0 +1,94 @@
+\chapter{Background}
+\label{cha:background}
+
+% allgemein Signatursysteme: was machen sie, für was braucht man sie
+
+\section{Hashfunctions}
+% preimage resistance, second preimage resistance, collission resistance -> hier erklären
+
+\section{One-Time Signature Schemes}
+This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}.
+% hier erklären was one time signature scheme ist & dass LD-OTS und Winternitz-OTS erklärt werden
+% dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
+% hashfunctions vorher erklären? also bei OTS und dann hier nur darauf referenzieren
+
+
+
+% werden bei LD + Winternitz so benutzt
+\begin{equation}
+\label{eq:ldots_one-way-func}
+\textbf{One-way function f: } \lbrace 0,1 \rbrace^n \rightarrow \lbrace 0,1 \rbrace ^n
+\end{equation}
+
+\begin{equation}
+\label{eq:ldots_basic_hashfunc}
+\textbf{Cryptographic hash function h: } \lbrace 0,1 \rbrace^* \rightarrow \lbrace 0,1 \rbrace^n
+\end{equation}
+
+\subsection{Lamport-Diffie One-Time Signature Scheme}
+The Lamport–Diffie one-time signature scheme (LD-OTS) was first proposed by Leslie Lamport in 1979~\cite{lamport_signature_scheme_1979}. 
+It is a signature scheme where the public key can only be used to sign a single message.
+%-> bei allen OTS schemes so, vlt vorher erklären / zusammenfassen?
+
+
+\subsubsection{LD-OTS Keypair Generation}
+The signature key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
+\begin{equation}
+\label{eq:ldots_sign_key}
+X = \left(x_{n-1}\left[0\right], x_{n-1}\left[1\right], \cdots, x_{1}\left[0\right], x_{1}\left[1\right], x_{0}\left[0\right], x_{0}\left[1\right] \right)
+\end{equation}
+The verification key Y is created out of the signature key X. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:ldots_one-way-func}) is applied.
+
+\begin{equation}
+y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
+\end{equation}
+
+\begin{equation}
+Y = \left( 
+y_{n-1}\left[0\right], y_{n-1}\left[1 \right], \cdots, y_{1}\left[0\right], y_{1}\left[1\right], y_{0}\left[0\right], y_{0}\left[1\right]
+\right)
+\end{equation}
+
+\subsubsection{LD-OTS Signature Generation} % m has fixed length
+The signature key X (see equation~\ref{eq:ldots_sign_key}) is necessary to sign the message $m \in \lbrace 0,1 \rbrace^*$. 
+First, the cryptographic hash function $h$ (see equation~\ref{eq:ldots_basic_hashfunc}) is applied to $m$ in order to get a value of fixed length $n$.
+
+\begin{equation}
+\label{eq:ldots_hash_message}
+h(M)=(h_{n-1}, \cdots, h_{0})
+\end{equation}
+For each $h_i \in h(M)$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
+
+\begin{equation}
+\sigma = \left(
+x_{n-1} \left[ h_{n-1} \right], \cdots, x_1\left[ h_1 \right], x_0\left[ h_0\right]
+\right) = (\sigma_{n-1}, \cdots, \sigma_0)
+\end{equation}
+
+\subsubsection{LD-OTS Message Verification}
+After receiving a message $m$ with corresponding signature $\sigma$, the verifier calculates the message hash $h(m)$. 
+To verify the given signature $\sigma$, it is necessary to check the following condition.
+\begin{equation}
+\left(
+f(\sigma_{n-1}), \cdots, f(\sigma_0)
+\right) =
+\left(
+y_{n-1}[h_{n-1}], \cdots, y_0[h_0]
+\right)
+\end{equation}
+If the condition is true, the signature is valid.
+
+% nochmal extra auf Einmalverwendung hinweisen
+% table with properties i.e.
+% keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: schnelle signatur+keygen Negativ: Viel Speicherverbrauch
+% Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
+
+\subsection{Winternitz One-Time Signature Scheme}
+LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same basic hash-function (equation~\ref{eq:ldots_basic_hashfunc} and one-way function (equation~\ref{eq:ldots_one-way-func}) as LD-OTS. %genauer beschreiben evtl
+
+\subsubsection{W-OTS Keypair Generation}
+First, the Winternitz-Parameter $w \geq 2$ is selected. It states how many 
+
+% keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur ALS bei Lamport-Diffie!
+
+\section{Merkle-Trees}

@@ -1,0 +1,56 @@
+\documentclass[ngerman,BCOR=4mm, english]{tudscrreprt}
+\iftutex
+  \usepackage{fontspec}
+\else
+  \usepackage[T1]{fontenc}
+  \usepackage[ngerman=ngerman-x-latest]{hyphsubst}
+\fi
+\usepackage{babel}
+\usepackage{isodate}
+\usepackage{hyperref} % generate links to chapters etc.
+
+\begin{document}
+
+\faculty{Faculty of Computer Science}
+%\department{department?}
+\institute{Institute of Systems Architecture}
+\chair{Chair of Privacy and Security}
+\date{15.05.2021}
+\title{%
+  Hash-based Digital Signature Schemes
+}
+\subject{master}
+\graduation[M.Sc.]{Master of Science}
+\author{%
+  Amelie Wagner%
+  \matriculationnumber{3949194}%
+  \dateofbirth{17.09.1994}%
+%  \placeofbirth{Dresden}%
+}
+%\matriculationyear{2010}
+\supervisor{Dr.-Ing. Elke Franz \and M.Sc. Fabio Campos}
+% \professor{Prof. Dr. ?}
+%\makecover % add cover page
+\maketitle % add actual title page 
+
+
+
+\begin{otherlanguage}{ngerman} % selbstaendigkeitserklaerung deutsch
+\confirmation
+\end{otherlanguage}
+
+\TUDoption{abstract}{true, notoc} % set header for abstract + don't show abstract in table of contents
+\begin{abstract}
+This is a super cool abstract
+\end{abstract}
+
+
+\tableofcontents
+\include{chapters/introduction}
+\include{chapters/background}
+\include{chapters/state_of_art}
+
+\bibliography{bibliography}
+\bibliographystyle{IEEEtran}
+
+\end{document}
