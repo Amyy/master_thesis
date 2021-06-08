@@ -2,6 +2,7 @@
 \label{cha:background}
 
 % allgemein Signatursysteme: was machen sie, für was braucht man sie
+% es wird message digest signiert
 
 \section{Hashfunctions}
 % preimage resistance, second preimage resistance, collission resistance -> hier erklären
@@ -50,7 +51,7 @@ y_{n-1}\left[0\right], y_{n-1}\left[1 \right], \cdots, y_{1}\left[0\right], y_{1
 \end{equation}
 
 \subsubsection{LD-OTS Signature Generation} % m has fixed length
-The signature key X (see equation~\ref{eq:ldots_sign_key}) is necessary to sign the message $m \in \lbrace 0,1 \rbrace^*$. 
+The private key X (see equation~\ref{eq:ldots_sign_key}) is necessary to sign the message $m \in \lbrace 0,1 \rbrace^*$. 
 First, the cryptographic hash function $h$ (see equation~\ref{eq:ldots_basic_hashfunc}) is applied to $m$ in order to get a value of fixed length $n$.
 
 \begin{equation}
@@ -84,15 +85,37 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme}
-LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash-function (equation~\ref{eq:ldots_basic_hashfunc} and one-way function (equation~\ref{eq:ldots_one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (equation~\ref{eq:ldots_basic_hashfunc} and one-way function (equation~\ref{eq:ldots_one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
 \subsubsection{W-OTS Keypair Generation}
 First, two parameters are selected: The Winternitz-Parameter $w \geq 2$ and the security parameter $n$. When increasing $w$, the signature size will decrease linearly and the effort for key generation, signing and verification will increase exponentially. As $n$ is the length of the message digest, increasing it leads to higher security because it increases the collision resistance of the hash function. 
 % The Winternitz parameter w enables space/time trade-offs.
 
+% beide Gleichungen aus Buchmann-Grundlagenbuch
 
+% bezieht sich auf #stücke in die m geteilt wird
+\begin{equation}
+\label{eq:t1}
+t_1 = \ceil[\Bigg]{\frac{n}{w}}
+\end{equation}
 
+% bezieht sich auf #stücke in die checksum geteilt wird
+\begin{equation}
+\label{eq:t2}
+t_2 = \ceil*{\frac{\floor*{\log_2 t_1} + 1 + w}{w} }
+\end{equation}
 
+% anzahl stücke von signatur M || C am ende
+\begin{equation}
+t = t_1 + t_2
+\end{equation}
+
+The private key $X$ consists of $t$ bit strings, each of length $n$ chosen at random.
+\begin{equation}
+X = (x_0, \cdots, x_{t-1})
+\end{equation}
+
+% continue with public key
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur ALS bei Lamport-Diffie!
 
