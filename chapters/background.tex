@@ -31,13 +31,13 @@ It is a signature scheme where the public key can only be used to sign a single 
 %-> bei allen OTS schemes so, vlt vorher erklären / zusammenfassen?
 
 
-\subsubsection{LD-OTS Keypair Generation}
-The signature key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
+\subsubsection{LD-OTS Key Generation}
+The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
 \begin{equation}
 \label{eq:ldots_sign_key}
 X = \left(x_{n-1}\left[0\right], x_{n-1}\left[1\right], \cdots, x_{1}\left[0\right], x_{1}\left[1\right], x_{0}\left[0\right], x_{0}\left[1\right] \right)
 \end{equation}
-The verification key Y is created out of the signature key X. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:ldots_one-way-func}) is applied.
+The public key Y is created out of the signature key X. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:ldots_one-way-func}) is applied.
 
 \begin{equation}
 y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
@@ -65,8 +65,8 @@ x_{n-1} \left[ h_{n-1} \right], \cdots, x_1\left[ h_1 \right], x_0\left[ h_0\rig
 \right) = (\sigma_{n-1}, \cdots, \sigma_0)
 \end{equation}
 
-\subsubsection{LD-OTS Message Verification}
-After receiving a message $m$ with corresponding signature $\sigma$, the verifier calculates the message hash $h(m)$. 
+\subsubsection{LD-OTS Verification}
+After receiving a message $m$ with corresponding signature $\sigma$, the verifier calculates the message digest $h(m)$. 
 To verify the given signature $\sigma$, it is necessary to check the following condition.
 \begin{equation}
 \left(
@@ -84,10 +84,15 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme}
-LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same basic hash-function (equation~\ref{eq:ldots_basic_hashfunc} and one-way function (equation~\ref{eq:ldots_one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash-function (equation~\ref{eq:ldots_basic_hashfunc} and one-way function (equation~\ref{eq:ldots_one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
 \subsubsection{W-OTS Keypair Generation}
-First, the Winternitz-Parameter $w \geq 2$ is selected. It states how many 
+First, two parameters are selected: The Winternitz-Parameter $w \geq 2$ and the security parameter $n$. When increasing $w$, the signature size will decrease linearly and the effort for key generation, signing and verification will increase exponentially. As $n$ is the length of the message digest, increasing it leads to higher security because it increases the collision resistance of the hash function. 
+% The Winternitz parameter w enables space/time trade-offs.
+
+
+
+
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur ALS bei Lamport-Diffie!
 
