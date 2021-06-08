@@ -8,6 +8,10 @@
 \usepackage{babel}
 \usepackage{isodate}
 \usepackage{hyperref} % generate links to chapters etc.
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil} % for generating ceil over whole fraction
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+% https://tex.stackexchange.com/questions/42271/floor-and-ceiling-functions#42274
 
 \begin{document}
 
@@ -43,7 +47,6 @@
 \begin{abstract}
 This is a super cool abstract
 \end{abstract}
-
 
 \tableofcontents
 \include{chapters/introduction}
