@@ -34,11 +34,12 @@ It is a signature scheme where the public key can only be used to sign a single 
 
 \subsubsection{LD-OTS Key Generation}
 The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
+
 \begin{equation}
 \label{eq:ldots_sign_key}
-X = \left(x_{n-1}\left[0\right], x_{n-1}\left[1\right], \cdots, x_{1}\left[0\right], x_{1}\left[1\right], x_{0}\left[0\right], x_{0}\left[1\right] \right)
+X = \left(x_{0}\left[0\right], x_{0}\left[1\right], x_{1}\left[0\right], x_{1}\left[1\right], \cdots, x_{n-1}\left[0\right], x_{n-1}\left[1\right] \right)
 \end{equation}
-The public key Y is created out of the signature key X. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:one-way-func}) is applied.
+The public key $Y$ is created out of the signature key $X$. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:one-way-func}) is applied.
 
 \begin{equation}
 y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
@@ -46,7 +47,7 @@ y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
 
 \begin{equation}
 Y = \left( 
-y_{n-1}\left[0\right], y_{n-1}\left[1 \right], \cdots, y_{1}\left[0\right], y_{1}\left[1\right], y_{0}\left[0\right], y_{0}\left[1\right]
+y_{0}\left[0\right], y_{0}\left[1 \right], y_{1}\left[0\right], y_{1}\left[1\right], \cdots, y_{n-1}\left[0\right], y_{n-1}\left[1\right]
 \right)
 \end{equation}
 
@@ -57,25 +58,25 @@ The cryptographic hash function $h$ (see equation~\ref{eq:basic_hashfunc}) is ap
 
 \begin{equation}
 \label{eq:hash_message}
-h(M)=(h_{0}, \cdots, h_{n-1}) = m
+m = h(M) = (h_{0}, \cdots, h_{n-1})
 \end{equation}
-For each $h_i \in h(M)$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
-
+For each $h_i \in m$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
+% h_i in m_i umbenennen oder umgekehrt -> konsequent bleiben
 \begin{equation}
 \sigma = \left(
-x_{n-1} \left[ h_{n-1} \right], \cdots, x_1\left[ h_1 \right], x_0\left[ h_0\right]
-\right) = (\sigma_{n-1}, \cdots, \sigma_0)
+x_0 \left[ h_0 \right], x_1\left[ h_1 \right], \cdots, x_{n-1}\left[ h_{n-1}\right]
+\right) = (\sigma_0, \cdots, \sigma_{n-1})
 \end{equation}
 
 \subsubsection{LD-OTS Verification}
-After receiving a message $m$ with corresponding signature $\sigma$, the verifier calculates the message digest $h(m)$. 
+After receiving a message $M$ with the corresponding signature $\sigma$, the verifier calculates the message digest $h(M) = m$. 
 To verify the given signature $\sigma$, it is necessary to check the following condition.
 \begin{equation}
 \left(
-f(\sigma_{n-1}), \cdots, f(\sigma_0)
+f(\sigma_0), \cdots, f(\sigma_{n-1})
 \right) =
 \left(
-y_{n-1}[h_{n-1}], \cdots, y_0[h_0]
+y_0[h_0], \cdots, y_{n-1}[h_{n-1}]
 \right)
 \end{equation}
 If the condition is true, the signature is valid.
@@ -152,7 +153,7 @@ B &= m | c  \\
 &= m_0 | \cdots | m_{t_1 - 1} | c_0 | \cdots | c_{t_2 - 1} \nonumber \\
 &= b_0 | \cdots | b_{t-1} \nonumber
 \end{align}
-The signature $\sigma$ is calculated by applying the one-way function $f$ to each element in the private key $X$ (see equation~\ref{eq:wots_privkey}) several times:  
+The signature $\sigma$ is calculated by applying the one-way function $f$ to each part of the private key $X$ (see equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount times the hash function $f$ is applied to the corresponding $x_i \in X$.
 
 \begin{equation}
 \sigma = f^{b_0}(x_0), f^{b_1}(x_1), \cdots, f^{b_{t-1}}(x_{t-1}) 
