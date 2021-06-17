@@ -1,19 +1,21 @@
 \chapter{Background}
 \label{cha:background}
 
+\section{Hashfunctions}
+% preimage resistance, second preimage resistance, collission resistance -> hier erklären
+
+
+
+\section{Digital Signature Schemes} % or "systems" statt "schemes"?
 % allgemein Signatursysteme: was machen sie, für was braucht man sie
 % es wird message digest signiert
 
-\section{Hashfunctions}
-% preimage resistance, second preimage resistance, collission resistance -> hier erklären
 
 \section{One-Time Signature Schemes}
 This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}.
 % hier erklären was one time signature scheme ist & dass LD-OTS und Winternitz-OTS erklärt werden
 % dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
 % hashfunctions vorher erklären? also bei OTS und dann hier nur darauf referenzieren
-
-
 
 % werden bei LD + Winternitz so benutzt
 \begin{equation}
@@ -167,7 +169,14 @@ Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (se
 \begin{equation}
 (f^{(2^w-1)-b_0}(\sigma_0), \cdots, f^{(2^w - 1) - b_{t-1}}(\sigma_{t-1})) \? (y_0, \cdots, y_{t-1})
 \end{equation}
-If each $f^{2^w-1-b_i}(\sigma_i) = y_i \in Y$, the signature is valid because $\sigma_i = f^{b_i}(x_i)$ and therefore $f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i$.
+If each $f^{2^w-1-b_i}(\sigma_i) = y_i$, the signature is valid because $\sigma_i = f^{b_i}(x_i)$ and therefore
+
+\begin{gather}
+f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
+\forall 0 \leq i \leq t-1 \nonumber
+\end{gather}
+
+
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
