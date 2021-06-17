@@ -59,7 +59,7 @@ The cryptographic hash function $h$ (see equation~\ref{eq:basic_hashfunc}) is ap
 \begin{equation}
 \label{eq:hash_message}
 m = h(M) = (h_{0}, \cdots, h_{n-1})
-\end{equation}
+\end{equation} % Elemente von m ENTWEDER m_i ODER h_i
 For each $h_i \in m$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
 % h_i in m_i umbenennen oder umgekehrt -> konsequent bleiben
 \begin{equation}
@@ -133,6 +133,7 @@ Each $y_i \in Y$ is a bit string of length $n$. The public key $Y$ has to be pub
 For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash function~h (see equation~\ref{eq:basic_hashfunc}) is applied to $M$ (see equation~\ref{eq:hash_message}). The resulting hash digest $m$ is split into $t_1$ bitstrings of length $w$. If $m$ is not divisible by $w$, it is necessary to add leading zeros to $m$ before splitting.
 
 \begin{equation}
+\label{eq:hash_digest_split}
 m = m_0 | m_1 | \cdots | m_{t_1-1}
 \end{equation}
 Each bitstring $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$.
@@ -146,23 +147,27 @@ The checksum $c$ is divided into $t_2$ bitstrings of length $w$. In order to div
 \begin{equation}
 c = c_0 | c_1 | \cdots | c_{t_2 - 1}
 \end{equation}
-Afterwards, $m$ and $c$ are concatenated to one block $B$. This leads to $t$ bitstrings of length $w$ in total, as $t = t_1 + t_2$.
+Afterwards, $m$ and $c$ are concatenated to one block~$B$. This leads to $t$ bitstrings of length $w$ in total, as $t = t_1 + t_2$.
 
 \begin{align}
+\label{eq:block_B_out_of_M_and_C}
 B &= m | c  \\ 
 &= m_0 | \cdots | m_{t_1 - 1} | c_0 | \cdots | c_{t_2 - 1} \nonumber \\
 &= b_0 | \cdots | b_{t-1} \nonumber
 \end{align}
-The signature $\sigma$ is calculated by applying the one-way function $f$ to each part of the private key $X$ (see equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount times the hash function $f$ is applied to the corresponding $x_i \in X$.
+The signature $\sigma$ is calculated by applying the one-way function~$f$ to each part of the private key $X$ (see equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount of times the hash function $f$ is applied to the corresponding $x_i \in X$.
 
 \begin{equation}
-\sigma = f^{b_0}(x_0), f^{b_1}(x_1), \cdots, f^{b_{t-1}}(x_{t-1}) 
+\sigma = f^{b_0}(x_0), f^{b_1}(x_1), \cdots, f^{b_{t-1}}(x_{t-1}) = (\sigma_0, \cdots, \sigma_{t-1})
 \end{equation}
-% -> this looks weird, m | w vlt substituieren damit man nicht c_t2-1 als Exponent schreiben muss
 
 \subsubsection{W-OTS Verification}
+Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$.
 
-
+\begin{equation}
+(f^{(2^w-1)-b_0}(\sigma_0), \cdots, f^{(2^w - 1) - b_{t-1}}(\sigma_{t-1})) \? (y_0, \cdots, y_{t-1})
+\end{equation}
+If each $f^{2^w-1-b_i}(\sigma_i) = y_i \in Y$, the signature is valid because $\sigma_i = f^{b_i}(x_i)$ and therefore $f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i$.
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
