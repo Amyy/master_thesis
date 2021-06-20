@@ -1,10 +1,15 @@
 \chapter{Background}
 \label{cha:background}
 
-\section{Hashfunctions}
+\section{Definition of Hashfunctions}
 % preimage resistance, second preimage resistance, collission resistance -> hier erklären
+A hash function $h$ is any function $h: A \rightarrow B$, where $A$ and $B$ are
+finite sets with $|A| = N$ and $|B| = M$. % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\
+% hashfunction hat fixe outputlänge? also M fix?
+~\cite{cha:bg_hashfunctoins_Stinson2006}
 
-
+A hash function is a function that maps strings of arbitrary length to strings of
+fixed length.~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}
 
 \section{Digital Signature Schemes} % or "systems" statt "schemes"?
 % allgemein Signatursysteme: was machen sie, für was braucht man sie
