@@ -3,13 +3,22 @@
 
 \section{Definition of Hashfunctions}
 % preimage resistance, second preimage resistance, collission resistance -> hier erklären
-A hash function $h$ is any function $h: A \rightarrow B$, where $A$ and $B$ are
-finite sets with $|A| = N$ and $|B| = M$. % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\
-% hashfunction hat fixe outputlänge? also M fix?
-~\cite{cha:bg_hashfunctoins_Stinson2006}
-
 A hash function is a function that maps strings of arbitrary length to strings of
-fixed length.~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}
+fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, where $X$ and $Y$ are
+finite sets with $|X| = M$ (arbitrary length) and $|Y| = N$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\ hashfunction hat fixe outputlänge? also M fix?
+Hash functions can be computed efficiently and have three additional security properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} % fotos einfügen, formeln einfügen
+\begin{enumerate}
+	\item \textbf{Preimage-Resistance / One-wayness}
+	 A hash function $h$ is preimage resistant if given the output value of the function, it is computationally infeasible to find any input which generates this output, i.e. finding any preimage $x'$ such that $h(x') = y $ when given any $y$, but the corresponding input for $h$ that generated $y$ is not known.
+
+	\item \textbf{Second Preimage-Resistance}
+	A hash function $h$ is second preimage-resistant, if given any input value and the corresponding output, it is computationally infeasible to find another distinct
+input that produces the same output, i.e. given any $x$ finding a second preimage $x' \neq x$ such that $h(x) = h(x')$. % oder erst formel -> dann beschreibung dran?
+	
+	\item \textbf{Collision Resistance}
+	A hash function is called collision-resistant, if it is infeasible to find a pair of different inputs that map to the identical value. % hier weitermachen mit Springer-Buch
+	
+\end{enumerate}
 
 \section{Digital Signature Schemes} % or "systems" statt "schemes"?
 % allgemein Signatursysteme: was machen sie, für was braucht man sie
@@ -60,7 +69,7 @@ y_{0}\left[0\right], y_{0}\left[1 \right], y_{1}\left[0\right], y_{1}\left[1\rig
 
 \subsubsection{LD-OTS Signature Generation} % m has fixed length
 Before signing, the public key $Y$ has to be published.
-The private key X (see equation~\ref{eq:ldots_sign_key}) is used to sign the message $M \in \lbrace 0,1 \rbrace^*$. 
+The private key $X$ (see equation~\ref{eq:ldots_sign_key}) is used to sign the message $M \in \lbrace 0,1 \rbrace^*$. 
 The cryptographic hash function $h$ (see equation~\ref{eq:basic_hashfunc}) is applied to $M$ in order to get the hash digest $m$ of fixed length $n$.
 
 \begin{equation}
