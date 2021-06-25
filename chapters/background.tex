@@ -9,16 +9,17 @@ finite sets with $|X| = M$ (arbitrary length) and $|Y| = N$ (fixed length)~\cite
 Hash functions can be computed efficiently and have three additional security properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} % fotos einfügen, formeln einfügen
 \begin{enumerate}
 	\item \textbf{Preimage-Resistance / One-wayness}
-	 A hash function $h$ is preimage resistant if given the output value of the function, it is computationally infeasible to find any input which generates this output, i.e. finding any preimage $x'$ such that $h(x') = y $ when given any $y$, but the corresponding input for $h$ that generated $y$ is not known.
+	 A hash function $h$ is preimage-resistant if given the output value of the function, it is computationally infeasible to find any input which generates this output, i.e. finding any preimage $x'$ such that $h(x') = y $ when given any $y$, but the corresponding input for $h$ that generated $y$ is not known.
 
 	\item \textbf{Second Preimage-Resistance}
 	A hash function $h$ is second preimage-resistant, if given any input value and the corresponding output, it is computationally infeasible to find another distinct
 input that produces the same output, i.e. given any $x$ finding a second preimage $x' \neq x$ such that $h(x) = h(x')$. % oder erst formel -> dann beschreibung dran?
 	
 	\item \textbf{Collision Resistance}
-	A hash function is called collision-resistant, if it is infeasible to find a pair of different inputs that map to the identical value. % hier weitermachen mit Springer-Buch
-	
+	A hash function $h$ is called collision-resistant, if it is computationally infeasible to find a pair of different inputs $x, x'$ that map to the same output value, such that $h(x) = h(x')$.
 \end{enumerate}
+
+
 
 \section{Digital Signature Schemes} % or "systems" statt "schemes"?
 % allgemein Signatursysteme: was machen sie, für was braucht man sie
@@ -26,21 +27,21 @@ input that produces the same output, i.e. given any $x$ finding a second preimag
 
 
 \section{One-Time Signature Schemes}
-This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}.
+This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
+The cryptographic hash function~$h$ is preimage resistant, second preimage-resistant and collision resistant, it is applied to the original message and generates message digest.
+The one-way function~$f$ is a hash function that is at least preimage-resistant and takes a fixed input length, because it is applied to the message digest.% später wird Benutzung von h und f noch sichtbar
 % hier erklären was one time signature scheme ist & dass LD-OTS und Winternitz-OTS erklärt werden
-% dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
-% hashfunctions vorher erklären? also bei OTS und dann hier nur darauf referenzieren
-
-% werden bei LD + Winternitz so benutzt
-\begin{equation}
-\label{eq:one-way-func}
-\textbf{One-way function f: } \lbrace 0,1 \rbrace^n \rightarrow \lbrace 0,1 \rbrace ^n
-\end{equation}
 
 \begin{equation}
 \label{eq:basic_hashfunc}
 \textbf{Cryptographic hash function h: } \lbrace 0,1 \rbrace^* \rightarrow \lbrace 0,1 \rbrace^n
 \end{equation}
+
+\begin{equation}
+\label{eq:one-way-func}
+\textbf{One-way function f: } \lbrace 0,1 \rbrace^n \rightarrow \lbrace 0,1 \rbrace ^n
+\end{equation}
+
 
 \subsection{Lamport-Diffie One-Time Signature Scheme}
 The Lamport–Diffie one-time signature scheme (LD-OTS) was first proposed by Leslie Lamport in 1979~\cite{lamport_signature_scheme_1979}. 
@@ -108,8 +109,6 @@ LD-OTS signatures are efficient to calculate but have a huge size and therefore 
 \subsubsection{W-OTS Key Generation}
 First, two parameters are selected: The Winternitz-Parameter $w \geq 2$ and the security parameter $n$. When increasing $w$, the signature size will decrease linearly and the effort for key generation, signing and verification will increase exponentially. As $n$ is the length of the message digest, increasing it leads to higher security because it increases the collision resistance of the hash function. % weil mehr Winternitz-Ketten generiert werden, je kleiner w ist, reduziert ein hohes w die Signaturgröße
 % The Winternitz parameter w enables space/time trade-offs.
-
-% beide Gleichungen aus Buchmann-Grundlagenbuch
 
 % bezieht sich auf #stücke in die m geteilt wird
 \begin{equation}
@@ -190,7 +189,7 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 \forall 0 \leq i \leq t-1 \nonumber
 \end{gather}
 
-
+% dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
