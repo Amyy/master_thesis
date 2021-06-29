@@ -1,10 +1,26 @@
 \chapter{Background}
 \label{cha:background}
 
+\section{Digital Signature Schemes} % difference scheme -- system
+A \textit{digital signature scheme} uses a set of rules and a set of parameters to verify the identity of the originator and integrity of data.~\cite{cha:bg_digital_sign_schemes_NIST_standard1992} In this section, data refers to a message being sent from a sender (signer) to a recipient (verifier) across a network. % hier schutzziele erwähnen -> recipient will bestätigung das nachricht wirklich vom empfänder, sender will dass recipient ihm keine falschen nachrichten unterschiebt
+
+% "signer/sender, verifier/recipient" -> so okay?
+% ! digital signature scheme -> assymetrisch (immer?) 
+
+The digital signature scheme consists of a key generation algorithm, a signature algorithm and a corresponding verification algorithm. % gehört keygen wirklich zu signatursystem?
+The key generation algorithm creates a private key of the sender used for signature generation, and a public key used by the recipient for signature verification. % und auch noch von weiteren Leuten die Originalität von Nachricht prüfen wollen? Aber in meinem runtergebrochenen Beispiel nur 2 Leute
+The signature algorithm generates the \textit{digital signature} of a message by using the secret known only to the signer and the content of the message being signed.
+The verification algorithm is used by the recipient to check the authenticity of the signature and the corresponding message with the public key.
+~\cite{cha:bg_signature_schemes_book_menezes2018_1997}
+% assymetric system - public, private key
+% schema "keygen, signieren, verify"
+% es wird message digest signiert
+% Überleitung zu Hashfunctions
+
 \section{Definition of Hashfunctions}
 % preimage resistance, second preimage resistance, collission resistance -> hier erklären 
 The security of One-Time Signature Schemes is based on cryptographic secure hash functions. A hash function is a function that can be computed efficiently and maps strings of arbitrary length to strings of fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, where $X$ and $Y$ are
-finite sets with $|X| = M$ (arbitrary length) and $|Y| = N$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textbf{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
+finite sets with $|X| = M$ (arbitrary length) and $|Y| = N$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textit{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
 
 % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\ hashfunction hat fixe outputlänge? also M fix?
 \begin{enumerate} % fotos einfügen?
@@ -13,19 +29,11 @@ finite sets with $|X| = M$ (arbitrary length) and $|Y| = N$ (fixed length)~\cite
 
 	\item \textbf{Second Preimage-Resistance}
 	A hash function $h$ is second preimage-resistant, if given any input value and the corresponding output, it is computationally infeasible to find another distinct
-input that produces the same output, i.e. given any $x$ finding a second preimage $x' \neq x$ such that $h(x) = h(x')$. % oder erst formel -> dann beschreibung dran?
+input that produces the same output, i.e. given any $x$ finding a second preimage $x \neq x'$ such that $h(x) = h(x')$. % oder erst formel -> dann beschreibung dran?
 	
 	\item \textbf{Collision Resistance}
 	A hash function $h$ is called collision-resistant, if it is computationally infeasible to find a pair of different inputs $x, x'$ that map to the same output value, such that $h(x) = h(x')$.
 \end{enumerate}
-
-% cryptographisch sichere hashfunktionen haben diese Eigenschaften?
-
-\section{Digital Signature Schemes} % difference scheme -- system
-A digital signature system is a digital device using a set of rules and a set of parameters enabling it to be used to verify the identity of the originator and integrity of data (i.e. messages)~\cite{cha:bg_digital_sign_schemes_NIST_standard1992}. These rules and parameters are 
-
-
-% es wird message digest signiert
 
 \section{One-Time Signature Schemes}
 This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
