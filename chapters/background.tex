@@ -66,10 +66,12 @@ input that produces the same output, i.e. given any $x$ finding a second preimag
 	      
 \end{enumerate}	      
 
-% ONE-Time Signature scheme anmerken / erklären
 
 \section{One-Time Signature Schemes}
-This section is mainly based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
+This section is based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. 
+% ONE-Time Signature scheme anmerken / erklären
+The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes}, meaning the public and private key can be used \textbf{once}, for generating one signature. If they are used for generating more than one signature, the signature can be broken. % vlt professioneller beschreiben?
+The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
 The cryptographic hash function~$h$ is preimage resistant, second preimage-resistant and collision resistant, it is applied to the original message and generates the message digest.
 The one-way function~$f$ is a hash function that is at least preimage-resistant and takes a fixed input length, because it is applied to the message digest.% später wird Benutzung von h und f noch sichtbar
 % hier erklären was one time signature scheme ist & dass LD-OTS und Winternitz-OTS erklärt werden
@@ -237,3 +239,6 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
 \section{Merkle-Trees}
+The main problem of the one-time signature schemes introduced in the last section is the possibility to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
+
+% In 1979 Ralph Merkle proposed a solution to this problem. The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. The Merkle signature scheme (MSS) works with any cryptographic hash function and any one-time signature scheme.
