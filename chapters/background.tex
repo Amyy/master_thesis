@@ -1,6 +1,6 @@
 \chapter{Background}
 \label{cha:background}
-This chapter addresses the scientific background needed for this work. First, the general concept digital signature systems and hash functions are elaborated. Afterwards, the most common concepts for post-quantum digital signature systems are explained. 
+This chapter addresses the scientific background needed for this work. First, the general concept of digital signature systems and hash functions are elaborated. Afterwards, the most common concepts for post-quantum digital signature systems are explained. 
 
 \section{Digital Signature Schemes}
 % ! digital signature scheme -> assymetrisch (immer?) 
@@ -20,7 +20,7 @@ To ensure the above mentioned properties of digital signatures, a digital signat
 \end{figure} 
 
 \begin{enumerate}
-\item The \textit{key generation algorithm} creates a private key $X$ known only to the sender used for signature generation, and a public key $Y$ used by the recipient for signature verification. Both keys are mathematically dependent from each other, in which way is determined by the specific type of signature scheme (i.e. the Winternitz signature scheme, see section~\ref{sec:WOTS_keygen}). % und auch noch von weiteren Leuten die Originalität von Nachricht prüfen wollen? Aber in meinem runtergebrochenen Beispiel nur 2 Leute, außerdem wird nicht erklärt dass auch key signiert wird
+\item The \textit{key generation algorithm} creates a private key $X$ used for signature generation, and a public key $Y$ used by the recipient for signature verification. Both keys are mathematically dependent from each other, in which way is determined by the specific type of signature scheme (i.e. the Winternitz signature scheme, see section~\ref{sec:WOTS_keygen}). % und auch noch von weiteren Leuten die Originalität von Nachricht prüfen wollen? Aber in meinem runtergebrochenen Beispiel nur 2 Leute, außerdem wird nicht erklärt dass auch key signiert wird
 \item The \textit{signature generation algorithm} creates the digital signature~$\sigma$ of a message with the private key $X$ of the signer and the content of the message.
 \item The \textit{verification algorithm} is used by the recipient or a third party to verify the authenticity of the signature~$\sigma$ and the corresponding message with the public key $Y$.
 \end{enumerate}
@@ -31,10 +31,9 @@ To ensure the above mentioned properties of digital signatures, a digital signat
 % es wird message digest signiert
 % Überleitung zu Hashfunctions
 
-\section{Definition of Hashfunctions}
+\section{Definition of Hash Functions}
 % preimage resistance, second preimage resistance, collission resistance -> hier erklären 
-The security of One-Time Signature Schemes is based on cryptographic secure hash functions. A hash function is a function that can be computed efficiently and maps strings of arbitrary length to strings of fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, where $X$ and $Y$ are
-finite sets with $|X| = X_{len}$ (arbitrary length) and $|Y| = Y_{len}$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textit{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
+The security of One-Time Signature Schemes is based on cryptographic secure hash functions. A hash function is a function that can be computed efficiently and maps strings of arbitrary length to strings of fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, with $|X| = X_{len}$ (arbitrary length) and $|Y| = Y_{len}$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textit{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
 
 % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\ hashfunction hat fixe outputlänge? also M fix?
 \begin{enumerate} % fotos einfügen?
@@ -70,7 +69,7 @@ input that produces the same output, i.e. given any $x$ finding a second preimag
 \section{One-Time Signature Schemes}
 This section is based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. 
 % ONE-Time Signature scheme anmerken / erklären
-The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes}, meaning the public and private key can be used \textbf{once}, for generating one signature. If they are used for generating more than one signature, the signature can be broken. % vlt professioneller beschreiben?
+The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes}, meaning the public and private key can be used \textbf{once}, for generating one signature. If they are used for generating more than one signature, the signature can be forged. % vlt rauslöschen einfach
 The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
 The cryptographic hash function~$h$ is preimage resistant, second preimage-resistant and collision resistant, it is applied to the original message and generates the message digest.
 The one-way function~$f$ is a hash function that is at least preimage-resistant and takes a fixed input length, because it is applied to the message digest.% später wird Benutzung von h und f noch sichtbar
@@ -100,7 +99,7 @@ The private key X consists of $2n$ bit strings, each of length $n$, chosen at ra
 \label{eq:ldots_sign_key}
 X = \left(x_{0}\left[0\right], x_{0}\left[1\right], x_{1}\left[0\right], x_{1}\left[1\right], \cdots, x_{n-1}\left[0\right], x_{n-1}\left[1\right] \right)
 \end{equation}
-The public key $Y$ is created out of the signature key $X$. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:one-way-func}) is applied.
+The public key $Y$ is created out of the private key $X$. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see equation~\ref{eq:one-way-func}) is applied.
 
 \begin{equation}
 y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
@@ -148,7 +147,7 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme}
-LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (equation~\ref{eq:basic_hashfunc} and one-way function (equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (equation~\ref{eq:basic_hashfunc}) and one-way function (equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
 \subsubsection{W-OTS Key Generation}
 \label{sec:WOTS_keygen}
@@ -238,7 +237,20 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 
 % keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
-\section{Merkle-Trees}
+\section{Merkle Signature Scheme} % Tree irgendwo einfügen in Name?
 The main problem of the one-time signature schemes introduced in the last section is the possibility to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 
-% In 1979 Ralph Merkle proposed a solution to this problem. The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. The Merkle signature scheme (MSS) works with any cryptographic hash function and any one-time signature scheme.
+To solve this problem, Ralph Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf is a different one-time key pair. The root of the tree is the public key $Y$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
+
+This concept is denoted as Merkle signature scheme \textit{MSS} and it works with any cryptographic hash function and any one-time signature scheme. % besser einbinden :D
+
+\subsection{MSS Key Generation}
+The signer chooses the tree depth~$d$, $d \geq 2$. 
+
+\begin{tikzpicture}
+\node {public key $Y$}
+	child { node {$h_{1,1}$} }
+	child { node {$h_{1,2}$} };
+\end{tikzpicture} % an die blätter X und Y machen, außerdem klarmachen dass h1,1 = hash(h2,1|h2,2)
+
+%The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
