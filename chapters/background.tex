@@ -242,6 +242,8 @@ The main problem of the one-time signature schemes introduced in the last sectio
 
 To solve this problem, Ralph Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf is a different one-time key pair. The root of the tree is the public key $Y$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. % besser einbinden :D
+%The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
+
 
 \subsection{MSS Key Generation}
 The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_i, Y_i), i \leq j \leq 2^d$ with $X_i$ being the private key and $Y_i$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_i$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
@@ -250,6 +252,13 @@ h_{i,j} = h(Y_i) \\
 \forall 0 \leq i \leq 2^d - 1 \nonumber \\ 
 \forall 0 \leq j \leq d \nonumber
 \end{gather}
+
+% The inner nodes of the Merkle tree are computed according
+to the following construction rule: a parent node is the hash value of the
+concatenation of its left and right children. The MSS public key is the root
+of the Merkle tree. The MSS private key is the sequence of the 2
+H one-time
+signature keys.
 
 % vlt wurzel umbenennen
 \begin{figure}
@@ -264,13 +273,13 @@ h_{i,j} = h(Y_i) \\
     level 4/.style = {level distance = 1cm}
 ]
 \node {public key $Y = h_{0,0}$}
-	child { node {$h_{0,1}$} 
-		child { node {$h_{0,2}$}
-			child{ node {$h_{0,3}$}
+	child { node {$h_{0,1} = h(h_{0,2} | h_{1,2})$} 
+		child { node {$h_{0,2} = h(h_{0,3} | h_{1,3}))$}
+			child{ node {$h_{0,3} = h(Y_0)$}
 				child{ node {$X_0, Y_0$}
 				}	
 			}
-			child{ node {$h_{1,3}$}
+			child{ node {$h_{1,3} = h(Y_1)$}
 				child{ node {$X_1, Y_1$}
 				}			
 			}		
@@ -313,7 +322,10 @@ h_{i,j} = h(Y_i) \\
 \caption{Merkle tree of depth $d=3$.}
 \end{figure}
 
-%The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
+
+
+
+
 
 \subsection{MSS Signature Generation}
 
