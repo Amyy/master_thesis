@@ -253,12 +253,7 @@ h_{i,j} = h(Y_j) \\
 \forall 0 \leq i \leq d \nonumber
 \end{gather}
 
-% The inner nodes of the Merkle tree are computed according
-to the following construction rule: a parent node is the hash value of the
-concatenation of its left and right children. The MSS public key is the root
-of the Merkle tree. The MSS private key is the sequence of the 2
-H one-time
-signature keys.
+% The inner nodes of the Merkle tree are computed according to the following construction rule: a parent node is the hash value of the concatenation of its left and right children. The MSS public key is the root of the Merkle tree. The MSS private key is the sequence of the 2 H one-time signature keys.
 
 % vlt wurzel umbenennen
 \begin{figure}
@@ -272,20 +267,20 @@ signature keys.
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$h_{0,0} = h(h_{h_0,1} | h_{1,1})$}
-	child { node {$h_{0,1} = h(h_{0,2} | h_{1,2})$} 
-		child { node {$h_{0,2} = h(h_{0,3} | h_{1,3}))$}
-			child{ node {$h_{0,3} = h(Y_0)$}
+\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$}
+	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
+		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1}))$}
+			child{ node {$h_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$h_{1,3} = h(Y_1)$}
+			child{ node {$h_{3,1} = h(Y_1)$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node {$h_{1,2}$}
-			child{ node {$h_{2,3}$}
+		child { node {$h_{2,1}$}
+			child{ node {$h_{3,2}$}
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
@@ -297,21 +292,21 @@ signature keys.
 	}
 	child { node {$h_{1,1}$} 
 		child { node {$h_{2,2}$}
-			child {node {$h_{4,3}$}
+			child {node {$h_{3,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{5,3}$}
+			child {node {$h_{3,5}$}
 				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
-		child { node {$h_{3,2}$}
-			child {node {$h_{6,3}$}
+		child { node {$h_{2,3}$}
+			child {node {$h_{3,6}$}
 				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{7,3}$}
+			child {node {$h_{3,7}$}
 				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
@@ -319,7 +314,7 @@ signature keys.
 	}
 	;
 \end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
-\caption{Merkle tree of depth $d=3$.}
+\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children. The leafs are the hash digest of their corresponding public key.}
 \end{figure}
 
 
