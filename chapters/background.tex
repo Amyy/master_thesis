@@ -246,11 +246,11 @@ This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works w
 
 
 \subsection{MSS Key Generation}
-The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_i, Y_i), i \leq j \leq 2^d$ with $X_i$ being the private key and $Y_i$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_i$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
+The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j), 0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_j$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
 \begin{gather}
-h_{i,j} = h(Y_i) \\
-\forall 0 \leq i \leq 2^d - 1 \nonumber \\ 
-\forall 0 \leq j \leq d \nonumber
+h_{i,j} = h(Y_j) \\
+\forall 0 \leq j \leq 2^d - 1 \nonumber \\ 
+\forall 0 \leq i \leq d \nonumber
 \end{gather}
 
 % The inner nodes of the Merkle tree are computed according
@@ -272,25 +272,25 @@ signature keys.
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {public key $Y = h_{0,0}$}
+\node {$h_{0,0} = h(h_{h_0,1} | h_{1,1})$}
 	child { node {$h_{0,1} = h(h_{0,2} | h_{1,2})$} 
 		child { node {$h_{0,2} = h(h_{0,3} | h_{1,3}))$}
 			child{ node {$h_{0,3} = h(Y_0)$}
-				child{ node {$X_0, Y_0$}
+				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
 			child{ node {$h_{1,3} = h(Y_1)$}
-				child{ node {$X_1, Y_1$}
+				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
 		child { node {$h_{1,2}$}
 			child{ node {$h_{2,3}$}
-				child{ node {$X_2, Y_2$}
+				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
 			child{ node {$h_{3,3}$}
-				child{ node {$X_3,Y_3$}
+				child{ node {$X_3,Y_3$} edge from parent[<-]
 				}			
 			}		
 		}	
@@ -298,21 +298,21 @@ signature keys.
 	child { node {$h_{1,1}$} 
 		child { node {$h_{2,2}$}
 			child {node {$h_{4,3}$}
-				child{ node {$X_4, Y_4$}
+				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
 			child {node {$h_{5,3}$}
-				child{ node {$X_5,Y_5$}
+				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
 		child { node {$h_{3,2}$}
 			child {node {$h_{6,3}$}
-				child{ node {$X_6,Y_6$}
+				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
 			child {node {$h_{7,3}$}
-				child{ node {$X_7,Y_7$}
+				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
 		}	
