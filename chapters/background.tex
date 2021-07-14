@@ -244,39 +244,43 @@ To solve this problem, Ralph Merkle~\cite{cha:bg_merkletrees_Merkle_1979} propos
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. % besser einbinden :D
 
 \subsection{MSS Key Generation}
-The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_i, Y_i), i \leq j \leq 2^d$ with $X_j$ being the private key and $Y_j$ the public key.
+The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_i, Y_i), i \leq j \leq 2^d$ with $X_i$ being the private key and $Y_i$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_i$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
+\begin{gather}
+h_{i,j} = h(Y_i) \\
+\forall 0 \leq i \leq 2^d - 1 \nonumber \\ 
+\forall 0 \leq j \leq d \nonumber
+\end{gather}
 
-%  edge from parent[draw=none]
+\begin{figure}
+\label{img:merkle_tree}
+\centering
+% unsichtbare Kante: edge from parent[draw=none]
 \begin{tikzpicture} 
 [
     level 1/.style = {sibling distance = 8cm},
     level 2/.style = {sibling distance = 4cm},
     level 3/.style = {sibling distance = 2.5cm},
-    level 4/.style = {teal, level distance = 1cm}
+    level 4/.style = {level distance = 1cm}
 ]
 \node {public key $Y = h_{0,0}$}
 	child { node {$h_{1,0}$} 
 		child { node {$h_{2,0}$}
 			child{ node {$h_{3,0}$}
-				child{ node {$Y_0$}
-					child{ node {$X_0$}}
+				child{ node {$X_0, Y_0$}
 				}	
 			}
 			child{ node {$h_{3,1}$}
-				child{ node {$Y_1$}
-					child{ node {$X_1$}}
+				child{ node {$X_1, Y_1$}
 				}			
 			}		
 		} 
 		child { node {$h_{2,1}$}
 			child{ node {$h_{3,2}$}
-				child{ node {$Y_2$}
-					child{ node {$X_2$}}
+				child{ node {$X_2, Y_2$}
 				}			
 			}
 			child{ node {$h_{3,3}$}
-				child{ node {$Y_3$}
-					child{ node {$X_3$}}
+				child{ node {$X_3,Y_3$}
 				}			
 			}		
 		}	
@@ -284,30 +288,32 @@ The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time k
 	child { node {$h_{1,1}$} 
 		child { node {$h_{2,2}$}
 			child {node {$h_{3,4}$}
-				child{ node {$Y_4$}
-					child{ node {$X_4$}}
+				child{ node {$X_4, Y_4$}
 				}			
 			}
 			child {node {$h_{3,5}$}
-				child{ node {$Y_5$}
-					child{ node {$X_5$}}
+				child{ node {$X_5,Y_5$}
 				}			
 			}		
 		}
 		child { node {$h_{2,3}$}
 			child {node {$h_{3,6}$}
-				child{ node {$Y_6$}
-					child{ node {$X_6$}}
+				child{ node {$X_6,Y_6$}
 				}			
 			}
 			child {node {$h_{3,7}$}
-				child{ node {$Y_7$}
-					child{ node {$X_7$}}
+				child{ node {$X_7,Y_7$}
 				}			
 			}
 		}	
 	}
 	;
-\end{tikzpicture} % an die blätter X und Y machen, außerdem klarmachen dass h1,1 = hash(h2,1|h2,2)
+\end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
+\caption{Merkle tree of depth $d=3$.}
+\end{figure}
 
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
+
+\subsection{MSS Signature Generation}
+
+\subsection{MSS Signature Verification}
