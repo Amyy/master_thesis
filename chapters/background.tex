@@ -251,6 +251,7 @@ h_{i,j} = h(Y_i) \\
 \forall 0 \leq j \leq d \nonumber
 \end{gather}
 
+% vlt wurzel umbenennen
 \begin{figure}
 \label{img:merkle_tree}
 \centering
@@ -263,19 +264,19 @@ h_{i,j} = h(Y_i) \\
     level 4/.style = {level distance = 1cm}
 ]
 \node {public key $Y = h_{0,0}$}
-	child { node {$h_{1,0}$} 
-		child { node {$h_{2,0}$}
-			child{ node {$h_{3,0}$}
+	child { node {$h_{0,1}$} 
+		child { node {$h_{0,2}$}
+			child{ node {$h_{0,3}$}
 				child{ node {$X_0, Y_0$}
 				}	
 			}
-			child{ node {$h_{3,1}$}
+			child{ node {$h_{1,3}$}
 				child{ node {$X_1, Y_1$}
 				}			
 			}		
 		} 
-		child { node {$h_{2,1}$}
-			child{ node {$h_{3,2}$}
+		child { node {$h_{1,2}$}
+			child{ node {$h_{2,3}$}
 				child{ node {$X_2, Y_2$}
 				}			
 			}
@@ -287,21 +288,21 @@ h_{i,j} = h(Y_i) \\
 	}
 	child { node {$h_{1,1}$} 
 		child { node {$h_{2,2}$}
-			child {node {$h_{3,4}$}
+			child {node {$h_{4,3}$}
 				child{ node {$X_4, Y_4$}
 				}			
 			}
-			child {node {$h_{3,5}$}
+			child {node {$h_{5,3}$}
 				child{ node {$X_5,Y_5$}
 				}			
 			}		
 		}
-		child { node {$h_{2,3}$}
-			child {node {$h_{3,6}$}
+		child { node {$h_{3,2}$}
+			child {node {$h_{6,3}$}
 				child{ node {$X_6,Y_6$}
 				}			
 			}
-			child {node {$h_{3,7}$}
+			child {node {$h_{7,3}$}
 				child{ node {$X_7,Y_7$}
 				}			
 			}
