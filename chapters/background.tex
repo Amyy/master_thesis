@@ -248,12 +248,18 @@ This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works w
 \subsection{MSS Key Generation}
 The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j), 0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_j$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
 \begin{gather}
+\label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
 h_{i,j} = h(Y_j) \\
 \forall 0 \leq j \leq 2^d - 1 \nonumber \\ 
 \forall 0 \leq i \leq d \nonumber
 \end{gather}
 
-% The inner nodes of the Merkle tree are computed according to the following construction rule: a parent node is the hash value of the concatenation of its left and right children. The MSS public key is the root of the Merkle tree. The MSS private key is the sequence of the 2 H one-time signature keys.
+% --> hier weitermachen
+The inner nodes of the Merkle tree are computed according to the following construction rule: 
+
+A parent node is the hash value of the concatenation of its left and right children.
+
+The MSS public key is the root of the Merkle tree. The MSS private key is the sequence of the 2^d one-time signature keys.
 
 % vlt wurzel umbenennen
 \begin{figure}
@@ -269,7 +275,7 @@ h_{i,j} = h(Y_j) \\
 ]
 \node {$h_{0,0} = h(h_{1,0} | h_{1,1})$}
 	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
-		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1}))$}
+		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
 			child{ node {$h_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
@@ -314,11 +320,8 @@ h_{i,j} = h(Y_j) \\
 	}
 	;
 \end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
-\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children. The leafs are the hash digest of their corresponding public key.}
+\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children. The leafs are the hash digest of their corresponding public key (see equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}).}
 \end{figure}
-
-
-
 
 
 
