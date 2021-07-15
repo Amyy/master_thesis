@@ -239,29 +239,35 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 
 \section{Merkle Signature Scheme} % Tree irgendwo einfügen in Name?
 The main problem of the one-time signature schemes introduced in the last section is the possibility to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
-
 To solve this problem, Ralph Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf is a different one-time key pair. The root of the tree is the public key $Y$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
-This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. % besser einbinden :D
+This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. In the following sections, the cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}) is used. 
+% besser einbinden :D
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
 
-
 \subsection{MSS Key Generation}
-The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j), 0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the public key. The leaves of the Merkle tree are the digests $h_{i,j}$ of the public key $Y_j$, calculated with a cryptographic hash function~$h$ (see equation~\ref{eq:basic_hashfunc}):
+For a depiction of the merkle tree referenced in this section, see figure~\ref{img:merkle_tree}.
+The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j), 0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the public key. The \textit{leaves} of the Merkle tree are the hash digests $h_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
 h_{i,j} = h(Y_j) \\
-\forall 0 \leq j \leq 2^d - 1 \nonumber \\ 
-\forall 0 \leq i \leq d \nonumber
+i = d , \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
+The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $h_{i,j}$ is the hash digest of the concatenation of its direct two children $h_{i+1,j}$ and $h_{i+1,j+1}$.
 
-% --> hier weitermachen
-The inner nodes of the Merkle tree are computed according to the following construction rule: 
+% ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
+\begin{gather}
+h_{i,j} = h(h_{i+1,j} | h_{i+1,j+1}) \\
+\forall 0 \leq i < d \nonumber \\ 
+\forall 0 \leq j \leq 2^d - 1 \nonumber
+\end{gather} 
+The \textit{root} of the Merkle tree is the MSS public key~$Y$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the merkle tree.
 
-A parent node is the hash value of the concatenation of its left and right children.
+\begin{align}
+Y &= h_{0,0} \\
+X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \nonumber
+\end{align}
 
-The MSS public key is the root of the Merkle tree. The MSS private key is the sequence of the 2^d one-time signature keys.
 
-% vlt wurzel umbenennen
 \begin{figure}
 \label{img:merkle_tree}
 \centering
@@ -273,7 +279,7 @@ The MSS public key is the root of the Merkle tree. The MSS private key is the se
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$}
+\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$ = MSS public key $Y$}
 	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
 		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
 			child{ node {$h_{3,0} = h(Y_0)$}
