@@ -235,7 +235,6 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 
 % dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
 
-% keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
 
 \section{Merkle Signature Scheme} % Tree irgendwo einfügen in Name?
 The main problem of the one-time signature schemes introduced in the last section is the possibility to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
@@ -245,7 +244,7 @@ This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works w
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
 
 \subsection{MSS Key Generation}
-For a depiction of the merkle tree referenced in this section, see figure~\ref{img:merkle_tree}.
+For a depiction of the Merkle tree referenced in this section, see figure~\ref{img:merkle_tree}.
 The signer chooses the tree depth~$d$, $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j), 0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the public key. The \textit{leaves} of the Merkle tree are the hash digests $h_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
@@ -260,11 +259,11 @@ h_{i,j} = h(h_{i+1,j} | h_{i+1,j+1}) \\
 \forall 0 \leq i < d \nonumber \\ 
 \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather} 
-The \textit{root} of the Merkle tree is the MSS public key~$Y$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the merkle tree.
+The \textit{root} of the Merkle tree is the MSS public key~$Y$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the Merkle tree.
 
 \begin{align}
-Y &= h_{0,0} \\
-X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \nonumber
+X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
+Y &= h_{0,0} \nonumber
 \end{align}
 
 
@@ -328,9 +327,28 @@ X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \nonumber
 \end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
 \caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children. The leafs are the hash digest of their corresponding public key (see equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}).}
 \end{figure}
-
-
+% soll treehash algo hier auch erklärt werden?
 
 \subsection{MSS Signature Generation}
+%The one-time key pairs are used successively for generating signatures.  
+To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see equation~\ref{eq:hash_message}). Then, by using an arbitrary one-time signature scheme, the one-time signature $\sigma_s$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X$. The corresponding $Y_s$ is also part of the signature.
+To prove the authenticity of $Y_s$ to the verifier, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path $A_s$ for the verification key $Y_s$. The authentication path is a sequence $A_s = (a0,\cdots,a_{d-1})$ of nodes in the Merkle tree.
+
+In summary, the MSS Signature contains the following elements:
+\begin{itemize}
+\item The one-time key pair $X_s, Y_s$.
+\item The index $s$.
+\item The authentication path $A_s = (a_0,\cdots,a_{d-1})$.
+\end{itemize}
+
+Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, this allows the verifier to construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree.
+
+% Beispielgrafik / +equation einfügen
+
 
 \subsection{MSS Signature Verification}
+
+
+% ganz am Ende: Übersichtstabelle zu allen Zeit/Speicheraufwandszeiten
+% MSS key pair generation requires the computation of 2^d one-time key pairs and 2^(d+1)-1 evaluations of the hash function.
+% WOTS keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
