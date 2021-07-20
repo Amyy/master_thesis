@@ -332,19 +332,94 @@ Y &= h_{0,0} \nonumber
 \subsection{MSS Signature Generation}
 %The one-time key pairs are used successively for generating signatures.  
 To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see equation~\ref{eq:hash_message}). Then, by using an arbitrary one-time signature scheme, the one-time signature $\sigma_s$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X$. The corresponding $Y_s$ is also part of the signature.
-To prove the authenticity of $Y_s$ to the verifier, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path $A_s$ for the verification key $Y_s$. The authentication path is a sequence $A_s = (a0,\cdots,a_{d-1})$ of nodes in the Merkle tree.
+To prove the authenticity of $Y_s$ to the verifier, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
+ 
+\begin{equation}
+A_s = (a_0,\cdots, a_i, \cdots, a_{d-1})
+\end{equation}
+Each node $a_i \in A_s$ is calculated as follows:
+% !! floor probably also necessary for first equations
+\begin{align}
+\label{eq:auth_path_calculation_merkle_tree}
+a_{d-k} &= h_{d-k, j} \\
+j &= 
+\left\{\begin{matrix} \nonumber
+s/2^k-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
+s/2^k+1 \text{ if } \floor{s/2^k} \equiv 0 \mod{2}
+\end{matrix}\right.  \nonumber \\
+\forall k &= 0, \cdots, d-1 \nonumber 
+\end{align}
+Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see figure~\ref{img:merkle_tree_signature_gen}.
 
-In summary, the MSS Signature contains the following elements:
+% Beispielgrafik / +equation einfügen -> rechnung + graph aus pdf aufzeichnen, und in eigene indizes h_i,j übersetzen
+% !! Pfeile einzeichnen für pfad von blatt zu knoten, farbige Knoten, in caption dazu sagen
+\begin{figure}
+\label{img:merkle_tree_signature_gen}
+\centering
+% unsichtbare Kante: edge from parent[draw=none]
+\begin{tikzpicture} 
+[
+    level 1/.style = {sibling distance = 8cm},
+    level 2/.style = {sibling distance = 4cm},
+    level 3/.style = {sibling distance = 2.5cm},
+    level 4/.style = {level distance = 1cm}
+]
+\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$ = MSS public key $Y$}
+	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
+		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
+			child{ node {$h_{3,0} = h(Y_0)$}
+				child{ node {$X_0, Y_0$} edge from parent[<-]
+				}	
+			}
+			child{ node {$h_{3,1} = h(Y_1)$}
+				child{ node {$X_1, Y_1$} edge from parent[<-]
+				}			
+			}		
+		} 
+		child { node {$h_{2,1}$}
+			child{ node {$h_{3,2}$}
+				child{ node {$X_2, Y_2$} edge from parent[<-]
+				}			
+			}
+			child{ node {$h_{3,3}$}
+				child{ node {$X_3,Y_3$} edge from parent[<-]
+				}			
+			}		
+		}	
+	}
+	child { node {$h_{1,1}$} 
+		child { node {$h_{2,2}$}
+			child {node {$h_{3,4}$}
+				child{ node {$X_4, Y_4$} edge from parent[<-]
+				}			
+			}
+			child {node {$h_{3,5}$}
+				child{ node {$X_5,Y_5$} edge from parent[<-]
+				}			
+			}		
+		}
+		child { node {$h_{2,3}$}
+			child {node {$h_{3,6}$}
+				child{ node {$X_6,Y_6$} edge from parent[<-]
+				}			
+			}
+			child {node {$h_{3,7}$}
+				child{ node {$X_7,Y_7$} edge from parent[<-]
+				}			
+			}
+		}	
+	}
+	;
+\end{tikzpicture}
+\caption{Merkle signature generation for $d=3, s=3$. The arrows indicate the path from the leaf $h_{3,3} = h(Y_3)$ to the root of the tree.}
+\end{figure}
+
+In summary, one MSS Signature contains the following elements:
 \begin{itemize}
 \item The one-time key pair $X_s, Y_s$.
 \item The index $s$.
 \item The authentication path $A_s = (a_0,\cdots,a_{d-1})$.
 \end{itemize}
-
-Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, this allows the verifier to construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree.
-
-% Beispielgrafik / +equation einfügen
-
 
 \subsection{MSS Signature Verification}
 
