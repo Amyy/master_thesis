@@ -349,7 +349,7 @@ j &=
 \end{matrix}\right.  \nonumber \\
 \forall k &= 0, \cdots, d-1 \nonumber 
 \end{align}
-Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see figure~\ref{img:merkle_tree_signature_gen}.
+Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
 
 
 % ? path h2,0 - h1,0 and h1,1 - h0,0 also with arrows?
@@ -412,7 +412,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation for $d=3, s=3$. The \textcolor{cyan_tud}{cyan elements} directly part of the signature: The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the authentication path $A_s$, $Y_3$ is the corresponding one-time key The \textcolor{darkblue_tud}{blue nodes} are calculated by the verifier with the information given in the signature. The arrows indicate the path from the public key $Y_3$ to the root of the tree.}
+\caption{Merkle signature generation for $d=3, s=3$. The \textcolor{cyan_tud}{cyan elements} are directly part of the signature: The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the authentication path $A_s$, $Y_3$ is the corresponding one-time public key. The \textcolor{darkblue_tud}{blue nodes} are calculated by the verifier with the elements given in the signature. The arrows indicate the path from the public key $Y_3$ to the root of the tree.}
 \end{figure}
 
 In summary, one MSS Signature contains the following elements:
