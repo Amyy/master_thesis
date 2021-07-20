@@ -344,8 +344,8 @@ Each node $a_i \in A_s$ is calculated as follows:
 a_{d-k} &= h_{d-k, j} \\
 j &= 
 \left\{\begin{matrix} \nonumber
-s/2^k-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
-s/2^k+1 \text{ if } \floor{s/2^k} \equiv 0 \mod{2}
+\floor{s/2^k}-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
+\floor{s/2^k}+1 \text{ if } \floor{s/2^k} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
 \forall k &= 0, \cdots, d-1 \nonumber 
 \end{align}
