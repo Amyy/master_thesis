@@ -351,8 +351,9 @@ j &=
 \end{align}
 Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see figure~\ref{img:merkle_tree_signature_gen}.
 
-% Beispielgrafik / +equation einfügen -> rechnung + graph aus pdf aufzeichnen, und in eigene indizes h_i,j übersetzen
-% !! Pfeile einzeichnen für pfad von blatt zu knoten, farbige Knoten, in caption dazu sagen
+
+% ? path h2,0 - h1,0 and h1,1 - h0,0 also with arrows?
+% in caption: "path from leaf to the root" not entirely correct, cyan nodes also part of the path?
 \begin{figure}
 \label{img:merkle_tree_signature_gen}
 \centering
@@ -364,30 +365,30 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$ = MSS public key $Y$}
-	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
-		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
+\node [darkblue_tud] {$h_{0,0}$ = MSS public key $Y$ }
+	child { node [darkblue_tud] {$h_{1,0}$ } edge from parent[<-]
+		child { node [cyan_tud] {$h_{2,0}$} edge from parent[-, black]
 			child{ node {$h_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$h_{3,1} = h(Y_1)$}
+			child{ node {$h_{3,1}$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node {$h_{2,1}$}
-			child{ node {$h_{3,2}$}
+		child { node [darkblue_tud] {$h_{2,1}$}  edge from parent[<-]
+			child{ node [cyan_tud]{$h_{3,2}$} edge from parent[-, black]
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node {$h_{3,3}$}
-				child{ node {$X_3,Y_3$} edge from parent[<-]
+			child{ node [darkblue_tud] {$h_{3,3}$} edge from parent[<-]
+				child{ node [cyan_tud] {$X_3,Y_3$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node {$h_{1,1}$} 
+	child { node [cyan_tud] {$h_{1,1}$} 
 		child { node {$h_{2,2}$}
 			child {node {$h_{3,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
@@ -411,7 +412,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation for $d=3, s=3$. The arrows indicate the path from the leaf $h_{3,3} = h(Y_3)$ to the root of the tree.}
+\caption{Merkle signature generation for $d=3, s=3$. The \textcolor{cyan_tud}{cyan elements} directly part of the signature: The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the authentication path $A_s$, $Y_3$ is the corresponding one-time key The \textcolor{darkblue_tud}{blue nodes} are calculated by the verifier with the information given in the signature. The arrows indicate the path from the public key $Y_3$ to the root of the tree.}
 \end{figure}
 
 In summary, one MSS Signature contains the following elements:
