@@ -334,13 +334,14 @@ Y &= h_{0,0} \nonumber
 To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see equation~\ref{eq:hash_message}). Then, by using an arbitrary one-time signature scheme, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X$. 
 
 \begin{equation}
+\label{eq:merkle_s/OTS_signature}
 \sigma_{s/OTS} \leftarrow_{sign} (X_s, m) 
 \end{equation}
 The corresponding $Y_s$ is also part of the signature.
 To prove the authenticity of $Y_s$ to the verifier, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
  
 \begin{equation}
-A_s = (a_0,\cdots, a_i, \cdots, a_{d-1})
+A_s = (a_d,\cdots, a_i, \cdots, a_{1})
 \end{equation}
 Each node $a_i \in A_s$ is calculated as follows:
 % !! floor probably also necessary for first equations
@@ -352,7 +353,7 @@ j &=
 \floor{s/2^k}-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
 \floor{s/2^k}+1 \text{ if } \floor{s/2^k} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
-\forall k &= 0, \cdots, d-1 \nonumber 
+\forall k &= d-1, \cdots, 0 \nonumber 
 \end{align}
 Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
 
@@ -370,9 +371,9 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node [darkblue_tud] {$h_{0,0}$ = MSS public key $Y$ }
-	child { node [darkblue_tud] {$h_{1,0}$ } edge from parent[<-]
-		child { node [cyan_tud] {$h_{2,0}$} edge from parent[-, black]
+\node [darkblue_tud] {$h_{0,0} = \text{MSS public key Y} \? p_0$ }
+	child { node [darkblue_tud] {$h_{1,0} = p_1$ } edge from parent[<-]
+		child { node [cyan_tud] {$h_{2,0} = a_2$} edge from parent[-, black]
 			child{ node {$h_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
@@ -382,18 +383,18 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 				}			
 			}		
 		} 
-		child { node [darkblue_tud] {$h_{2,1}$}  edge from parent[<-]
-			child{ node [cyan_tud]{$h_{3,2}$} edge from parent[-, black]
+		child { node [darkblue_tud] {$h_{2,1} = p_2$}  edge from parent[<-]
+			child{ node [cyan_tud]{$h_{3,2} = a_3$} edge from parent[-, black]
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node [darkblue_tud] {$h_{3,3}$} edge from parent[<-]
-				child{ node [cyan_tud] {$X_3,Y_3$} edge from parent[<-]
+			child{ node [darkblue_tud] {$h_{3,3} = p_3$} edge from parent[<-]
+				child{ node {$X_3, \textcolor{cyan_tud}{Y_3}$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node [cyan_tud] {$h_{1,1}$} 
+	child { node [cyan_tud] {$h_{1,1} = a_1$} 
 		child { node {$h_{2,2}$}
 			child {node {$h_{3,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
@@ -417,18 +418,43 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation for $d=3, s=3$. The \textcolor{cyan_tud}{cyan elements} are directly part of the signature: The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the authentication path $A_s$, $Y_3$ is the corresponding one-time public key. The \textcolor{darkblue_tud}{blue nodes} are calculated by the verifier with the elements given in the signature. The arrows indicate the path from the public key $Y_3$ to the root of the tree.}
+\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y$, the one-time public key $Y_3$ is valid.}
 \end{figure}
-In summary, one MSS Signature contains the following elements:
+In summary, one MSS signature contains the following elements:
 \begin{equation}
 \label{eq:complete_merkle_signature_for_one_Ys}
 \sigma_s = (Y_s, s,\sigma_{s/OTS}, A_s) 
 \end{equation}
 
 \subsection{MSS Signature Verification}
-After receiving the Merkle signature $\sigma_s$, the verifier validates the signature in two steps:
-% In the first step, the verifier uses the one-time verification key $Y_s$ to verify the one-time signature $\sigma_{OTS}$ of the digest d by means of the verification algorithm of the respective one-time signature scheme. In the second step the verifier validates the authenticity of the one-time verification key Ys by constructing the path (p0,...,pH) from the sth leaf g(Ys) to the root of the Merkle tree. He uses the index s and the authentication path (a0,...,aH−1) and applies the following construction.
+After receiving the Merkle signature $\sigma_s$, the verifier uses the one-time public key $Y_s$ to verify the one-time signature $\sigma_{s/OTS}$ of message digest $m$ (see also equation~\ref{eq:merkle_s/OTS_signature}) with the signature verification algorithm of the corresponding one-time signature scheme.
+%\begin{equation}
+%(\sigma_{s/OTS},m) \rightarrow{verify} 
+%\end{equation}
+Afterwards, the verifier has to check the authenticity of $Y_s$ itself by creating the path $P_s$ from $Y_s$ to the root of the Merkle tree:
+
+\begin{equation}
+P_s = (p_d, \cdots, p_0)
+\end{equation}
+The path $P_s$ is constructed by using the index $s$ and the authentication path $A_s$ (see figure~\ref{img:merkle_tree_signature_gen}):
+
+\begin{align}
+\label{eq:merkle_verifier_path_calculation}
+p_d &= h(Y_s) \\
+p_{k} &= 
+\left\{\begin{matrix} \nonumber
+h(a_{k+1} | p_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 1 \mod{2} \\
+h(p_{k+1} | a_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 0 \mod{2}
+\end{matrix}\right.  \nonumber \\
+\forall k &= d-1, \cdots, 0 \nonumber 
+\end{align}
+The authentication of the one-time verification key $Y_s$ is only successful if the calculated root $p_0$ by the verifier matches the public key $Y$.
 
 % ganz am Ende: Übersichtstabelle zu allen Zeit/Speicheraufwandszeiten
 % MSS key pair generation requires the computation of 2^d one-time key pairs and 2^(d+1)-1 evaluations of the hash function.
 % WOTS keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: Wenig Speicherverbrauch, kleinere Signatur als bei Lamport-Diffie!
+
+% \subsection{XMSS}
+% xmss kurz beschreiben: WOTS+merkle trees = xmss
+% - hypertress
+% - nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden (herausstellen, was unterschied zu merkle trees ist)	
