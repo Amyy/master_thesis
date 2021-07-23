@@ -246,17 +246,17 @@ This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works w
 
 \subsection{MSS Key Generation}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
-The signer chooses the tree depth~$d$, where $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j)$, where $0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $h_{i,j}$ of the public key $Y_j$.
+The signer chooses the tree depth~$d$, where $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j)$, where $0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
-h_{i,j} = h(Y_j) \\
+H_{i,j} = h(Y_j) \\
 i = d , \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
-The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $h_{i,j}$ is the hash digest of the concatenation of its direct two children $h_{i+1,j}$ and $h_{i+1,j+1}$.
+The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children $H_{i+1,j}$ and $H_{i+1,j+1}$.
 
 % ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
 \begin{gather}
-h_{i,j} = h(h_{i+1,j} | h_{i+1,j+1}) \\
+H_{i,j} = h(H_{i+1,j} | H_{i+1,j+1}) \\
 \forall 0 \leq i < d \nonumber \\ 
 \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather} 
@@ -264,7 +264,7 @@ The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS pr
 
 \begin{align}
 X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
-Y &= h_{0,0} \nonumber
+Y &= H_{0,0} \nonumber
 \end{align}
 
 
@@ -279,46 +279,46 @@ Y &= h_{0,0} \nonumber
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$h_{0,0} = h(h_{1,0} | h_{1,1}) = Y_{MSS}$}
-	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
-		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
-			child{ node {$h_{3,0} = h(Y_0)$}
+\node {$H_{0,0} = h(H_{1,0} | H_{1,1}) = Y_{MSS}$}
+	child { node {$H_{1,0} = h(H_{2,0} | H_{2,1})$} 
+		child { node {$H_{2,0} = h(H_{3,0} | H_{3,1})$}
+			child{ node {$H_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$h_{3,1} = h(Y_1)$}
+			child{ node {$H_{3,1} = h(Y_1)$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node {$h_{2,1}$}
-			child{ node {$h_{3,2}$}
+		child { node {$H_{2,1}$}
+			child{ node {$H_{3,2}$}
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node {$h_{3,3}$}
+			child{ node {$H_{3,3}$}
 				child{ node {$X_3,Y_3$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node {$h_{1,1}$} 
-		child { node {$h_{2,2}$}
-			child {node {$h_{3,4}$}
+	child { node {$H_{1,1}$} 
+		child { node {$H_{2,2}$}
+			child {node {$H_{3,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{3,5}$}
+			child {node {$H_{3,5}$}
 				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
-		child { node {$h_{2,3}$}
-			child {node {$h_{3,6}$}
+		child { node {$H_{2,3}$}
+			child {node {$H_{3,6}$}
 				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{3,7}$}
+			child {node {$H_{3,7}$}
 				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
@@ -348,7 +348,7 @@ Each node $a_i \in A_s$ is calculated as follows:
 % !! floor probably also necessary for first equations
 \begin{align}
 \label{eq:auth_path_calculation_merkle_tree}
-a_{d-k} &= h_{d-k, j} \\
+a_{d-k} &= H_{d-k, j} \\
 j &= 
 \left\{\begin{matrix} \nonumber
 \floor{s/2^k}-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
@@ -372,46 +372,46 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node [darkblue_tud] {$h_{0,0} = Y_{MSS} \? p_0$ }
-	child { node [darkblue_tud] {$h_{1,0} = p_1$ } edge from parent[<-]
-		child { node [cyan_tud] {$h_{2,0} = a_2$} edge from parent[-, black]
-			child{ node {$h_{3,0} = h(Y_0)$}
+\node [darkblue_tud] {$H_{0,0} = Y_{MSS} \? p_0$ }
+	child { node [darkblue_tud] {$H_{1,0} = p_1$ } edge from parent[<-]
+		child { node [cyan_tud] {$H_{2,0} = a_2$} edge from parent[-, black]
+			child{ node {$H_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$h_{3,1}$}
+			child{ node {$H_{3,1}$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node [darkblue_tud] {$h_{2,1} = p_2$}  edge from parent[<-]
-			child{ node [cyan_tud]{$h_{3,2} = a_3$} edge from parent[-, black]
+		child { node [darkblue_tud] {$H_{2,1} = p_2$}  edge from parent[<-]
+			child{ node [cyan_tud]{$H_{3,2} = a_3$} edge from parent[-, black]
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node [darkblue_tud] {$h_{3,3} = p_3$} edge from parent[<-]
+			child{ node [darkblue_tud] {$H_{3,3} = p_3$} edge from parent[<-]
 				child{ node {$X_3, \textcolor{cyan_tud}{Y_3}$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node [cyan_tud] {$h_{1,1} = a_1$} 
-		child { node {$h_{2,2}$}
-			child {node {$h_{3,4}$}
+	child { node [cyan_tud] {$H_{1,1} = a_1$} 
+		child { node {$H_{2,2}$}
+			child {node {$H_{3,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{3,5}$}
+			child {node {$H_{3,5}$}
 				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
-		child { node {$h_{2,3}$}
-			child {node {$h_{3,6}$}
+		child { node {$H_{2,3}$}
+			child {node {$H_{3,6}$}
 				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
-			child {node {$h_{3,7}$}
+			child {node {$H_{3,7}$}
 				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
@@ -419,7 +419,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
+\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $H_{3,2}, H_{2,0}, H_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
 \end{figure}
 In summary, one MSS signature contains the following elements:
 \begin{equation}
