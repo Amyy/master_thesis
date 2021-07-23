@@ -194,7 +194,7 @@ For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash func
 
 \begin{equation}
 \label{eq:hash_digest_split}
-m = m_0 | m_1 | \cdots | m_{t_1-1}
+m = m_0 \concat m_1 \concat \cdots \concat m_{t_1-1}
 \end{equation}
 Each bitstring $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$.
 % checksum t2 Teile der Länge w teilbar
