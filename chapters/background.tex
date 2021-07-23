@@ -239,7 +239,7 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 
 \section{Merkle Signature Scheme} 
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
-To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
+To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
 % besser einbinden :D
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
@@ -260,7 +260,7 @@ h_{i,j} = h(h_{i+1,j} | h_{i+1,j+1}) \\
 \forall 0 \leq i < d \nonumber \\ 
 \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather} 
-The \textit{root} of the Merkle tree is the MSS public key~$Y$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the Merkle tree.
+The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the Merkle tree.
 
 \begin{align}
 X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
@@ -279,7 +279,7 @@ Y &= h_{0,0} \nonumber
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$h_{0,0} = h(h_{1,0} | h_{1,1})$ = MSS public key $Y$}
+\node {$h_{0,0} = h(h_{1,0} | h_{1,1}) = Y_{MSS}$}
 	child { node {$h_{1,0} = h(h_{2,0} | h_{2,1})$} 
 		child { node {$h_{2,0} = h(h_{3,0} | h_{3,1})$}
 			child{ node {$h_{3,0} = h(Y_0)$}
@@ -372,7 +372,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node [darkblue_tud] {$h_{0,0} = \text{MSS public key Y} \? p_0$ }
+\node [darkblue_tud] {$h_{0,0} = Y_{MSS} \? p_0$ }
 	child { node [darkblue_tud] {$h_{1,0} = p_1$ } edge from parent[<-]
 		child { node [cyan_tud] {$h_{2,0} = a_2$} edge from parent[-, black]
 			child{ node {$h_{3,0} = h(Y_0)$}
@@ -419,7 +419,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y$, the one-time public key $Y_3$ is valid.}
+\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $h_{3,2}, h_{2,0}, h_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
 \end{figure}
 In summary, one MSS signature contains the following elements:
 \begin{equation}
@@ -449,7 +449,7 @@ h(p_{k+1} | a_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
 \forall k &= d-1, \cdots, 0 \nonumber 
 \end{align}
-The authentication of the one-time verification key $Y_s$ is only successful if the calculated root $p_0$ by the verifier matches the public key $Y$.
+The authentication of the one-time verification key $Y_s$ is only successful if the calculated root $p_0$ by the verifier matches the public key $Y_{MSS}$.
 
 % ganz am Ende: Übersichtstabelle zu allen Zeit/Speicheraufwandszeiten
 % MSS key pair generation requires the computation of 2^d one-time key pairs and 2^(d+1)-1 evaluations of the hash function.
