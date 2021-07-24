@@ -260,11 +260,11 @@ H_{i,j} = h(H_{i+1,j} \concat H_{i+1,j+1}) \\
 \forall 0 \leq i < d \nonumber \\ 
 \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather} 
-The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS private key~$X$ is the collection of one-time signature keys generated before constructing the Merkle tree.
+The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS private key~$X_{MSS}$ is the collection of one-time signature keys generated before constructing the Merkle tree.
 
 \begin{align}
-X &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
-Y &= H_{0,0} \nonumber
+X_{MSS} &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
+Y_{MSS} &= H_{0,0} \nonumber
 \end{align}
 
 
@@ -332,7 +332,7 @@ Y &= H_{0,0} \nonumber
 
 \subsection{MSS Signature Generation}
 %The one-time key pairs are used successively for generating signatures.  
-To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}). Then, by using a chosen one-time signature scheme, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X$. 
+To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}). Then, by using a chosen one-time signature scheme, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$. 
 
 \begin{equation}
 \label{eq:merkle_s/OTS_signature}
