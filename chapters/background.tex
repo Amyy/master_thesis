@@ -205,15 +205,15 @@ c = \sum_{i = 0}^{t-1}(2^w-m_i)
 \end{equation}
 The checksum $c$ is divided into $t_2$ bitstrings of length $w$. In order to divide $c$ this way, it can be necessary to add leading zeros to $c$ as a padding.
 \begin{equation}
-c = c_0 | c_1 | \cdots | c_{t_2 - 1}
+c = c_0 \concat c_1 \concat \cdots \concat c_{t_2 - 1}
 \end{equation}
 Afterwards, $m$ and $c$ are concatenated to one block~$B$. This leads to $t$ bitstrings of length $w$ in total, as $t = t_1 + t_2$.
 
 \begin{align}
 \label{eq:block_B_out_of_M_and_C}
-B &= m | c  \\ 
-&= m_0 | \cdots | m_{t_1 - 1} | c_0 | \cdots | c_{t_2 - 1} \nonumber \\
-&= b_0 | \cdots | b_{t-1} \nonumber
+B &= m \concat c  \\ 
+&= m_0 \concat \cdots \concat m_{t_1 - 1} \concat c_0 \concat \cdots \concat c_{t_2 - 1} \nonumber \\
+&= b_0 \concat \cdots \concat b_{t-1} \nonumber
 \end{align}
 The signature $\sigma$ is calculated by applying the one-way function~$f$ to each part of the private key $X$ (see Equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount of times the hash function $f$ is applied to the corresponding $x_i \in X$.
 
@@ -256,7 +256,7 @@ The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent
 
 % ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
 \begin{gather}
-H_{i,j} = h(H_{i+1,j} | H_{i+1,j+1}) \\
+H_{i,j} = h(H_{i+1,j} \concat H_{i+1,j+1}) \\
 \forall 0 \leq i < d \nonumber \\ 
 \forall 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather} 
@@ -279,9 +279,9 @@ Y &= H_{0,0} \nonumber
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$H_{0,0} = h(H_{1,0} | H_{1,1}) = Y_{MSS}$}
-	child { node {$H_{1,0} = h(H_{2,0} | H_{2,1})$} 
-		child { node {$H_{2,0} = h(H_{3,0} | H_{3,1})$}
+\node {$H_{0,0} = h(H_{1,0} \concat H_{1,1}) = Y_{MSS}$}
+	child { node {$H_{1,0} = h(H_{2,0} \concat H_{2,1})$} 
+		child { node {$H_{2,0} = h(H_{3,0} \concat H_{3,1})$}
 			child{ node {$H_{3,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
@@ -444,8 +444,8 @@ The path $P_s$ is constructed by using the index $s$ and the authentication path
 p_d &= h(Y_s) \\
 p_{k} &= 
 \left\{\begin{matrix} \nonumber
-h(a_{k+1} | p_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 1 \mod{2} \\
-h(p_{k+1} | a_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 0 \mod{2}
+h(a_{k+1} \concat p_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 1 \mod{2} \\
+h(p_{k+1} \concat a_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
 \forall k &= d-1, \cdots, 0 \nonumber 
 \end{align}
