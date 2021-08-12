@@ -434,28 +434,29 @@ In summary, one MSS signature contains the following elements:
 \end{equation}
 
 \subsection{MSS Signature Verification}
-After receiving the Merkle signature $\sigma_s$, the verifier uses the one-time public key $Y_s$ to verify the one-time signature $\sigma_{s/OTS}$ of message digest $m$ (see also Equation~\ref{eq:merkle_s/OTS_signature}) with the signature verification algorithm of the corresponding one-time signature scheme.
+After receiving the Merkle signature $\sigma_s$, \textcolor{red}{the verifier uses the one-time public key $Y_s$ to verify} % -> wrong, needs to be changed
+ the one-time signature $\sigma_{s/OTS}$ of message digest $m$ (see also Equation~\ref{eq:merkle_s/OTS_signature}) with the signature verification algorithm of the corresponding one-time signature scheme.
 %\begin{equation}
 %(\sigma_{s/OTS},m) \rightarrow{verify} 
 %\end{equation}
 Afterwards, the verifier has to check the authenticity of $Y_s$ itself by creating the path $P_s$ from $Y_s$ to the root of the Merkle tree:
 
 \begin{equation}
-P_s = (p_d, \cdots, p_0)
+P_s = (p_0, \cdots, p_d)
 \end{equation}
 The path $P_s$ is constructed by using the index $s$ and the authentication path $A_s$ (see Figure~\ref{img:merkle_tree_signature_gen}):
 
 \begin{align}
 \label{eq:merkle_verifier_path_calculation}
-p_d &= h(Y_s) \\
-p_{k} &= 
+&p_0 = h(Y_s) \\
+&p_{i} = 
 \left\{\begin{matrix} \nonumber
-h(a_{k+1} \concat p_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 1 \mod{2} \\
-h(p_{k+1} \concat a_{k+1}) \text{ if } \floor{s/2^{k+1}} \equiv 0 \mod{2}
+h(a_{i-1} \concat p_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 1 \mod{2} \\
+h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
-\forall k &= d-1, \cdots, 0 \nonumber 
+&0 \leq i \leq d  \nonumber 
 \end{align}
-The authentication of the one-time verification key $Y_s$ is only successful if the calculated root $p_0$ by the verifier matches the public key $Y_{MSS}$.
+The authentication of the one-time verification key $Y_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$.
 
 % ganz am Ende: Übersichtstabelle zu allen Zeit/Speicheraufwandszeiten
 % MSS key pair generation requires the computation of 2^d one-time key pairs and 2^(d+1)-1 evaluations of the hash function.
