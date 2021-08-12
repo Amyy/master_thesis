@@ -240,7 +240,7 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 \section{Merkle Signature Scheme} 
 %!! Zitierung fehlt von Buchmann
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
-To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
+To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
 % besser einbinden :D
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
@@ -340,23 +340,26 @@ To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of lengt
 \label{eq:merkle_s/OTS_signature}
 \sigma_{s/OTS} \leftarrow_{sign} (X_s, m) 
 \end{equation}
-The corresponding $Y_s$ is also part of the signature.
-To prove the authenticity of $Y_s$ to the verifier, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
- 
+% das folgende ist vom Konzept her falsch? (Vor allem folgende 2 Sätze) -> steht so in Lehrbuch
+\textcolor{red}{The corresponding $Y_s$ is also part of the signature.% <- "nicht wirklich" -> LD-OTS, WOTS anschauen was da mitgegeben wird jeweils in Signatur
+To prove the authenticity of $Y_s$ to the verifier}, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
+
+% a_{d-1}, NOT a_{d} because this would be the root
+% a_i vlt rausnehmen aus Sequenz?
 \begin{equation}
-A_s = (a_d,\cdots, a_i, \cdots, a_{1})
+A_s = (a_0,\cdots, a_i, \cdots, a_{d-1})
 \end{equation}
 Each node $a_i \in A_s$ is calculated as follows:
 % !! floor probably also necessary for first equations
 \begin{align}
 \label{eq:auth_path_calculation_merkle_tree}
-a_{d-k} &= H_{d-k, j} \\
-j &= 
+&a_{i} = H_{i, j} \\
+&j = 
 \left\{\begin{matrix} \nonumber
-\floor{s/2^k}-1 \text{ if } \floor{s/2^k} \equiv 1 \mod{2} \\
-\floor{s/2^k}+1 \text{ if } \floor{s/2^k} \equiv 0 \mod{2}
+\floor{s/2^i}-1 \text{ if } \floor{s/2^i} \equiv 1 \mod{2} \\
+\floor{s/2^i}+1 \text{ if } \floor{s/2^i} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
-\forall k &= d-1, \cdots, 0 \nonumber 
+&0 \leq i \leq d-1 \nonumber
 \end{align}
 Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see Figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
 
@@ -424,9 +427,10 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 \caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $H_{3,2}, H_{2,0}, H_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
 \end{figure}
 In summary, one MSS signature contains the following elements:
+% Ys not part of sigma_s?
 \begin{equation}
 \label{eq:complete_merkle_signature_for_one_Ys}
-\sigma_s = (Y_s, s,\sigma_{s/OTS}, A_s) 
+\sigma_s = (\textcolor{red}{Y_s}, s,\sigma_{s/OTS}, A_s) 
 \end{equation}
 
 \subsection{MSS Signature Verification}
