@@ -15,7 +15,7 @@ To ensure the above mentioned properties of digital signatures, a digital signat
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{images/Background/Digital_Signaturesystem_Simple.png}
-\caption{The general structure of a digital signature system. The key generation algorithm creates the private key~$X$ and public key~$Y$, whereas $X$ is only known to the signer and $Y$ is made public for the verifier. The signer creates the message $M$ and signs it with the private key, using the signature generation algorithm. Afterwards, the so generated signature~$\sigma$ and the corresponding message~$M$ are sent to the verifier. The verifier checks the validity of the message and the corresponding signature with the public key (that is already known after key generation and distribution)and the verification algorithm. If the verification algorithm evaluates returns a valid result, the verifier can trust the message or otherwise knows it has been tempered with}
+\caption{The general structure of a digital signature system. The key generation algorithm creates the private key~$X$ and public key~$Y$, whereas $X$ is only known to the signer and $Y$ is made public for the verifier. The signer creates the message $M$ and signs it with the private key, using the signature generation algorithm. Afterwards, the so generated signature~$\sigma$ and the corresponding message~$M$ are sent to the verifier. The verifier checks the validity of the message and the corresponding signature with the public key (that is already known after key generation and distribution) and the verification algorithm. If the verification algorithm evaluates returns a valid result, the verifier can trust the message or otherwise knows it has been tempered with).}
 \label{img:digital_sign_system_simple}
 \end{figure} 
 
@@ -238,6 +238,7 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 
 
 \section{Merkle Signature Scheme} 
+%!! Zitierung fehlt von Buchmann
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-times key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
@@ -246,25 +247,26 @@ This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works w
 
 \subsection{MSS Key Generation}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
-The signer chooses the tree depth~$d$, where $d \geq 2$ and generates $2^d$ one-time key pairs $(X_j, Y_j)$, where $0 \leq j \leq 2^d-1$ with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
+The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
 H_{i,j} = h(Y_j) \\
-i = d , \forall 0 \leq j \leq 2^d - 1 \nonumber
+i = d \nonumber \\  
+0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
-The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children $H_{i+1,j}$ and $H_{i+1,j+1}$.
+The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children: % $H_{i+1,j}$ and $H_{i+1,j+1}$.
 
 % ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
 \begin{gather}
-H_{i,j} = h(H_{i+1,j} \concat H_{i+1,j+1}) \\
-\forall 0 \leq i < d \nonumber \\ 
-\forall 0 \leq j \leq 2^d - 1 \nonumber
+H_{i,j} = h(H_{i-1,2j} \concat H_{i-1,2j+1}) \\
+1 \leq i \leq d \nonumber \\ 
+0 \leq j < 2^{d - i} \nonumber
 \end{gather} 
 The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS private key~$X_{MSS}$ is the collection of one-time signature keys generated before constructing the Merkle tree.
-
+% Y_mss = H_d,0 because d=height of tree
 \begin{align}
 X_{MSS} &= (X_0, \cdots, X_{X_j}, \cdots, X_{2^d - 1} ) \\
-Y_{MSS} &= H_{0,0} \nonumber
+Y_{MSS} &= H_{d,0} \nonumber
 \end{align}
 
 
