@@ -281,46 +281,46 @@ Y_{MSS} &= H_{d,0} \nonumber
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node {$H_{0,0} = h(H_{1,0} \concat H_{1,1}) = Y_{MSS}$}
-	child { node {$H_{1,0} = h(H_{2,0} \concat H_{2,1})$} 
-		child { node {$H_{2,0} = h(H_{3,0} \concat H_{3,1})$}
-			child{ node {$H_{3,0} = h(Y_0)$}
+\node {$H_{3,0} = h(H_{2,0} \concat H_{2,1}) = Y_{MSS}$}
+	child { node {$H_{2,0} = h(H_{1,0} \concat H_{1,1})$} 
+		child { node {$H_{1,0} = h(H_{0,0} \concat H_{0,1})$}
+			child{ node {$H_{0,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$H_{3,1} = h(Y_1)$}
+			child{ node {$H_{0,1} = h(Y_1)$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node {$H_{2,1}$}
-			child{ node {$H_{3,2}$}
+		child { node {$H_{1,1}$}
+			child{ node {$H_{0,2}$}
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node {$H_{3,3}$}
+			child{ node {$H_{0,3}$}
 				child{ node {$X_3,Y_3$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node {$H_{1,1}$} 
-		child { node {$H_{2,2}$}
-			child {node {$H_{3,4}$}
+	child { node {$H_{2,1}$} 
+		child { node {$H_{1,2}$}
+			child {node {$H_{0,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
-			child {node {$H_{3,5}$}
+			child {node {$H_{0,5}$}
 				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
-		child { node {$H_{2,3}$}
-			child {node {$H_{3,6}$}
+		child { node {$H_{1,3}$}
+			child {node {$H_{0,6}$}
 				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
-			child {node {$H_{3,7}$}
+			child {node {$H_{0,7}$}
 				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
