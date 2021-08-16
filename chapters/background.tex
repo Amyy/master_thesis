@@ -377,46 +377,46 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node [darkblue_tud] {$H_{0,0} = Y_{MSS} \? p_0$ }
-	child { node [darkblue_tud] {$H_{1,0} = p_1$ } edge from parent[<-]
-		child { node [cyan_tud] {$H_{2,0} = a_2$} edge from parent[-, black]
-			child{ node {$H_{3,0} = h(Y_0)$}
+\node [red] {$H_{3,0} = Y_{MSS} \? p_3$ }
+	child { node [darkblue_tud] {$H_{2,0} = p_2$ } edge from parent[<-]
+		child { node [cyan_tud] {$H_{1,0} = a_1$} edge from parent[-, black]
+			child{ node {$H_{0,0} = h(Y_0)$}
 				child{ node {$X_0, Y_0$} edge from parent[<-]
 				}	
 			}
-			child{ node {$H_{3,1}$}
+			child{ node {$H_{0,1}$}
 				child{ node {$X_1, Y_1$} edge from parent[<-]
 				}			
 			}		
 		} 
-		child { node [darkblue_tud] {$H_{2,1} = p_2$}  edge from parent[<-]
-			child{ node [cyan_tud]{$H_{3,2} = a_3$} edge from parent[-, black]
+		child { node [darkblue_tud] {$H_{1,1} = p_1$}  edge from parent[<-]
+			child{ node [cyan_tud]{$H_{0,2} = a_0$} edge from parent[-, black]
 				child{ node {$X_2, Y_2$} edge from parent[<-]
 				}			
 			}
-			child{ node [darkblue_tud] {$H_{3,3} = p_3$} edge from parent[<-]
+			child{ node [darkblue_tud] {$H_{0,3} = p_0$} edge from parent[<-]
 				child{ node {$X_3, \textcolor{cyan_tud}{Y_3}$} edge from parent[<-]
 				}			
 			}		
 		}	
 	}
-	child { node [cyan_tud] {$H_{1,1} = a_1$} 
-		child { node {$H_{2,2}$}
-			child {node {$H_{3,4}$}
+	child { node [cyan_tud] {$H_{2,1} = a_2$} 
+		child { node {$H_{1,2}$}
+			child {node {$H_{0,4}$}
 				child{ node {$X_4, Y_4$} edge from parent[<-]
 				}			
 			}
-			child {node {$H_{3,5}$}
+			child {node {$H_{0,5}$}
 				child{ node {$X_5,Y_5$} edge from parent[<-]
 				}			
 			}		
 		}
-		child { node {$H_{2,3}$}
-			child {node {$H_{3,6}$}
+		child { node {$H_{1,3}$}
+			child {node {$H_{0,6}$}
 				child{ node {$X_6,Y_6$} edge from parent[<-]
 				}			
 			}
-			child {node {$H_{3,7}$}
+			child {node {$H_{0,7}$}
 				child{ node {$X_7,Y_7$} edge from parent[<-]
 				}			
 			}
