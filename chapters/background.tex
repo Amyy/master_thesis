@@ -31,9 +31,9 @@ To ensure the above mentioned properties of digital signatures, a digital signat
 % es wird message digest signiert
 % Überleitung zu Hashfunctions
 
-\section{Definition of Hash Functions}
-% preimage resistance, second preimage resistance, collission resistance -> hier erklären 
-The security of One-Time Signature Schemes is based on cryptographic secure hash functions. A hash function is a function that can be computed efficiently and maps strings of arbitrary length to strings of fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, with $|X| = X_{len}$ (arbitrary length) and $|Y| = Y_{len}$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textit{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
+\section{Definition of Hash Functions} 
+The security of \textit{One-Time Signature Schemes} (see section~\ref{sec:one-time_sign_schemes}) %maybe not forward-reference -> merge into One-Time Signature Schemes section
+ is based on cryptographic secure hash functions. A hash function is a function that can be computed efficiently and maps strings of arbitrary length to strings of fixed length~\cite{cha:bg_hashfunctions_thesis_matusiewicz2007}. Therefore a hash function $h$ is defined as any function $h: X \rightarrow Y$, with $|X| = X_{len}$ (arbitrary length) and $|Y| = Y_{len}$ (fixed length)~\cite{cha:bg_hashfunctoins_Stinson2006}. A hash function is considered \textit{cryptographically secure} if it has the following  properties:~\cite{cha:bg_hashfunctions_BASIC_DEFINITIONS_Springer2004} 
 
 % M ist auch die ungehashte message später -> dort umbenennen zB M_sent \\ hashfunction hat fixe outputlänge? also M fix?
 \begin{enumerate} % fotos einfügen?
@@ -70,7 +70,7 @@ input that produces the same output, i.e. given any $x$ finding a second preimag
 \label{sec:one-time_sign_schemes}
 This section is based on the work of Buchmann et al~\cite{book_pqc_bernstein_2004}. 
 % ONE-Time Signature scheme anmerken / erklären
-The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes (OTS)}, meaning the public and private key can be used \textbf{once}, for generating one signature. If they are used for generating more than one signature, the signature can be forged. % vlt rauslöschen einfach
+The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes (OTS)}, meaning the public and private key can be used \textbf{once}, for signing a single message. If they are used for generating more than one signature, the signature can be forged. % vlt rauslöschen einfach
 The following types of functions are used for the Lamport-Diffie One-Time Signature Scheme and the Winternitz One-Time Signature Scheme. 
 The cryptographic hash function~$h$ is preimage resistant, second preimage-resistant and collision resistant, it is applied to the original message and generates the message digest.
 The one-way function~$f$ is a hash function that is at least preimage-resistant and takes a fixed input length, because it is applied to the message digest.% später wird Benutzung von h und f noch sichtbar
@@ -89,9 +89,6 @@ The one-way function~$f$ is a hash function that is at least preimage-resistant 
 
 \subsection{Lamport-Diffie One-Time Signature Scheme}
 The Lamport–Diffie one-time signature scheme (LD-OTS) was first proposed by Leslie Lamport in 1979~\cite{lamport_signature_scheme_1979}. 
-It is a signature scheme where the public key can only be used to sign a single message.
-%-> bei allen OTS schemes so, vlt vorher erklären / zusammenfassen?
-
 
 \subsubsection{LD-OTS Key Generation}
 The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
@@ -333,6 +330,7 @@ Y_{MSS} &= H_{d,0} \nonumber
 % soll treehash algo hier auch erklärt werden?
 
 \subsection{MSS Signature Generation}
+For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}.
 %The one-time key pairs are used successively for generating signatures.  
 To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}). Then, by using a chosen one-time signature scheme, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$. 
 
@@ -341,8 +339,8 @@ To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of lengt
 \sigma_{s/OTS} \leftarrow_{sign} (X_s, m) 
 \end{equation}
 % das folgende ist vom Konzept her falsch? (Vor allem folgende 2 Sätze) -> steht so in Lehrbuch
-\textcolor{red}{The corresponding $Y_s$ is also part of the signature.% <- "nicht wirklich" -> LD-OTS, WOTS anschauen was da mitgegeben wird jeweils in Signatur
-To prove the authenticity of $Y_s$ to the verifier}, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
+\textcolor{red}{The corresponding $Y_s$ is also part of the signature}.% <- "nicht wirklich" -> LD-OTS, WOTS anschauen was da mitgegeben wird jeweils in Signatur
+The verifier checks the authenticity of the signature by calculating a part of the Merkle-Tree, see Figure~\ref{img:merkle_tree_signature_gen}. Therefore, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
 
 % a_{d-1}, NOT a_{d} because this would be the root
 % a_i vlt rausnehmen aus Sequenz?
@@ -377,7 +375,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
     level 3/.style = {sibling distance = 2.5cm},
     level 4/.style = {level distance = 1cm}
 ]
-\node [red] {$H_{3,0} = Y_{MSS} \? p_3$ }
+\node [darkblue_tud] {$H_{3,0} = p_3 \? Y_{MSS}$ }
 	child { node [darkblue_tud] {$H_{2,0} = p_2$ } edge from parent[<-]
 		child { node [cyan_tud] {$H_{1,0} = a_1$} edge from parent[-, black]
 			child{ node {$H_{0,0} = h(Y_0)$}
@@ -424,7 +422,7 @@ Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In comb
 	}
 	;
 \end{tikzpicture}
-\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $H_{3,2}, H_{2,0}, H_{1,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_3, a_2, a_1)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_3, p_2, p_1, p_0)$} is calculated by the verifier, also indicated by the arrows. If the root $p_0$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
+\caption{Merkle signature generation and verification for $d=3, s=3$. The nodes $H_{0,2}, H_{1,0}, H_{2,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_0, a_1, a_2)$} calculated by the signer, \textcolor{cyan_tud}{$Y_3$} is the corresponding \textcolor{cyan_tud}{one-time public key}. The \textcolor{darkblue_tud}{path $P_s = (p_0, p_1, p_2, p_3)$} is calculated by the verifier, also indicated by the arrows. If the root $p_3$ calculated by the verifier matches the public key $Y_{MSS}$, the one-time public key $Y_3$ is valid.}
 \end{figure}
 In summary, one MSS signature contains the following elements:
 % Ys not part of sigma_s?
@@ -434,6 +432,7 @@ In summary, one MSS signature contains the following elements:
 \end{equation}
 
 \subsection{MSS Signature Verification}
+For a explanatory depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}.
 After receiving the Merkle signature $\sigma_s$, \textcolor{red}{the verifier uses the one-time public key $Y_s$ to verify} % -> wrong, needs to be changed
  the one-time signature $\sigma_{s/OTS}$ of message digest $m$ (see also Equation~\ref{eq:merkle_s/OTS_signature}) with the signature verification algorithm of the corresponding one-time signature scheme.
 %\begin{equation}
