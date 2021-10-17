@@ -199,7 +199,7 @@ Each bitstring $m_i \in m$ is converted to its decimal representation in order t
 
 \begin{equation}
 \label{eq:checksum_calculation}
-c = \sum_{i = 0}^{t-1}(2^w-m_i)
+c = \sum_{i = 0}^{t_{1}-1}(2^w-m_i)
 \end{equation}
 The checksum $c$ is divided into $t_2$ bitstrings of length $w$. In order to divide $c$ this way, it can be necessary to add leading zeros to $c$ as a padding.
 \begin{equation}
@@ -459,6 +459,24 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 The authentication of the one-time verification key $Y_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$.
 
 \section{Extended Merkle Signature Scheme (XMSS)}
+
+
+
+
+\subsection{XMSS Key Generation}
+
+
+
+
+\subsection{XMSS Signature Generation}
+
+
+
+
+\subsection{XMSS Signature Verification}
+
+
+
 
 
 
