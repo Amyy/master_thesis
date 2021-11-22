@@ -301,8 +301,7 @@ For a depiction of the Merkle tree referenced in this section, see Figure~\ref{i
 The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
-H_{i,j} = h(Y_j) \\
-i = d \nonumber \\  
+H_{0,j} = h(Y_j) \\ 
 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
 The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children: % $H_{i+1,j}$ and $H_{i+1,j+1}$.
