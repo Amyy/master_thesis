@@ -290,7 +290,9 @@ Because these values are the same as in the public key $Y$, $\sigma$ is valid.
 %!! Zitierung fehlt von Buchmann
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
-This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
+This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
+% -> maybe better: works with any scheme but W-OTS "works best"?
+In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
 % besser einbinden :D
 %The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
 
@@ -509,12 +511,13 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 \end{align}
 The authentication of the one-time verification key $Y_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$.
 
+\section{Leighton-Micali Signature Scheme (LMS)}
 
-\subsubsection{MSS Example Calculation}
-This section contains an example calculation of MSS, including key generation, signature generation, and signature verification.
+\subsection{LMS Key Generation}
 
+\subsection{LMS Signature Generation}
 
-
+\subsection{LMS Signature Verification}
 
 
 \section{Extended Merkle Signature Scheme (XMSS)}
