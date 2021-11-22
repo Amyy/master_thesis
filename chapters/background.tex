@@ -17,7 +17,7 @@ To ensure the above mentioned properties of digital signatures, a digital signat
 \includegraphics[width=\linewidth]{images/Background/Digital_Signaturesystem_Simple.png}
 \caption{The general structure of a digital signature system. %Elke: Nur den ersten Satz als caption. Das hier nicht: The key generation algorithm creates the private key~$X$ and public key~$Y$, whereas $X$ is only known to the signer and $Y$ is made public for the verifier. The signer creates the message $M$ and signs it with the private key, using the signature generation algorithm. Afterwards, the so generated signature~$\sigma$ and the corresponding message~$M$ are sent to the verifier. The verifier checks the validity of the message and the corresponding signature with the public key (that is already known after key generation and distribution) and the verification algorithm. If the verification algorithm evaluates returns a valid result, the verifier can trust the message or otherwise knows it has been tempered with).
 }
-\label{img:digital_sign_sytem_simple}
+\label{img:digital_sign_system_simple}
 \end{figure} 
 
 \begin{enumerate}
@@ -291,23 +291,25 @@ Because these values are the same as in the public key $Y$, $\sigma$ is valid.
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
-% -> maybe better: works with any scheme but W-OTS "works best"?
+The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. 
+% Moreover, when using LD-OTS, the verifier needs to know $2n$ elements of $X$, but for W-OTS only the signature is needed. -> eigentlich eins von beiden: X_s komplett in Signatur an verifier schicken, ODER Y_s in Signatur mitschicken.
+
 In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
-% besser einbinden :D
-%The idea is to use a complete binary hash tree to reduce the validity of an arbitrary but fixed number of one time verification keys to the validity of one single public key, the root of the hash tree. 
+
 
 \subsection{MSS Key Generation}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
 The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
-H_{0,j} = h(Y_j) \\ 
+H_{i,j} = h(Y_j) \\ 
 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
 The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children: % $H_{i+1,j}$ and $H_{i+1,j+1}$.
 
 % ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
 \begin{gather}
+\label{eq:inner_nodes_merkle_tree_keygen}
 H_{i,j} = h(H_{i-1,2j} \concat H_{i-1,2j+1}) \\
 1 \leq i \leq d \nonumber \\ 
 0 \leq j < 2^{d - i} \nonumber
@@ -321,7 +323,6 @@ Y_{MSS} &= H_{d,0} \nonumber
 
 
 \begin{figure}
-\label{img:merkle_tree}
 \centering
 % unsichtbare Kante: edge from parent[draw=none]
 \begin{tikzpicture} 
@@ -378,22 +379,22 @@ Y_{MSS} &= H_{d,0} \nonumber
 	}
 	;
 \end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
-\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children. The leafs are the hash digest of their corresponding public key (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}).}
+\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digest of their corresponding public key (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}).}
+\label{img:merkle_tree}
 \end{figure}
 % soll treehash algo hier auch erklärt werden?
 
 \subsection{MSS Signature Generation}
-For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}.
-%The one-time key pairs are used successively for generating signatures.  
-To sign a message $M$, the signer calculates the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}). Then, by using a chosen one-time signature scheme, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$. 
+For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}. 
+To sign a message $M$, the signer needs to generate the signature $\sigma_s$.
+First,the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}) is calculated. Then, by using a chosen one-time signature scheme (here: W-OTS), the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$.
 
 \begin{equation}
 \label{eq:merkle_s/OTS_signature}
 \sigma_{s/OTS} \leftarrow_{sign} (X_s, m) 
 \end{equation}
-% das folgende ist vom Konzept her falsch? (Vor allem folgende 2 Sätze) -> steht so in Lehrbuch
-\textcolor{red}{The corresponding $Y_s$ is also part of the signature}.% <- "nicht wirklich" -> LD-OTS, WOTS anschauen was da mitgegeben wird jeweils in Signatur
-The verifier checks the authenticity of the signature by calculating a part of the Merkle-Tree, see Figure~\ref{img:merkle_tree_signature_gen}. Therefore, additional information about the Merkle tree is included into the signature: The index $s$ and an authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
+%\ "The corresponding $Y_s$ is also part of the signature" -> NICHT bei W-OTS, wovon man hier ausgeht. Verifier berechnet Y_s auf dem Weg zur vollen Winternitz-Kette, indem er signatur bekommt und "weiterhasht".
+Additional information about the Merkle tree is needed for $\sigma_s$: The index $s$ and the authentication path for the verification key $Y_s$. The authentication path $A_s$ consists of a sequence of nodes $a_i$ in the Merkle tree:
 
 % a_{d-1}, NOT a_{d} because this would be the root
 % a_i vlt rausnehmen aus Sequenz?
@@ -412,7 +413,10 @@ Each node $a_i \in A_s$ is calculated as follows:
 \end{matrix}\right.  \nonumber \\
 &0 \leq i \leq d-1 \nonumber
 \end{align}
-Because of the index $s$, the verifier knows the leaf-position of $Y_s$. In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see Figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
+% ToDo:
+% !! hier anpassen für W-OTS: Verifier knows position of \sigma_s in Merkle tree and can "hash" all the way to get Y_s. Then calculate rest of the tree.
+Because of the index $s$, the verifier knows the leaf-position of $Y_s$. % not exactly, see comment above 
+In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $h(Y_s)$ to the root of the Merkle tree, see Figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
 
 
 % ? path h2,0 - h1,0 and h1,1 - h0,0 also with arrows?
@@ -481,7 +485,7 @@ In summary, one MSS signature contains the following elements:
 % Ys not part of sigma_s?
 \begin{equation}
 \label{eq:complete_merkle_signature_for_one_Ys}
-\sigma_s = (\textcolor{red}{Y_s}, s,\sigma_{s/OTS}, A_s) 
+\sigma_s = (s,\sigma_{s/OTS}, A_s) 
 \end{equation}
 
 \subsection{MSS Signature Verification}
