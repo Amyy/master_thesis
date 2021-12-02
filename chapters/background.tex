@@ -222,7 +222,7 @@ The signature $\sigma$ is calculated by applying the one-way function~$f$ to eac
 \subsubsection{W-OTS Verification}
 \label{cha:wots-verification}
 Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see Equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see Equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$.
-
+% somehow introduce the term "winternitz-chain"?
 \begin{equation}
 (f^{(2^w-1)-b_0}(\sigma_0), \cdots, f^{(2^w - 1) - b_{t-1}}(\sigma_{t-1})) \? (y_0, \cdots, y_{t-1})
 \end{equation}
@@ -498,30 +498,21 @@ In summary, one MSS signature contains the following elements:
 	;
 \end{tikzpicture}
 \caption{Example for Merkle signature generation and verification, tree depth $d=3$. The signer generates the Merkle tree and chooses $s=3$, then calculates the signature $\textcolor{cyan_tud}{\sigma_3 = (3, \sigma_{s/OTS},A_3)}$.
-The nodes $H_{0,2}, H_{1,0}, H_{2,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_0, a_1, a_2)$}. After receiving $\sigma_3$, the verifier uses the one-time signature \textcolor{cyan_tud}{$\sigma_{3/OTS}$} to calculate $\textcolor{darkblue_tud}{Y_3}$. This works specifically because W-OTS is used here: Applying the hash function~$h$ for a specific amount of times to $\sigma_3$ automatically generates $Y_3$, see section~\ref{cha:wots-verification}.
+The nodes $H_{0,2}, H_{1,0}, H_{2,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_0, a_1, a_2)$}. After receiving $\sigma_3$, the verifier uses the one-time signature \textcolor{cyan_tud}{$\sigma_{3/OTS}$} to calculate $\textcolor{darkblue_tud}{Y_3}$ by applying the hash function $h$ a specific amount of times to it (see also Section~\ref{cha:wots-verification}).
 Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}{Y_3}$, the verifier can calculate the path \textcolor{darkblue_tud}{path $P_s = (p_0, p_1, p_2, p_3)$}, also indicated by the arrows. If the root $p_3$ calculated by the verifier matches the public key $Y_{MSS}$, the signature $\sigma_3$ is valid.}
 \end{figure}
 
 
 \subsection{MSS Signature Verification}
-For a explanatory depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}.
+When receiving $\sigma_s$ (see equation~\ref{eq:complete_merkle_signature_for_one_Ys}), the verifier uses $\sigma_{s/OTS}$ to calculate $Y_s$. This works specifically because W-OTS is used in combination with the Merkle tree: Applying the hash function $h$ for a specific amount of times to $\sigma_s$ (this is determined by the underlying W-OTS, see section~\ref{cha:wots-verification}) automatically generates $Y_s$.
+Because of the index $s$, the verifier knows the leaf-position of the calculated $Y_s$ in the Merkle tree. 
+In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree: % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
 
-% put this in verifier-section?
-When receiving $\sigma_s$, the verifier calculates the "Winternitz-chain" until $Y_s$. Because of the index $s$, the verifier knows the leaf-position of the calculated $Y_s$ in the Merkle tree. 
-In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree, see Figure~\ref{img:merkle_tree_signature_gen}. % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
-
-
-After receiving the Merkle signature $\sigma_s$, \textcolor{red}{the verifier uses the one-time public key $Y_s$ to verify} % -> wrong, needs to be changed
- the one-time signature $\sigma_{s/OTS}$ of message digest $m$ (see also Equation~\ref{eq:merkle_s/OTS_signature}) with the signature verification algorithm of the corresponding one-time signature scheme.
-%\begin{equation}
-%(\sigma_{s/OTS},m) \rightarrow{verify} 
-%\end{equation}
-Afterwards, the verifier has to check the authenticity of $Y_s$ itself by creating the path $P_s$ from $Y_s$ to the root of the Merkle tree:
 
 \begin{equation}
 P_s = (p_0, \cdots, p_d)
 \end{equation}
-The path $P_s$ is constructed by using the index $s$ and the authentication path $A_s$ (see Figure~\ref{img:merkle_tree_signature_gen}):
+The path $P_s$ is constructed by using the index $s$ and the authentication path $A_s$:
 
 \begin{align}
 \label{eq:merkle_verifier_path_calculation}
@@ -533,7 +524,8 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
 &0 \leq i \leq d  \nonumber 
 \end{align}
-The authentication of the one-time verification key $Y_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$.
+The verification of signature $\sigma_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$. The one-time key $Y_s$ and therefore the one-time signature $\sigma_s/OTS$ are implicitly validated, as $Y_s$ is calculated "on the way" to the root of the Merkle tree by the verifier.
+This section is also explained in detail with a depiction of the Merkle tree in Figure~\ref{img:merkle_tree_signature_gen}.
 
 \section{Leighton-Micali Signature Scheme (LMS)}
 
