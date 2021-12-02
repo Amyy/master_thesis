@@ -291,11 +291,8 @@ Because these values are the same as in the public key $Y$, $\sigma$ is valid.
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
-The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. 
-% Moreover, when using LD-OTS, the verifier needs to know $2n$ elements of $X$, but for W-OTS only the signature is needed. -> eigentlich eins von beiden: X_s komplett in Signatur an verifier schicken, ODER Y_s in Signatur mitschicken.
-
-In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
-
+The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
+% Moreover, when using LD-OTS: All X_s (for signature) + corresponding Y_s are needed. Not enough when verifier knows only the X_s that are needed for OTS-signature, moreover the rest of Y_s are needed (because all "leaves" are needed) to build the merkle tree.
 
 \subsection{MSS Key Generation}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
@@ -387,7 +384,7 @@ Y_{MSS} &= H_{d,0} \nonumber
 \subsection{MSS Signature Generation}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}. 
 To sign a message $M$, the signer needs to generate the signature $\sigma_s$.
-First,the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}) is calculated. Then, by using a chosen one-time signature scheme (here: W-OTS), the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$.
+First, the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}) is calculated. Then, by using a chosen one-time signature scheme (here: W-OTS), the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$.
 
 \begin{equation}
 \label{eq:merkle_s/OTS_signature}
