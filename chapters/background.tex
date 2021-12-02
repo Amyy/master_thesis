@@ -318,7 +318,7 @@ The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS pr
 X_{MSS} &= (X_0, \cdots, X_j, \cdots, X_{2^d - 1} ) \\
 Y_{MSS} &= H_{d,0} \nonumber
 \end{align}
-
+Now, the signer publishes the public key $Y_{MSS}$.
 
 \begin{figure}
 \centering
@@ -506,8 +506,7 @@ Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}
 \subsection{MSS Signature Verification}
 When receiving $\sigma_s$ (see equation~\ref{eq:complete_merkle_signature_for_one_Ys}), the verifier uses $\sigma_{s/OTS}$ to calculate $Y_s$. This works specifically because W-OTS is used in combination with the Merkle tree: Applying the hash function $h$ for a specific amount of times to $\sigma_s$ (this is determined by the underlying W-OTS, see section~\ref{cha:wots-verification}) automatically generates $Y_s$.
 Because of the index $s$, the verifier knows the leaf-position of the calculated $Y_s$ in the Merkle tree. 
-In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree: % explain more detailed that root is made public BEFORE one-time key Y/the signature is made public
-
+In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree: 
 
 \begin{equation}
 P_s = (p_0, \cdots, p_d)
