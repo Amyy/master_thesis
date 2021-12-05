@@ -545,7 +545,9 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 The verification of signature $\sigma_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$. The one-time key $Y_s$ and therefore the one-time signature $\sigma_s/OTS$ are implicitly validated, as $Y_s$ is calculated "on the way" to the root of the Merkle tree by the verifier.
 This section is also explained in detail with a depiction of the Merkle tree in Figure~\ref{img:merkle_tree_signature_gen}.
 
+
 \section{Leighton-Micali Signature Scheme (LMS)}
+% is stateful
 
 \subsection{LMS Key Generation}
 
@@ -555,6 +557,9 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 
 
 \section{Extended Merkle Signature Scheme (XMSS)}
+% is stateful
+xmss main source~\cite{xmss_RFC8391}
+
 
 \subsection{XMSS Key Generation}
 
