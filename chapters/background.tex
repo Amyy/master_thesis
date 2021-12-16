@@ -96,6 +96,7 @@ The Lamport–Diffie one-time signature scheme (LD-OTS) was first proposed by Le
 
 \subsubsection{LD-OTS Key Generation}
 The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
+% !! einfügen, was n für eine Rolle spielt
 
 \begin{equation}
 \label{eq:ldots_sign_key}
@@ -122,7 +123,7 @@ The cryptographic hash function $h$ (see Equation~\ref{eq:basic_hashfunc}) is ap
 \label{eq:hash_message}
 m = h(M) = (h_{0}, \cdots, h_{n-1})
 \end{equation} % Elemente von m ENTWEDER m_i ODER h_i
-For each $h_i \in m$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
+For each bit $h_i \in m$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
 % h_i in m_i umbenennen oder umgekehrt -> konsequent bleiben
 \begin{equation}
 \sigma = \left(
@@ -149,7 +150,7 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme (W-OTS)}
-LD-OTS signatures are efficient to calculate but have a huge size and therefore need a lot of memory. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a huge size. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
 \subsubsection{W-OTS Key Generation}
 \label{sec:WOTS_keygen}
