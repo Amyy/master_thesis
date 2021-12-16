@@ -330,7 +330,6 @@ Y_{MSS} &= H_{d,0} \nonumber
 The signer publishes the public key $Y_{MSS}$.
 
 \begin{figure}
-\label{img:merkle_tree}
 \centering
 % unsichtbare Kante: edge from parent[draw=none]
 \begin{tikzpicture} 
@@ -403,10 +402,12 @@ The signer publishes the public key $Y_{MSS}$.
 	;
 \end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
 \caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digests of their corresponding \textcolor{grey_tud}{one-time public key} (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}). Because W-OTS is used, the signer generates the \textcolor{grey_tud}{public one-time keys} by applying the hash function~$h$ for $2^w-1$ times to the corresponding \textcolor{grey_tud}{private one-time keys $X_i \in X_{MSS}$} (see Equations~\ref{eq:wots-generation-one-time-public-key} and~\ref{eq:xmss_priv_key}).}
+\label{img:merkle_tree}
 \end{figure}
 % soll treehash algo hier auch erklärt werden?
 
 \subsection{MSS Signature Generation}
+\label{sec:mss_sig_gen}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}. 
 To sign a message $M$, the signer needs to generate the signature $\sigma_s$.
 First, the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}) is calculated. Then, by using the chosen one-time signature scheme W-OTS, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$. % somehow: move "s is part of the signature" here / as first sentence, makes more sense than mentioning that it's part of the signature later
@@ -445,7 +446,6 @@ In summary, one MSS signature contains the following elements:
 % ? path h2,0 - h1,0 and h1,1 - h0,0 also with arrows?
 % in caption: "path from leaf to the root" not entirely correct, cyan nodes also part of the path?
 \begin{figure}
-\label{img:merkle_tree_signature_gen}
 \centering
 % unsichtbare Kante: edge from parent[draw=none]
 \begin{tikzpicture} 
@@ -523,6 +523,7 @@ In summary, one MSS signature contains the following elements:
 \caption{Example for Merkle signature generation and verification, tree depth $d=3$. The signer generates the Merkle tree and chooses $s=3$, then calculates the signature $\textcolor{cyan_tud}{\sigma_3 = (3, \sigma_{s/OTS},A_3)}$.
 The nodes $H_{0,2}, H_{1,0}, H_{2,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_0, a_1, a_2)$}. After receiving $\sigma_3$, the verifier uses the one-time signature \textcolor{cyan_tud}{$\sigma_{3/OTS}$} to calculate $\textcolor{darkblue_tud}{Y_3}$ by applying the hash function $h$ a specific amount of times to it (see also Section~\ref{cha:wots-verification}).
 Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}{Y_3}$, the verifier can calculate the path \textcolor{darkblue_tud}{path $P_s = (p_0, p_1, p_2, p_3)$}, also indicated by the arrows. If the root $p_3$ calculated by the verifier matches the public key $Y_{MSS}$, the signature $\sigma_3$ is valid.}
+\label{img:merkle_tree_signature_gen}
 \end{figure}
 
 % insert description of LMS here / "this is basically LMS but LMS also has a seed"
