@@ -95,7 +95,8 @@ The one-way function~$f$ is a hash function that is at least preimage-resistant 
 The Lamport–Diffie one-time signature scheme (LD-OTS) was first proposed by Leslie Lamport in 1979~\cite{lamport_signature_scheme_1979}. 
 
 \subsubsection{LD-OTS Key Generation}
-The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. % n ist security parameter
+The private key X consists of $2n$ bit strings, each of length $n$, chosen at random. As the key size and signature size are dependent on $n$, it is also referred to as security parameter.
+% n ist security parameter
 % !! einfügen, was n für eine Rolle spielt
 
 \begin{equation}
@@ -150,7 +151,8 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme (W-OTS)}
-LD-OTS signatures are efficient to calculate but have a huge size. The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a huge size. % somewhere else explain that huge signature -> need much "memory"-> bad ? or is it obvious
+The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
 \subsubsection{W-OTS Key Generation}
 \label{sec:WOTS_keygen}
