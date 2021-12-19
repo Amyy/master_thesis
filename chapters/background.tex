@@ -192,7 +192,7 @@ y_i \in Y =  f^{2^w-1}(x_i), 0 \leq i \leq t-1
 \begin{equation}
 Y = (y_0, \cdots, y_{t-1})
 \end{equation}
-Each $y_i \in Y$ is a bit string of length $n$. The public key $Y$ has to be published before the signature can be generated.
+Each $y_i \in Y$ is a bit string of length $n$. The public key $Y$ has to be published before the signature can be generated. One value of the public key is corresponding to one full \textit{Winternitz chain}. % maybe introduce Winternitz chain another way?
 
 \subsubsection{W-OTS Signature Generation}
 For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash function~h (see Equation~\ref{eq:basic_hashfunc}) is applied to $M$ (see Equation~\ref{eq:hash_message}). The resulting hash digest $m$ is split into $t_1$ bitstrings of length $w$. If $m$ is not divisible by $w$, it is necessary to add leading zeros to $m$ before splitting.
@@ -201,10 +201,7 @@ For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash func
 \label{eq:hash_digest_split}
 m = m_0 \concat m_1 \concat \cdots \concat m_{t_1-1}
 \end{equation}
-Each bitstring $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$.
-% checksum t2 Teile der Länge w teilbar
-
-% Why checksum is necessary: This checksum is needed because an attacker can freely advance any of the Winternitz chains.  That is, if this checksum were not present, then an attacker who could find a hash that has every digit larger than the valid hash could replace it (and adjust the Winternitz chains).-> citation: RFC of LMS (https://www.rfc-editor.org/rfc/rfc8554.html#section-4)
+Each bitstring $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$. A detailed example why the checksum is necessary is shown at section~\ref{sec:checksum_explained}. % ! reference to subsubsection doesn't work: https://tex.stackexchange.com/questions/198800/how-to-number-and-cross-reference-subsubsection-level-headers and https://blog.chapagain.com.np/latex-numbering-subsubsection-and-showing-it-in-table-of-contents/
 
 \begin{equation}
 \label{eq:checksum_calculation}
@@ -222,7 +219,7 @@ B &= m \concat c  \\
 &= m_0 \concat \cdots \concat m_{t_1 - 1} \concat c_0 \concat \cdots \concat c_{t_2 - 1} \nonumber \\
 &= b_0 \concat \cdots \concat b_{t-1} \nonumber
 \end{align}
-The signature $\sigma$ is calculated by applying the one-way function~$f$ to each part of the private key $X$ (see Equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount of times the hash function $f$ is applied to the corresponding $x_i \in X$.
+The signature $\sigma$ is calculated by applying the one-way function~$f$ to each part of the private key $X$ (see Equation~\ref{eq:wots_privkey}) several times: The element $b_i \in B$ determines the amount of times the hash function $f$ is applied to the corresponding $x_i \in X$. One element of the signature is also referred to as one \textit{Winternitz chain}.
 
 \begin{equation}
 \sigma = (f^{b_0}(x_0), f^{b_1}(x_1), \cdots, f^{b_{t-1}}(x_{t-1})) = (\sigma_0, \cdots, \sigma_{t-1})
@@ -230,8 +227,8 @@ The signature $\sigma$ is calculated by applying the one-way function~$f$ to eac
 
 \subsubsection{W-OTS Verification}
 \label{cha:wots-verification}
-Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see Equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see Equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$.
-% somehow introduce the term "winternitz-chain"?
+Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see Equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see Equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$. This can also be described as advancing each Winternitz chain in the signature by applying~$f$, until the  values of the public key are reached.
+
 \begin{equation}
 (f^{(2^w-1)-b_0}(\sigma_0), \cdots, f^{(2^w - 1) - b_{t-1}}(\sigma_{t-1})) \? (y_0, \cdots, y_{t-1})
 \end{equation}
@@ -295,14 +292,25 @@ $( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^
 
 \end{enumerate}
 
-% dann überleiten -> merkle trees, diese benutzen um OTS zu "Mehrmaligen" Signatursystemen zu machen 
+\subsubsection{W-OTS Checksum Example}
+\label{sec:checksum_explained}
+In this section, the necessity of the W-OTS checksum (see also Equation~\ref{eq:checksum_calculation}) is explained with an example. 
+The attack prevented by the checksum is a \textit{adaptive chosen-message attack}: It is possible for the attacker to generate new messages with matching signatures which depend on previously obtained signatures and messages~\cite{cha:bg_signature_schemes_book_menezes2018_1997}. 
+After obtaining a message and corresponding signature, the idea behind the attack is to increase the bits of the received message to generate a new message.Then, the hash function is applied respectively to the corresponding digits in the signature, increasing the Winternitz chain. Then, without the checksum, a new valid signature would be generated for the message.
+
+% - LD-OTS does not need checksum because only one hash function call necessary.
+%For a general proof, see https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
+
+% Why checksum is necessary: This checksum is needed because an attacker can freely advance any of the Winternitz chains.  That is, if this checksum were not present, then an attacker who could find a hash that has every digit larger than the valid hash could replace it (and adjust the Winternitz chains).-> citation: RFC of LMS (https://www.rfc-editor.org/rfc/rfc8554.html#section-4)
+% genaue beschreibung checksum bsp angriff: https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
+% https://crypto.stackexchange.com/questions/31696/winternitz-signature-in-standard-model -> stackoverflow frage + antwort genau dazu
 
 \section{Merkle Signature Scheme (MSS)} 
 %!! Zitierung fehlt von Buchmann
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
-To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
+To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair, the \textit{Merkle Signature Scheme (MSS)}. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
-The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. In the following sections, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
+The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. Therefore, the chosen one-time signature scheme for MSS in this chapter is W-OTS. The cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
 % Moreover, when using LD-OTS: All X_s (for signature) + corresponding Y_s are needed. Not enough when verifier knows only the X_s that are needed for OTS-signature, moreover the rest of Y_s are needed (because all "leaves" are needed) to build the merkle tree.
 
 \subsection{MSS Key Generation}
@@ -553,6 +561,9 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 \end{align}
 The verification of signature $\sigma_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$. The one-time key $Y_s$ and therefore the one-time signature $\sigma_s/OTS$ are implicitly validated, as $Y_s$ is calculated "on the way" to the root of the Merkle tree by the verifier.
 This section is also explained in detail with a depiction of the Merkle tree in Figure~\ref{img:merkle_tree_signature_gen}.
+
+\subsection{Leighton-Micali Signature Scheme (LMS)}
+
 
 
 \section{Extended Merkle Signature Scheme (XMSS)}
