@@ -240,6 +240,7 @@ f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
 \end{gather}
 
 \subsubsection{W-OTS Example Calculation}
+\label{sec:w-ots_example_calc}
 This section contains an example calculation of W-OTS, including key generation, signature generation, and signature verification.
 % ! explain that example one-way function is not cryptographic secure, is only example
 
@@ -295,10 +296,28 @@ $( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^
 \subsubsection{W-OTS Checksum Example}
 \label{sec:checksum_explained}
 In this section, the necessity of the W-OTS checksum (see also Equation~\ref{eq:checksum_calculation}) is explained with an example. 
-The attack prevented by the checksum is a \textit{adaptive chosen-message attack}: It is possible for the attacker to generate new messages with matching signatures which depend on previously obtained signatures and messages~\cite{cha:bg_signature_schemes_book_menezes2018_1997}. 
-After obtaining a message and corresponding signature, the idea behind the attack is to increase the bits of the received message to generate a new message.Then, the hash function is applied respectively to the corresponding digits in the signature, increasing the Winternitz chain. Then, without the checksum, a new valid signature would be generated for the message.
+The attack prevented by the checksum is an \textit{adaptive chosen-message attack}: It is possible for the attacker to generate new messages with matching signatures which depend on previously obtained signatures and messages~\cite{cha:bg_signature_schemes_book_menezes2018_1997}. 
+After obtaining a message and corresponding signature, the idea behind the attack is to increase the bits of the received message to generate a new message. The hash function is applied respectively to the corresponding digits in the signature, increasing the Winternitz chain. Then, without the checksum, a new valid signature would be generated for the message. For this example, the same parameters for W-OTS are used as in the the section before. % (see section~\ref{sec:w-ots_example_calc}. again_: need correct subsubsection label
 
-% - LD-OTS does not need checksum because only one hash function call necessary.
+\begin{enumerate}
+\item We assume the attacker knows the message digest $m = 101$, the corresponding signature $\sigma = (\sigma_0, \sigma_1, \sigma_2, \sigma_3)$ and the parameters $w=2, n=3, Y, f$ of the example in the section before. The attacker can get this information because a digital signature system does not ensure confidentiality of the message or the parameters, the premise is the secrecy of the private key. The goal of the attacker is to forge a signature $\sigma' = (\sigma_0', \sigma_1', \sigma_2', \sigma_3')$ to get a valid signature for a message $m'$ chosen by the attacker. 
+% (e.g. the attacker was also the receiver of the message or intercepted the channel where the message was sent)
+
+\item The attacker calculates $m  = m_0 \concat m_1 = 01 \concat 01$, $c = c_0 \concat c_1 = 01 \concat 10$ and therefore $B =  b_0 \concat b_1 \concat b_2 \concat b_3 = 01 \concat 01 \concat 01 \concat 10$ (see steps 1-6 in section before).
+
+\item The original message $m = 101$ is increased by one: $m' = 111$. Make $m'$ divisible by $w = 2$, insert leading zero: $m' = m_0'\concat m_1' = 01 \concat 11$. Calculate checksum $c' = (2^w - m_0') + (2^w - m_1') = (4-1)+(4-3)=4$.
+Insert leading zero to $c'$ to make it divisible by $w$: $c' = c_0' \concat c_1' = 01 \concat 00$. Therefore, $B' = b_0' \concat b_1' \concat b_2' \concat b_3' = 01 \concat 11 \concat 01 \concat 00$.
+
+Now, the attacker can forge $\sigma_0', \sigma_1'$ of the signature $\sigma'$:
+As $b_0 = b_0' = 01$, $\sigma_0' = \sigma_0$.
+Because the difference between $b_1 = 01$ and $b_1' = 11$ is $2$, applying $f$ two more times to $\sigma_1$ leads to $\sigma_1'$: $f^2(\sigma_1) = \sigma_1'$.
+
+Notably, $\sigma_0, \sigma_1$ depend only on the message bits $m_0, m_1$, not on the checksum. Therefore, the attacker could forge a signature for $m'$ without the checksum. But because of the checksum bit $c_3 = b_3 = 10, c_3' = b_3' = 00$, $b_3 > b_3'$, it is not possible to calculate $\sigma_3$: The attacker would have to calculate $f^{-2}(\sigma_3)$, that is finding two times a preimage to $\sigma_3$. As long as the hash function $f$ is preimage resistant, which is assumed (see also Equation~\ref{eq:one-way-func}), this is not possible. The attacker can not forge the complete signature $\sigma'$.
+
+\end{enumerate}
+For a general proof of security of the checksum, see Section 9.3 in McGrew et al.~\cite{LMS_RFC8554}.
+For LD-OTS, the checksum is not necessary because only one hash function call is used to get to the public key $Y$. It is not possible to generate another valid signature $\sigma'$ by applying the hash function to the known signature $\sigma$ again.
+
 %For a general proof, see https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
 
 % Why checksum is necessary: This checksum is needed because an attacker can freely advance any of the Winternitz chains.  That is, if this checksum were not present, then an attacker who could find a hash that has every digit larger than the valid hash could replace it (and adjust the Winternitz chains).-> citation: RFC of LMS (https://www.rfc-editor.org/rfc/rfc8554.html#section-4)
