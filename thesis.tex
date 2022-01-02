@@ -14,7 +14,6 @@
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 % https://tex.stackexchange.com/questions/42271/floor-and-ceiling-functions#42274
 \newcommand{\?}{\stackrel{?}{=}} % =? stacked symbol
-\usepackage{tikz} % drawing in latex
 \usepackage{microtype} % automatically fix overfull hboxes
 
 % custom colors - TU Dresden colors
@@ -26,6 +25,12 @@
 
 % necessary to define concatenation-operator, because \parallel symbol doesn't work in tu dresden template
 \DeclareMathOperator\concat{|\!\!|}
+
+% drawing in latex
+% https://tex.stackexchange.com/questions/241232/creating-dots-lines-brackets-in-tree-with-tikz
+\usepackage{tikz}
+%\usepackage{tikz-qtree} -> destroys current tikz-pictures, because changes arrow-tips
+\usetikzlibrary{trees,calc,arrows.meta,positioning,decorations.pathreplacing,bending}
 
 \begin{document}
 
