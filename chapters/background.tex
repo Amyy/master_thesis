@@ -585,7 +585,8 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme. % main advantage: hashfunction does not need collission resistance, bitmasks are used to achieve this.
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). XMSS uses WOTS+, a version of WOTS which requires bitmasks.
+% main advantage: hashfunction does not need collission resistance, bitmasks are used to achieve this.
 
 % statful: Because of the underlying one-time signature schemes, xmss is stateful, meaning the secret key changes over time.  If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.)
 
