@@ -1,4 +1,4 @@
-<\chapter{Background}
+\chapter{Background}
 \label{cha:background}
 This chapter addresses the scientific background needed for this work. First, the general concept of digital signature systems and hash functions are elaborated. Afterwards, the most common concepts for hash-based digital signature systems are explained. The presented hash-based schemes are the \textit{Lamport-Diffie one-time signature scheme~(LD-OTS)}, the \textit{Winternitz one-time signature scheme~(W-OTS)}, the \textit{Merkle signature scheme~(MSS)} and the \textit{extended Merkle signature scheme~(XMSS)}.
 
@@ -316,7 +316,7 @@ Notably, $\sigma_0, \sigma_1$ depend only on the message bits $m_0, m_1$, not on
 
 \end{enumerate}
 For a general proof of security of the checksum, see Section 9.3 in McGrew et al.~\cite{LMS_RFC8554}.
-For LD-OTS, the checksum is not necessary because only one hash function call is used to get to the public key $Y$. It is not possible to generate another valid signature $\sigma'$ by applying the hash function to the known signature $\sigma$ again.
+For LD-OTS, the checksum is not necessary because only one hash function call is used to get to the public key $Y$. Therefore, it is not possible to generate another valid signature $\sigma'$ by applying the hash function to the known signature $\sigma$ again.
 
 %For a general proof, see https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
 
@@ -325,6 +325,7 @@ For LD-OTS, the checksum is not necessary because only one hash function call is
 % https://crypto.stackexchange.com/questions/31696/winternitz-signature-in-standard-model -> stackoverflow frage + antwort genau dazu
 
 \section{Merkle Signature Scheme (MSS)} 
+\label{sec:mss}
 %!! Zitierung fehlt von Buchmann
 The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair, the \textit{Merkle Signature Scheme (MSS)}. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
@@ -585,12 +586,15 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional bitmasks in the Merkle tree.
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional bitmasks in the Merkle tree, see Figure~\ref{img:example_xmss_minitree}.
+% Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
+The bitmasks (and the keys for the hash function $h$) % explain / check all the used hashfunctions
+are generated from a public seed that is part of the public key using the pseudorandom function $PRF$. The XMSS public key is the root of the XMSS tree and with the seed.
 
+% Tabelle mit Parametern: SEED, idx (Blatt index), w, n, hashfunctions...
 
-% main advantage: hashfunction does not need collission resistance, bitmasks are used to achieve this.
 % XMSS uses WOTS+, a version of WOTS which requires bitmasks.
-% statful: Because of the underlying one-time signature schemes, xmss is stateful, meaning the secret key changes over time.  If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.)
+% statful: Because of the underlying one-time signature schemes, xmss is stateful, meaning the secret key changes over time.  If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.) / MSS is a stateful signature scheme, meaning that the private key changes with every signature generation.
 
 % why xmss? why not just use LMS -> explain difference: 
 % collission resistance at hash function not necessary -> use bitmasks for that
@@ -600,89 +604,13 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
 % - hypertress ? nicht SPHINCS?
 % - nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden
 
-% -------- EXAMPLE GRAPH -------------------
-%\begin{figure}
-%\centering
-%% unsichtbare Kante: edge from parent[draw=none]
-% 
-%\begin{tikzpicture}[
-%    level/.style={sibling distance=40mm/#1}
-%    ]
-%
-%\node (z){root} 
-%  child {node (a) {node1}
-%    child {node  (b) {node3}
-%      child {node (b1) {$\vdots$} 
-%       child {node (b11) {leaf0}}
-%      }
-%      child {node (b2) {$\vdots$} 
-%       child {node (b12) {leaf1}}
-%      }
-%    }
-%    child {node (g) {node4}
-%      child {node (g1) {$\vdots$}
-%       child {node (g11) {...}}
-%      }
-%      child {node (g2) {$\vdots$} 
-%       child {node (g12) {...}}
-%      }
-%    }
-%  }
-%    child {node (d) {node2}
-%      child {node  (e) {node5}
-%        child {node (e1) {$\vdots$} 
-%         child {node (e11) {...}}
-%        }
-%        child {node (e2) {$\vdots$} 
-%         child {node (e12) {...}}
-%        }
-%      }
-%      child {node (f) {node6}
-%        child {node (f1) {$\vdots$} 
-%         child {node (f11) {...}}
-%        }
-%        child {node (f2) {$\vdots$} 
-%         child {node (f12) {...}
-%         }
-%         }
-%  }
-%};
-%
-%% cn's on left side of tree
-%\node[left=5 of z] (ln1) {level0} 
-%    child {node (ln2) {level1} edge from parent [draw=none]
-%        child {node (ln3) {level2} edge from parent [draw=none]
-%            child {node (ln4) {} edge from parent [draw=none]
-%                child {node (ln5) {level leaves} edge from parent [draw=none] }}}}; 
-%
-%% punkte zw leaves
-%%\path (b12.north east) -- (g11.north west) node [midway] {$\cdots$};
-%%\path (e12.north east) -- (f11.north west) node [midway] {$\cdots$};
-%
-%\coordinate (cd1) at ($(f12)+(1,0)$);
-%\coordinate (nb1) at ($(g12)!.5!(e11)$);
-%
-%% RECHTE Seite Pfeil+log(n)
-%\draw[thick,<->,] 
-%% near start: platziert Label1 unten, fill=white: Linie wird unterbrochen für Label1
-%    (cd1) -- (cd1|-z.east) node [near start, fill=white] {Label1};
-%
-%\draw[dashed,thick] % blue dotted line from cn (root) --> cn (left side)
-%    ($(z.west)+(-1em,0)$) -- (ln1);
-%\draw[dashed,thick,->] % % blue dotted line from cn/2 --> cn (left
-%    ($(a.west)+(-1em,0)$) -- (ln2.east);
-%%\draw[blue!70!black,dashed,thick,->]    
-%%    ($(b.west)+(-1em,0)$) -- (ln3);
-%%\draw[blue!70!black,dashed,thick,->]    
-%%    ($(b11.west)+(-1em,0)$) -- (ln5);
-%
-%\draw[thick,decorate,decoration={brace,amplitude=10pt,mirror},-,-{latex[flex=1pt]}] (b11.south west) -- (f12.south east); % curly bracket at leaves!
-%
-%\end{tikzpicture}
-%\caption{This is an example tree.}
-%\label{img:example_tree}
-%\end{figure}
-% ---------------- END EXAMPLE GRAPH ---------------------------
+\subsection{XMSS Key Generation}
+
+% source https://eprint.iacr.org/2011/484.pdf angeben / oder zu allgemein und nicht nötig?
+\begin{equation}
+\label{eq:xmss_bitmasks}
+H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right})
+\end{equation}
 
 % explain bitmasks on xmss with little tree image:
 \begin{figure}
@@ -713,24 +641,224 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
     ($(b.east)$) -- (rb);	
 
 \end{tikzpicture}
-\caption{One example node of an xmss tree. The node $H_{i,j}$ is calculated as follows: $h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right})$. }
-\label{img:example_minitree}
+\caption{An example parent node $H_{i,j}$ with the corresponding children $H_{i-1,2j},H_{i-1,2j+1}$ of a XMSS tree. The node $H_{i,j}$ is calculated by adding two bitmasks $b_{i,left}, b_{i,right}$ to its children. The result is concatenated and used as input for the hashfunction~$h$ (see Equation~\ref{eq:xmss_bitmasks}).}
+\label{img:example_xmss_minitree}
 \end{figure}
 
-
-\subsection{L-Tree}
-
-\subsection{XMSS Key Generation}
-
 \subsection{XMSS Signature Generation}
-
 % Quelle: RFC xmss
 % idx = index of next unused WOTS keypair/leaf
 % A_s = authpath, außerdem: bytestring r für randomized message hashing -> wirklich hier nötig?
+
 \begin{equation}
 \label{eq:xmss_sign}
 \sigma_{XMSS} = (idx, \sigma_{OTS}, A_s, ...) 
 \end{equation}
+
+
+% complete xmss example graph
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+[	
+	level 1/.style = {sibling distance = 8cm},
+	level 2/.style = {sibling distance = 4cm},
+	level 3/.style = {sibling distance = 2cm},
+    level 4/.style = {sibling distance = 1cm},
+    level 5/.style = {sibling distance = 0.5cm},
+	edge from parent fork down
+]
+% Merkle Tree
+\node(root)[]{public key}
+	child{node[circle, draw]{}
+		child{node[circle, draw]{}
+			child{node(left_lowest_merkle)[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}					
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}					
+				}		
+			}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}					
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}				
+			}		
+		}
+		child{node[circle, draw]{}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}				
+			}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}				
+			}		
+		}
+	}
+	child{node[circle, draw]{}
+		child{node[circle, draw]{}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}
+				child{node[circle, draw]{}				
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}		
+				}
+			}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}										
+				}
+				child{node[circle, draw]{}	
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}					
+				}				
+			}		
+		}
+		child{node[circle, draw]{}
+			child{node[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}				
+			}
+			child{node(lowest_rightest_merkle)[circle, draw]{}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}						
+				}
+				child{node[circle, draw]{}
+					child{node[circle, draw, fill=black]{}}
+					child{node[circle, draw, fill=black]{}}					
+				}				
+			}		
+		}
+	};
+	
+\coordinate (m_bracket_south) at ($(lowest_rightest_merkle.south east)+(1,0)$);
+
+% right side: arrow+label
+\draw[decorate,decoration={brace,mirror,amplitude=3mm}] 
+% near start: place Label1 low, fill=white: break arrow-line for font "merkle tree"
+(m_bracket_south) -- (m_bracket_south|-root.east) node [pos=0.5,right=0.3] {Merkle Tree};
+
+\draw[thick]
+($(left_lowest_merkle.south west)-(0,0.2)$) -- ($(m_bracket_south)-(0,0.2)$);
+\end{tikzpicture}
+\caption{This is an complete XMSS tree with the parameters $d=3$ (height of the Merkle tree), $l=4$ (amount of Winternitz one-time keys for one Merkle node / amount of leaves for one L-Tree).}
+\label{img:xmss_complete_tree_example}
+\end{figure}
+
+
+% -------- EXAMPLE GRAPH -------------------
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+    level/.style={sibling distance=40mm/#1}
+    ]
+
+\node (z){z} 
+  child {node (a) {node1}
+    child {node  (b) {node3}
+      child {node (b1) {$\vdots$} 
+       child {node (b11) {b11}}
+      }
+      child {node (b2) {$\vdots$} 
+       child {node (b12) {leaf1}}
+      }
+    }
+    child {node (g) {node4}
+      child {node (g1) {$\vdots$}
+       child {node (g11) {...}}
+      }
+      child {node (g2) {$\vdots$} 
+       child {node (g12) {g12}}
+      }
+    }
+  }
+    child {node (d) {node2}
+      child {node  (e) {node5}
+        child {node (e1) {$\vdots$} 
+         child {node (e11) {e11}}
+        }
+        child {node (e2) {$\vdots$} 
+         child {node (e12) {...}}
+        }
+      }
+      child {node (f) {node6}
+        child {node (f1) {$\vdots$} 
+         child {node (f11) {...}}
+        }
+        child {node (f2) {$\vdots$} 
+         child {node (f12) {f12}
+         }
+         }
+  }
+};
+
+% cn's on left side of tree
+\node[left=5 of z] (ln1) {level0} 
+    child {node (ln2) {level1} edge from parent [draw=none]
+        child {node (ln3) {level2} edge from parent [draw=none]
+            child {node (ln4) {} edge from parent [draw=none]
+                child {node (ln5) {level leaves} edge from parent [draw=none] }}}}; 
+
+% punkte zw leaves
+%\path (b12.north east) -- (g11.north west) node [midway] {$\cdots$};
+%\path (e12.north east) -- (f11.north west) node [midway] {$\cdots$};
+
+\coordinate (cd1) at ($(f12)+(1,0)$);
+\coordinate (nb1) at ($(g12)!.5!(e11)$);
+
+% RECHTE Seite Pfeil+Label1
+\draw[thick,<->,] 
+% near start: platziert Label1 unten, fill=white: Linie wird unterbrochen für Label1
+    (cd1) -- (cd1|-z.east) node [near start, fill=white] {Label1};
+
+\draw[dashed,thick] % dotted line from cn (root) --> cn (left side)
+    ($(z.west)+(-1em,0)$) -- (ln1);
+\draw[dashed,thick,->] % % blue dotted line from cn/2 --> cn (left
+    ($(a.west)+(-1em,0)$) -- (ln2.east);
+%\draw[blue!70!black,dashed,thick,->]    
+%    ($(b.west)+(-1em,0)$) -- (ln3);
+%\draw[blue!70!black,dashed,thick,->]    
+%    ($(b11.west)+(-1em,0)$) -- (ln5);
+
+\draw[thick,decorate,decoration={brace,amplitude=10pt,mirror},-,-{latex[flex=1pt]}] (b11.south west) -- (f12.south east); % curly bracket at leaves!
+
+\end{tikzpicture}
+\caption{This is an example tree.}
+\label{img:example_tree}
+\end{figure}
+% ---------------- END EXAMPLE GRAPH ---------------------------
 
 
 \subsection{XMSS Signature Verification}
