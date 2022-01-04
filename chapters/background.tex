@@ -666,6 +666,7 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 	level 3/.style = {sibling distance = 2cm},
     level 4/.style = {sibling distance = 1cm},
     level 5/.style = {sibling distance = 0.5cm},
+    level 6/.style = {circle,draw,fill=cyan_tud},
 	edge from parent fork down
 ]
 % Merkle Tree
@@ -674,44 +675,46 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 		child{node[circle, draw]{}
 			child{node(left_lowest_merkle)[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}}					
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}					
 				}		
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}					
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}				
 			}		
 		}
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}				
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}				
 			}		
 		}
@@ -720,44 +723,44 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}
 				child{node[circle, draw]{}				
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}		
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}		
 				}
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}										
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}										
 				}
 				child{node[circle, draw]{}	
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}					
 				}				
 			}		
 		}
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}				
 			}
 			child{node(lowest_rightest_merkle)[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=black]{}}
-					child{node[circle, draw, fill=black]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}}
+					child{node[circle, draw, fill=darkblue_tud]{}}					
 				}				
 			}		
 		}
