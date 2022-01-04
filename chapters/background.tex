@@ -585,9 +585,11 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). XMSS uses WOTS+, a version of WOTS which requires bitmasks.
-% main advantage: hashfunction does not need collission resistance, bitmasks are used to achieve this.
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional bitmasks in the Merkle tree.
 
+
+% main advantage: hashfunction does not need collission resistance, bitmasks are used to achieve this.
+% XMSS uses WOTS+, a version of WOTS which requires bitmasks.
 % statful: Because of the underlying one-time signature schemes, xmss is stateful, meaning the secret key changes over time.  If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.)
 
 % why xmss? why not just use LMS -> explain difference: 
@@ -596,90 +598,124 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
 % XMSS^MT: a multi-tree variant of XMSS -> even necessary to explain this?
 
 % - hypertress ? nicht SPHINCS?
-% - nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden (herausstellen, was unterschied zu merkle trees ist)
+% - nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden
 
+% -------- EXAMPLE GRAPH -------------------
+%\begin{figure}
+%\centering
+%% unsichtbare Kante: edge from parent[draw=none]
+% 
+%\begin{tikzpicture}[
+%    level/.style={sibling distance=40mm/#1}
+%    ]
+%
+%\node (z){root} 
+%  child {node (a) {node1}
+%    child {node  (b) {node3}
+%      child {node (b1) {$\vdots$} 
+%       child {node (b11) {leaf0}}
+%      }
+%      child {node (b2) {$\vdots$} 
+%       child {node (b12) {leaf1}}
+%      }
+%    }
+%    child {node (g) {node4}
+%      child {node (g1) {$\vdots$}
+%       child {node (g11) {...}}
+%      }
+%      child {node (g2) {$\vdots$} 
+%       child {node (g12) {...}}
+%      }
+%    }
+%  }
+%    child {node (d) {node2}
+%      child {node  (e) {node5}
+%        child {node (e1) {$\vdots$} 
+%         child {node (e11) {...}}
+%        }
+%        child {node (e2) {$\vdots$} 
+%         child {node (e12) {...}}
+%        }
+%      }
+%      child {node (f) {node6}
+%        child {node (f1) {$\vdots$} 
+%         child {node (f11) {...}}
+%        }
+%        child {node (f2) {$\vdots$} 
+%         child {node (f12) {...}
+%         }
+%         }
+%  }
+%};
+%
+%% cn's on left side of tree
+%\node[left=5 of z] (ln1) {level0} 
+%    child {node (ln2) {level1} edge from parent [draw=none]
+%        child {node (ln3) {level2} edge from parent [draw=none]
+%            child {node (ln4) {} edge from parent [draw=none]
+%                child {node (ln5) {level leaves} edge from parent [draw=none] }}}}; 
+%
+%% punkte zw leaves
+%%\path (b12.north east) -- (g11.north west) node [midway] {$\cdots$};
+%%\path (e12.north east) -- (f11.north west) node [midway] {$\cdots$};
+%
+%\coordinate (cd1) at ($(f12)+(1,0)$);
+%\coordinate (nb1) at ($(g12)!.5!(e11)$);
+%
+%% RECHTE Seite Pfeil+log(n)
+%\draw[thick,<->,] 
+%% near start: platziert Label1 unten, fill=white: Linie wird unterbrochen für Label1
+%    (cd1) -- (cd1|-z.east) node [near start, fill=white] {Label1};
+%
+%\draw[dashed,thick] % blue dotted line from cn (root) --> cn (left side)
+%    ($(z.west)+(-1em,0)$) -- (ln1);
+%\draw[dashed,thick,->] % % blue dotted line from cn/2 --> cn (left
+%    ($(a.west)+(-1em,0)$) -- (ln2.east);
+%%\draw[blue!70!black,dashed,thick,->]    
+%%    ($(b.west)+(-1em,0)$) -- (ln3);
+%%\draw[blue!70!black,dashed,thick,->]    
+%%    ($(b11.west)+(-1em,0)$) -- (ln5);
+%
+%\draw[thick,decorate,decoration={brace,amplitude=10pt,mirror},-,-{latex[flex=1pt]}] (b11.south west) -- (f12.south east); % curly bracket at leaves!
+%
+%\end{tikzpicture}
+%\caption{This is an example tree.}
+%\label{img:example_tree}
+%\end{figure}
+% ---------------- END EXAMPLE GRAPH ---------------------------
+
+% explain bitmasks on xmss with little tree image:
 \begin{figure}
 \centering
-% unsichtbare Kante: edge from parent[draw=none]
- 
-\begin{tikzpicture}[
-    level/.style={sibling distance=40mm/#1}
-    ]
+\begin{tikzpicture}[edge from parent fork down]
+\node(root){$H_{i,j}$}
+	child{node[rectangle, draw](root2){Hashfunction $h$} edge from parent [<-]
+		child {node(a)[circle, draw] {\tiny XOR} edge from parent [<-]
+			child {node(c) {$H_{i-1,2j}$}}
+		}
+		child{node(b)[circle, draw] {\tiny XOR} edge from parent [<-]
+			child{node(d) {$H_{i-1,2j+1}$}}	
+		}
+	};
+	
+% left bitmask	
+\node[left=1 of a] (la) {$b_{i,left}$}; 
 
-\node (z){root} 
-  child {node (a) {node1}
-    child {node  (b) {node3}
-      child {node (b1) {$\vdots$} 
-       child {node (b11) {leaf0}}
-      }
-      child {node (b2) {$\vdots$} 
-       child {node (b12) {leaf1}}
-      }
-    }
-    child {node (g) {node4}
-      child {node (g1) {$\vdots$}
-       child {node (g11) {...}}
-      }
-      child {node (g2) {$\vdots$} 
-       child {node (g12) {...}}
-      }
-    }
-  }
-    child {node (d) {node2}
-      child {node  (e) {node5}
-        child {node (e1) {$\vdots$} 
-         child {node (e11) {...}}
-        }
-        child {node (e2) {$\vdots$} 
-         child {node (e12) {...}}
-        }
-      }
-      child {node (f) {node6}
-        child {node (f1) {$\vdots$} 
-         child {node (f11) {...}}
-        }
-        child {node (f2) {$\vdots$} 
-         child {node (f12) {...}
-         }
-         }
-  }
-};
+% right bitmask
+\node[right=1 of b] (rb) {$b_{i,right}$};
 
-% cn's on left side of tree
-\node[left=5 of z] (ln1) {level0} 
-    child {node (ln2) {level1} edge from parent [draw=none]
-        child {node (ln3) {level2} edge from parent [draw=none]
-            child {node (ln4) {} edge from parent [draw=none]
-                child {node (ln5) {level leaves} edge from parent [draw=none] }}}}; 
+% arrow from left bitmask to left XOR
+\draw[<-] %line from la (left bitmask) -> left XOR
+    ($(a.west)$) -- (la);	
 
-% punkte zw leaves
-%\path (b12.north east) -- (g11.north west) node [midway] {$\cdots$};
-%\path (e12.north east) -- (f11.north west) node [midway] {$\cdots$};
-
-\coordinate (cd1) at ($(f12)+(1,0)$);
-\coordinate (nb1) at ($(g12)!.5!(e11)$);
-
-% RECHTE Seite Pfeil+log(n)
-\draw[thick,<->,] 
-% near start: platziert Label1 unten, fill=white: Linie wird unterbrochen für Label1
-    (cd1) -- (cd1|-z.east) node [near start, fill=white] {Label1};
-
-\draw[dashed,thick] % blue dotted line from cn (root) --> cn (left side)
-    ($(z.west)+(-1em,0)$) -- (ln1);
-\draw[dashed,thick,->] % % blue dotted line from cn/2 --> cn (left
-    ($(a.west)+(-1em,0)$) -- (ln2.east);
-%\draw[blue!70!black,dashed,thick,->]    
-%    ($(b.west)+(-1em,0)$) -- (ln3);
-%\draw[blue!70!black,dashed,thick,->]    
-%    ($(b11.west)+(-1em,0)$) -- (ln5);
-
-\draw[thick,decorate,decoration={brace,amplitude=10pt,mirror},-,-{latex[flex=1pt]}] (b11.south west) -- (f12.south east); % curly bracket at leaves!
+% arrow from right bitmask to right XOR
+\draw[<-] %line from rb (right bitmask) -> right XOR
+    ($(b.east)$) -- (rb);	
 
 \end{tikzpicture}
-\caption{This is an example tree.}
-\label{img:example_tree}
+\caption{One example node of an xmss tree. The node $H_{i,j}$ is calculated as follows: $h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right})$. }
+\label{img:example_minitree}
 \end{figure}
-
 
 
 \subsection{L-Tree}
