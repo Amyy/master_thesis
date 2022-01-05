@@ -3,7 +3,7 @@
 This chapter addresses the scientific background needed for this work. First, the general concept of digital signature systems and hash functions are elaborated. Afterwards, the most common concepts for hash-based digital signature systems are explained. The presented hash-based schemes are the \textit{Lamport-Diffie one-time signature scheme~(LD-OTS)}, the \textit{Winternitz one-time signature scheme~(W-OTS)}, the \textit{Merkle signature scheme~(MSS)} and the \textit{extended Merkle signature scheme~(XMSS)}.
 
 \section{Digital Signature Schemes}
-% ! digital signature scheme -> assymetrisch (immer?) 
+% ! digital signature scheme -> assymetris ch (immer?) 
 A \textit{digital signature scheme} uses a set of rules and a set of parameters to verify the identity of the originator, the integrity of data and non-repudiation.~\cite{cha:bg_digital_sign_schemes_NIST_standard1992} 
 % Non-repudiation: It prevents an entity from denying previous commitments or actions.
 % Integrity: Guarding against improper information modification or destruction, and includes ensuring information non-repudiation and authenticity -> https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-18r1.pdf
@@ -678,43 +678,73 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 					child{node[circle, draw, fill=darkblue_tud]{}
 						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
 					}
-					child{node[circle, draw, fill=darkblue_tud]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}
+					}					
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}					
 				}		
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}					
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}				
 			}		
 		}
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}				
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}				
 			}		
 		}
@@ -723,44 +753,76 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}
 				child{node[circle, draw]{}				
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}		
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}		
 				}
 			}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}										
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}										
 				}
 				child{node[circle, draw]{}	
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}					
 				}				
 			}		
 		}
 		child{node[circle, draw]{}
 			child{node[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}				
 			}
 			child{node(lowest_rightest_merkle)[circle, draw]{}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}						
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}						
 				}
 				child{node[circle, draw]{}
-					child{node[circle, draw, fill=darkblue_tud]{}}
-					child{node[circle, draw, fill=darkblue_tud]{}}					
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}
+					child{node[circle, draw, fill=darkblue_tud]{}
+						child{node[circle,fill=cyan_tud]{} edge from parent[<-, dashed]}					
+					}					
 				}				
 			}		
 		}
@@ -776,7 +838,7 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 \draw[thick]
 ($(left_lowest_merkle.south west)-(0,0.2)$) -- ($(m_bracket_south)-(0,0.2)$);
 \end{tikzpicture}
-\caption{This is an complete XMSS tree with the parameters $d=3$ (height of the Merkle tree), $l=4$ (amount of Winternitz one-time keys for one Merkle node / amount of leaves for one L-Tree).}
+\caption{This is an complete XMSS tree with the parameters $d=3$ (height of the Merkle tree). The amount of Winternitz one-time keys for one Merkle node / amount of leaves for one L-Tree is $l=4$.}
 \label{img:xmss_complete_tree_example}
 \end{figure}
 
