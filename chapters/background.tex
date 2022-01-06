@@ -334,6 +334,7 @@ The structure of the Winternitz one-time signature scheme fits better into MSS t
 % Moreover, when using LD-OTS: All X_s (for signature) + corresponding Y_s are needed. Not enough when verifier knows only the X_s that are needed for OTS-signature, moreover the rest of Y_s are needed (because all "leaves" are needed) to build the merkle tree.
 
 \subsection{MSS Key Generation}
+\label{cha:mss_keygen}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
 The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
 \begin{gather}
@@ -586,14 +587,21 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional bitmasks in the Merkle tree, see Figure~\ref{img:example_xmss_minitree}.
-% Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with WOTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional bitmasks in the Merkle tree, (see Figure~\ref{img:example_xmss_minitree}) as well as in the Winternitz-chains. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{WOTS+} (see Figure~\ref{img:example_wots+_bitmask}).
 The bitmasks (and the keys for the hash function $h$) % explain / check all the used hashfunctions
-are generated from a public seed that is part of the public key using the pseudorandom function $PRF$. The XMSS public key is the root of the XMSS tree and with the seed.
+are generated from a public seed that is part of the public key using the pseudorandom function $PRF$. The XMSS public key is the root of the XMSS tree. The seed is also part of the public key:
+
+% xmss public key
+% ! mark root of xmss tree also as H_{d,0}?
+\begin{equation}
+\label{eq:xmss_pubkey}
+Y_{XMSS} = (H_{d,0}, \text{seed})
+\end{equation}
+
 
 % Tabelle mit Parametern: SEED, idx (Blatt index), w, n, hashfunctions...
 
-% XMSS uses WOTS+, a version of WOTS which requires bitmasks.
+% Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
 % statful: Because of the underlying one-time signature schemes, xmss is stateful, meaning the secret key changes over time.  If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.) / MSS is a stateful signature scheme, meaning that the private key changes with every signature generation.
 
 % why xmss? why not just use LMS -> explain difference: 
@@ -605,6 +613,9 @@ are generated from a public seed that is part of the public key using the pseudo
 % - nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden
 
 \subsection{XMSS Key Generation}
+For a depiction of the XMSS tree, see Figure~\ref{img:xmss_complete_tree_example}. 
+Like in MSS (see Section~\ref{cha:mss_keygen}), the signer 
+
 
 % source https://eprint.iacr.org/2011/484.pdf angeben / oder zu allgemein und nicht nötig?
 \begin{equation}
@@ -645,6 +656,32 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 \label{img:example_xmss_minitree}
 \end{figure}
 
+% explain bitmasks on WOTS = WOTS+
+\begin{figure}
+\centering
+\begin{tikzpicture}[edge from parent fork down]
+\node[]{parent wots chain}
+	child{node[rectangle, draw]{Hashfunction $h$} edge from parent[<-]
+		child{node[circle,draw] (xor) {\tiny XOR} edge from parent[<-]
+			child{node[]{child wots chain}
+			}
+		}
+	};
+	
+% right bitmask
+% !! index b_i,j -> explain/check indizes
+\node[right=1 of xor] (rb) {$b_{i,j}$};
+
+% arrow from right bitmask to right XOR
+\draw[<-] %line from rb (right bitmask) -> right XOR
+    ($(xor.east)$) -- (rb);
+
+\end{tikzpicture}
+\caption{An example for on WOTS+ chain, including the bitmask $b_{i,j}$.}
+\label{img:example_wots+_bitmask}
+\end{figure}
+
+
 \subsection{XMSS Signature Generation}
 % Quelle: RFC xmss
 % idx = index of next unused WOTS keypair/leaf
@@ -666,8 +703,8 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 	level 3/.style = {sibling distance = 2cm},
     level 4/.style = {sibling distance = 1cm},
     level 5/.style = {sibling distance = 0.5cm},
-    level 6/.style = {circle,draw,fill=cyan_tud},
-	edge from parent fork down
+    level 6/.style = {circle,draw,fill=cyan_tud}
+    % edge from parent fork down -> would be forked tree style
 ]
 % Merkle Tree
 \node(root)[]{public key}
