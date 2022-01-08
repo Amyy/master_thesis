@@ -587,8 +587,7 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks in the Merkle tree (see Figure~\ref{img:example_xmss_minitree}) as well as in the Winternitz-chains (see Figure~\ref{img:example_wots+_bitmask}) for each invocation of the hash function. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+}. XMSS is a \textit{stateful} signature scheme, meaning that the private key changes after every signature generation.
-
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks in the Merkle tree (see Figure~\ref{img:example_xmss_minitree}) as well as in the Winternitz-chains (see Figure~\ref{img:example_wots+_bitmask}) for each invocation of the hash function. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+}. XMSS is a \textit{stateful} signature scheme, so the private key changes after every signature generation. The notation of parameters used for XMSS in this work is shown in Table~\ref{table:xmms_param}.
 
 %param for tree/xmss
 % w, n
@@ -596,6 +595,8 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
 % l = ergibt sich aus winternitz param w,n
 % D = complete height of the tree (pubkeys WOTS+ as leaves)c
 % source https://eprint.iacr.org/2020/470.pdf
+% l = number of Winternitz chains used in a single OTS operation -> ? why, check this
+\begin{table}
 \begin{center}
 \begin{tabular}{c l} 
  \hline
@@ -604,31 +605,25 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
  $n$ & security parameter. \\ 
  $w$ & Winternitz parameter  \\ 
  $d$ & height of Merkle tree in the XMSS tree  \\ 
- $l$ & height of one L-Tree in the XMSS tree  \\ 
+ $l$ & number of Winternitz chains used in a single OTS operation / \\ 
+     & amount of leaves of the L-Tree \\ 
+ $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
  $D$ &  $D = l+d$, \\ 
      &  height of the complete XMSS tree from W-OTS+ public keys to the root\\
  \hline
 \end{tabular}
+\caption{Symbols and parameters used for describing XMSS.}
+\label{table:xmms_param}
 \end{center}
-
-% For each call of the hash function, a new bitmask is used.
-Given two hash functions.. % siehe Fabios Paper zum weitermachen
-The hash function $h_{rand}$ takes one bitmask $b_{i,j}$ as random input. % not so true... first hash function generates input? continue reading paper
-\begin{equation}
-h_{rand} = 
-\end{equation}
+\end{table}
 
 % For further details on the security model of LMS and XMSS, we refer to [21] and for further security notions for the defined constructions, we refer to [5].-> fabios paper
 
-% since here: draft 
-To generate randomness, a pseudo-random function $h_{prf}$/$PRF$/$f_{rand}$ is used. It takes a seed $sd$ as input, and generates a random output. % deterministischer output?
-% Parameters XMSS/WOTS+ - PRF erklären
-% -> nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden + bitmasks!
+
 
 % Tabelle? mit Parametern: SEED, idx (Blatt index), w, n, hashfunctions...
 
-% Generation of bitmasks
-The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
+
 
 % explain / check all the used hashfunctions ->  keys for hashfunction also generated with prf -> first explain prf
 
@@ -652,6 +647,18 @@ The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$, ($d$ denotes the height of t
 \begin{equation}
 PRF: {} \rightarrow {}
 \end{equation}
+
+% since here:: random stuff about PRF
+The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
+
+To generate randomness, a pseudo-random function $h_{prf}$/$PRF$/$f_{rand}$ is used. It takes a seed $sd$ as input, and generates a random output. % deterministischer output?
+% Parameters XMSS/WOTS+ - PRF erklären
+% -> nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden + bitmasks!
+
+% For each call of the hash function, a new bitmask is used.
+Given two hash functions.. % siehe Fabios Paper zum weitermachen
+The hash function $h_{rand}$ takes one bitmask $b_{i,j}$ as random input. % not so true... first hash function generates input? continue reading paper
+% END random stuff for PRF 
 
 A uniformly random n-byte string S is sampled from a secure source of randomness. This string S is stored as private key.
 The seed S MUST be independent of SEED (pubkey seed, used to randomize hash function calls), and because it is the main secret, it MUST be kept secret. This seed S is used to generate an n-byte value $S_{ots}$ for each WOTS+ key pair.
@@ -930,8 +937,8 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
 
 % right side: arrow+label
 \draw[decorate,decoration={brace,mirror,amplitude=3mm}] 
-% near start: place Label1 low, fill=white: break arrow-line for font "merkle tree"
-(m_bracket_south) -- (m_bracket_south|-root.east) node [pos=0.5,right=0.3] {Merkle Tree};
+% near start: place Label1 low, fill=white: break arrow-line for label in line
+(m_bracket_south) -- (m_bracket_south|-root.east) node [pos=0.5,right=0.3] {$d$};
 
 \draw[thick]
 ($(left_lowest_merkle.south west)-(0,0.2)$) -- ($(m_bracket_south)-(0,0.2)$);
