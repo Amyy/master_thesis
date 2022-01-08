@@ -589,15 +589,34 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 \section{Extended Merkle Signature Scheme (XMSS)}
 The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks in the Merkle tree (see Figure~\ref{img:example_xmss_minitree}) as well as in the Winternitz-chains (see Figure~\ref{img:example_wots+_bitmask}) for each invocation of the hash function. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+}. XMSS is a \textit{stateful} signature scheme, meaning that the private key changes after every signature generation.
 
-% draft
+
+%param for tree/xmss
+% w, n
+% d = height of merkle tree
+% l = ergibt sich aus winternitz param w,n
+% D = complete height of the tree (pubkeys WOTS+ as leaves)c
+% source https://eprint.iacr.org/2020/470.pdf
+\begin{center}
+\begin{tabular}{c l} 
+ \hline
+ symbol & meaning  \\ 
+ \hline
+ $n$ & security parameter. \\ 
+ $w$ & Winternitz parameter  \\ 
+ $d$ & height of Merkle tree in the XMSS tree  \\ 
+ $l$ & height of one L-Tree in the XMSS tree  \\ 
+ $D$ &  $D = l+d$, \\ 
+     &  height of the complete XMSS tree from W-OTS+ public keys to the root\\
+ \hline
+\end{tabular}
+\end{center}
+
 % For each call of the hash function, a new bitmask is used.
 Given two hash functions.. % siehe Fabios Paper zum weitermachen
 The hash function $h_{rand}$ takes one bitmask $b_{i,j}$ as random input. % not so true... first hash function generates input? continue reading paper
 \begin{equation}
 h_{rand} = 
 \end{equation}
-
-One bitmask $b_{i,j}$ is generated...
 
 % For further details on the security model of LMS and XMSS, we refer to [21] and for further security notions for the defined constructions, we refer to [5].-> fabios paper
 
@@ -628,7 +647,13 @@ For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img
 Like in MSS (see Section~\ref{cha:mss_keygen}), the signer chooses the parameters for the tree as well as for the corresponding one-time signature scheme W-OTS+.
 
 % insert what to do for W-OTS+/ W-OTS+ param here
-The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$ are generated using a cryptographic pseudorandom method $PRF$, to generate the XMSS private key from a single $n$-byte value. A uniformly random n-byte string S is sampled from a secure source of randomness. This string S is stored as private key.
+The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$, ($d$ denotes the height of the complete XMSS tree - better: $d + l = $ ´height of whole merkle tree), are generated using a cryptographic pseudorandom method $PRF$, to generate the XMSS private key from a single $n$-byte value. 
+% pseudorand. function
+\begin{equation}
+PRF: {} \rightarrow {}
+\end{equation}
+
+A uniformly random n-byte string S is sampled from a secure source of randomness. This string S is stored as private key.
 The seed S MUST be independent of SEED (pubkey seed, used to randomize hash function calls), and because it is the main secret, it MUST be kept secret. This seed S is used to generate an n-byte value $S_{ots}$ for each WOTS+ key pair.
 
 The advantage of generating the private key elements from a random n-byte string is that only this n-byte string needs to be stored instead of the full private key. The key can be regenerated when needed.
