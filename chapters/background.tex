@@ -604,14 +604,14 @@ The notation of parameters used for XMSS in this work is shown in Table~\ref{tab
  \hline
  symbol & meaning  \\ 
  \hline
- $n$ & security parameter. \\ 
+ $n$ & security parameter \\ %the length in bytes of the message digest as well as each node 
  $w$ & Winternitz parameter  \\ 
  $d$ & height of Merkle tree in the XMSS tree  \\ 
  $l$ & number of Winternitz chains used in a single OTS operation / \\ 
      & amount of leaves of the L-Tree \\ 
  $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
-% $D$ &  $D = l+d$, \\ 
-%     &  height of the complete XMSS tree from W-OTS+ public keys to the root\\
+% $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
+ $PRF$ & pseudorandom function \\
  \hline
 \end{tabular}
 \caption{Symbols and parameters used for describing XMSS.}
@@ -624,25 +624,31 @@ For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img
 Like in MSS (see Section~\ref{cha:mss_keygen}), the signer chooses the parameters for the tree as well as for the corresponding one-time signature scheme W-OTS+.
 
 % insert what to do for W-OTS+/ W-OTS+ param here
-The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$, ($d$ denotes the height of the complete XMSS tree - better: $d + l = $ ´height of whole merkle tree), are generated using a cryptographic pseudorandom method $PRF$, to generate the XMSS private key from a single $n$-byte value. 
-% pseudorand. function
-\begin{equation}
-PRF: {} \rightarrow {}
-\end{equation}
+% not sure if d = height of MERKLE TREE or WHOLE XMSS TREE: $d$ denotes the height of the complete XMSS tree / $d + l = $ height of whole merkle tree
+The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$ used for XMSS are generated using a cryptographic pseudorandom function $PRF$. 
+A pseudorandom function is used to generate output from a random, private  
+seed $sd_x$ such that the output is computationally indistinguishable from truly random output.~\cite{PRF_source_2016sha}. $PRF$ takes the seed $sd_x$ of length $n$ and generates the W-OTS+ private keys, each of length $n$.
+The advantage of generating the private key elements from one input $sd_x$ is that only this value needs to be stored instead of the full private keys. The keys can be regenerated when needed.
 
+% define pseudorand. function here
+% ! only used for keygen, != keyed hashfunction with bitmasks
+\begin{align}
+PRF: \{0,1\}^n &\rightarrow \{0,1\}^n \times \cdots^{2^d-1} \\
+PRF(sd_x) &= (X_0, \cdots, X_{2^d-1}) \nonumber
+\end{align}
+
+% begin draft
 % ------------ random stuff about PRF
-The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
+% The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
 
-To generate randomness, a pseudo-random function $h_{prf}$/$PRF$/$f_{rand}$ is used. It takes a seed $sd$ as input, and generates a random output. % deterministischer output?
 % Parameters XMSS/WOTS+ - PRF erklären
-% -> nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden + bitmasks!
+% -> nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden + bitmasks
 
 % For each call of the hash function, a new bitmask is used.
 Given two hash functions.. % siehe Fabios Paper zum weitermachen
 The hash function $h_{rand}$ takes one bitmask $b_{i,j}$ as random input. % not so true... first hash function generates input? continue reading paper
 
 % collission resistance at hash function not necessary -> use bitmasks for that
-
 % --------- END random stuff for PRF 
 
 A uniformly random n-byte string S is sampled from a secure source of randomness. This string S is stored as private key.
