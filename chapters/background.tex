@@ -627,8 +627,8 @@ Like in MSS (see Section~\ref{cha:mss_keygen}), the signer chooses the parameter
 % not sure if d = height of MERKLE TREE or WHOLE XMSS TREE: $d$ denotes the height of the complete XMSS tree / $d + l = $ height of whole merkle tree
 The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$ used for XMSS are generated using a cryptographic pseudorandom function $PRF$. 
 A pseudorandom function is used to generate output from a random, private  
-seed $sd_x$ such that the output is computationally indistinguishable from truly random output.~\cite{PRF_source_2016sha}. $PRF$ takes the seed $sd_x$ of length $n$ and generates the W-OTS+ private keys, each of length $n$.
-The advantage of generating the private key elements from one input $sd_x$ is that only this value needs to be stored instead of the full private keys. The keys can be regenerated when needed.
+seed $sd_x$ such that the output is computationally indistinguishable from truly random output~\cite{PRF_source_2016sha}. $PRF$ takes the seed $sd_x$ of length $n$ and generates the W-OTS+ private keys, each of length $n$.
+The advantage of generating the private key elements from one input $sd_x$ is that only this value needs to be stored instead of the full private keys. The keys can be regenerated when needed. % source: xmss rfc
 
 % define pseudorand. function here
 % ! only used for keygen, != keyed hashfunction with bitmasks
@@ -641,8 +641,6 @@ PRF(sd_x) &= (X_0, \cdots, X_{2^d-1}) \nonumber
 % ------------ random stuff about PRF
 % The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
 
-% Parameters XMSS/WOTS+ - PRF erklären
-% -> nur 1 seed gespeichert, aus dem Zufall erzeugt wird, aus dem private keys erzeugt werden + bitmasks
 
 % For each call of the hash function, a new bitmask is used.
 Given two hash functions.. % siehe Fabios Paper zum weitermachen
@@ -665,6 +663,8 @@ The XMSS private key $X_{XMSS}$ consists of $2^d$ W-OTS+ one-time private keys, 
 X = ((X_0, \cdots, X_{2^d-1}), s_{next}, X_{PRF})
 \end{equation}
 The leaf index $s_{next}$ is initialized to zero when the XMSS private key is created. The key $X_{PRF}$ must be sampled from a secure source of randomness that follows the uniform distribution.  
+
+% WOTS+ pubkeys: (xmss draft) An OTS hash address ADRS and a seed SEED have to be provided by the calling algorithm.  This address will encode the address of the WOTS+ key pair within a greater structure.  Hence, a WOTS+ algorithm MUST NOT manipulate any parts of ADRS except for the last three 32-bit words. "chain" function = function that generates pubkeys (including bitmasks)-> look at pseudocode rfc
 
 
 % draft
