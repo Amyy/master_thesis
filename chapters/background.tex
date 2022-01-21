@@ -587,11 +587,9 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 %!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
 
 \section{Extended Merkle Signature Scheme (XMSS)}
-The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks in the Merkle tree (see Figure~\ref{img:example_xmss_minitree}) as well as in the Winternitz-chains (see Figure~\ref{img:example_wots+_bitmask}) for each invocation of the hash function. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+}. XMSS is a \textit{stateful} signature scheme, so the private key changes after every signature generation.
+The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS. One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks in the Merkle tree (see Figure~\ref{img:example_xmss_minitree}) as well as one-time public key generation (see Figure~\ref{img:example_wots+_bitmask}) for each invocation of the hash function. The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+}. XMSS is a \textit{stateful} signature scheme, so the private key changes after every signature generation. % evlt eigene subsection for WOTS+
 The notation of parameters used for XMSS in this work is shown in Table~\ref{table:xmms_param}.
 % Maybe add this to "stateful": If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.) -> or add to keygen
-
-% Describe XMSS tree: Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
 
 %param for tree/xmss
 % D = complete height of the tree (pubkeys WOTS+ as leaves)c -> necessary? leave out for now
@@ -612,6 +610,8 @@ The notation of parameters used for XMSS in this work is shown in Table~\ref{tab
  $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
 % $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
  $PRF$ & pseudorandom function \\
+ $sd_x$ & private seed for private key generation \\
+ $s_{next}$ & public(?) seed for bitmask generation  \\
  \hline
 \end{tabular}
 \caption{Symbols and parameters used for describing XMSS.}
@@ -625,56 +625,40 @@ Like in MSS (see Section~\ref{cha:mss_keygen}), the signer chooses the parameter
 
 % insert what to do for W-OTS+/ W-OTS+ param here
 % not sure if d = height of MERKLE TREE or WHOLE XMSS TREE: $d$ denotes the height of the complete XMSS tree / $d + l = $ height of whole merkle tree
-The W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$ used for XMSS are generated using a cryptographic pseudorandom function $PRF$. 
+All the W-OTS+ private keys $(X_0, \cdots, X_{2^d-1})$ used for XMSS are generated using a cryptographic pseudorandom function $PRF$ (see Equation~\ref{eq:prf}). 
 A pseudorandom function is used to generate output from a random, private  
-seed $sd_x$ such that the output is computationally indistinguishable from truly random output~\cite{PRF_source_2016sha}. $PRF$ takes the seed $sd_x$ of length $n$ and generates the W-OTS+ private keys, each of length $n$.
-The advantage of generating the private key elements from one input $sd_x$ is that only this value needs to be stored instead of the full private keys. The keys can be regenerated when needed. % source: xmss rfc
+seed such that the output is computationally indistinguishable from truly random output~\cite{PRF_source_2016sha}. $PRF$ takes the seed $sd_x$ and generates the W-OTS+ private keys. % each key has w-1 elements
+The advantage of generating the private key elements from one input $sd_x$ is that only this value needs to be stored instead of all the private keys and the keys can be regenerated when needed. % source: xmss rfc
 
-% define pseudorand. function here
-% ! only used for keygen, != keyed hashfunction with bitmasks
+% xmss PRF // PRF(wots+) has also key, not only seed
 \begin{align}
-PRF: \{0,1\}^n &\rightarrow \{0,1\}^n \times \cdots^{2^d-1} \\
-PRF(sd_x) &= (X_0, \cdots, X_{2^d-1}) \nonumber
+\label{eq:prf}
+PRF(sd_x) &= (X_0, \cdots, X_{2^d-1})
 \end{align}
-
-% begin draft
-% ------------ random stuff about PRF
-% The bitmasks are generated from a public seed that is part of the public key using the pseudorandom function $PRF$:
-
-
-% For each call of the hash function, a new bitmask is used.
-Given two hash functions.. % siehe Fabios Paper zum weitermachen
-The hash function $h_{rand}$ takes one bitmask $b_{i,j}$ as random input. % not so true... first hash function generates input? continue reading paper
-
-% collission resistance at hash function not necessary -> use bitmasks for that
-% --------- END random stuff for PRF 
-
-A uniformly random n-byte string S is sampled from a secure source of randomness. This string S is stored as private key.
-The seed S MUST be independent of SEED (pubkey seed, used to randomize hash function calls), and because it is the main secret, it MUST be kept secret. This seed S is used to generate an n-byte value $S_{ots}$ for each WOTS+ key pair.
-
-The advantage of generating the private key elements from a random n-byte string is that only this n-byte string needs to be stored instead of the full private key. The key can be regenerated when needed.
-
-% xmss priv key
-The XMSS private key $X_{XMSS}$ consists of $2^d$ W-OTS+ one-time private keys, the leaf index $s_{next}$ of the next unused private one-time key, and a private seed $X_{PRF}$ to generate pseudo-random values for randomized message hashing.
-% ToDO: include n-byte..etc, how much byte each param. has
-% "Theoretically" also part of priv. key: .. the n-byte value root (which is the root node of the tree and SEED), and the n-byte public seed used to pseudorandomly generate bitmasks and hash function keys. Although root and SEED formally would be considered only part of the public key, they are needed (e.g., for signature generation) and hence are also required for functions that do not take the public key as input.
+The XMSS private key $X_{XMSS}$ consists of the $2^d$ W-OTS+ one-time private keys, the leaf index $s_{next}$ of the next unused one-time private key, and a seed $X_{PRF}$ to generate pseudo-random bitmasks for randomized message hashing.
+% actually: is ONE XMSS private key = L-Tree+wots chains?
+% ToDO: include size of each param
 \begin{equation}
 \label{eq:priv_key}
-X = ((X_0, \cdots, X_{2^d-1}), s_{next}, X_{PRF})
+X_{XMSS} = ((X_0, \cdots, X_{2^d-1}), s_{next}, X_{PRF})
 \end{equation}
-The leaf index $s_{next}$ is initialized to zero when the XMSS private key is created. The key $X_{PRF}$ must be sampled from a secure source of randomness that follows the uniform distribution.  
+The leaf index $s_{next}$ is initialized to zero when the XMSS private key is created. The seed $X_{PRF}$ must be sampled from a secure source of randomness that follows the uniform distribution.  
+% X_prf == sd_x (aus PRF definiton)?
+% The bitmasks are generated from a public seed $X_{PRF}$ that is part of the public key using the pseudorandom function $PRF$:
 
-% WOTS+ pubkeys: (xmss draft) An OTS hash address ADRS and a seed SEED have to be provided by the calling algorithm.  This address will encode the address of the WOTS+ key pair within a greater structure.  Hence, a WOTS+ algorithm MUST NOT manipulate any parts of ADRS except for the last three 32-bit words. "chain" function = function that generates pubkeys (including bitmasks)-> look at pseudocode rfc
-
-
-% draft
-% xmss public key
-The public key of XMSS $Y_{XMSS}$ consists of the root of the XMSS tree and the public seed used for construction of the bitmasks.
+The public key of XMSS $Y_{XMSS}$ consists of the root of the XMSS tree and the public seed  $sd_y$ used for construction of the bitmasks.
 % ! mark root of xmss tree also as H_{d,0}?
 \begin{equation}
 \label{eq:xmss_pubkey}
-Y_{XMSS} = (H_{d,0}, \text{seed})
+Y_{XMSS} = (H_{d,0}, sd_y)
 \end{equation}
+
+
+
+
+
+
+
 
 % source https://eprint.iacr.org/2011/484.pdf angeben / oder zu allgemein und nicht nötig?
 \begin{equation}
@@ -711,7 +695,7 @@ H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right
     ($(b.east)$) -- (rb);	
 
 \end{tikzpicture}
-\caption{An example parent node $H_{i,j}$ with the corresponding children $H_{i-1,2j},H_{i-1,2j+1}$ of a XMSS tree. The node $H_{i,j}$ is calculated by adding two bitmasks $b_{i,left}, b_{i,right}$ to its children. The result is concatenated and used as input for the hashfunction~$h$ (see Equation~\ref{eq:xmss_bitmasks}).}
+\caption{An example parent node $H_{i,j}$ with the corresponding children $H_{i-1,2j},H_{i-1,2j+1}$ of a XMSS tree. The node $H_{i,j}$ is calculated by adding two bitmasks $b_{i,left}, b_{i,right}$ to its children. The result is concatenated and used as input for the hashfunction~$h$ (see Equation~\ref{eq:xmss_bitmasks}).} % Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
 \label{img:example_xmss_minitree}
 \end{figure}
 
