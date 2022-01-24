@@ -628,12 +628,17 @@ For all signature schemes shown in this work before, collision resistance of the
 %continue here: 
 Grover’s algorithm can be used to find ordinary collisions in time $O(2^{n/3})$, speeding up the classical “birthday” attack which requires $O(2^{n/2})$ time.
 % https://www.cs.princeton.edu/~mzhandry/docs/papers/LZ19a.pdf
+% see also: https://eprint.iacr.org/2020/213.pdf
 % später: Hier auf Grovers-Algo section verweisen
+
+% quantum collision attacks sha256: https://eprint.iacr.org/2021/292.pdf
+% " hash functions: https://eprint.iacr.org/2021/1016.pdf
 
 There are many ways to construct very efficient hash function families that are believed to be second preimage resistant, even in the presence of quantum computers.~\cite{xmss_paper_2011}
 
 To achieve minimal security assumptions preimage- second preimage-resistance -> use keyed hashfunction, bitmasks. % source xmss draft? or paper
-
+% keyed hashfunction paper general: https://web.cs.ucdavis.edu/~rogaway/papers/ignorance.pdf
+% keyed hashfunction explaining website: https://cryptographyacademy.com/hash-functions/
 
 \subsection{WOTS+}
 ...
