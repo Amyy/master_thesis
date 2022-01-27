@@ -626,7 +626,15 @@ All of modern cryptography relies on unproven assumptions, only a few cryptograp
 For all signature schemes shown in this work before, collision resistance of the used hash function is a security requirement (see also Section~\ref{sec:def_hashfunctions}). 
 With Grover’s algorithm, two ordinary collisions can be found in time $\mathcal{O}(2^{n/3})$, speeding up the classical birthday attack which requires $\mathcal{O}(2^{n/2})$ time (with $n$ being the output length of the specific used hash function)~\cite{colission_complexity_reduction_quantum_2019, birthday_attack_quantum_collision_1998}. % später: Hier auf Grovers-Algo section 
 For maintaining the security of the digital signature system, the requirement for collision resistance hash is omitted, so the only necessary security assumptions are preimage- and second preimage-resistance of the used hash function.
-To achieve this, keyed hashfunctions (HMAC) and bitmasks are used. % source xmss draft? or paper
+To achieve this, keyed hash functions (see Equation~\ref{eq:keyed_hashfc_general} ) and bitmasks are used. % source xmss draft? or paper 
+A keyed hash function $H_{keyed}$ takes a public key $K$ and a string of arbitrary length (in this work, it will be the message digest $m$) and maps it to an output of length $n$. The public key $K$ is an element of the key space~$\mathcal{K}$, $\mathcal{K}=\{0,1\}^n$.~\cite{keyed_hashfct_introduct_2006}
+
+% keyed hashfunction
+\begin{equation}
+\label{eq:keyed_hashfc_general}
+H_{keyed}: \mathcal{K} \times \{0, 1\}^* \rightarrow \{0, 1 \}^n
+\end{equation}
+
 % keyed hashfunction paper (eigentlich - coll. res. ohne keys omitten, aber gute introduction für keyed hashfunctions): https://web.cs.ucdavis.edu/~rogaway/papers/ignorance.pdf
 % keyed hashfunction explaining website: https://cryptographyacademy.com/hash-functions/
 
