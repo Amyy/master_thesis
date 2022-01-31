@@ -152,6 +152,7 @@ If the condition is true, the signature is valid.
 % Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
 
 \subsection{Winternitz One-Time Signature Scheme (W-OTS)}
+\label{sec:wots_general}
 LD-OTS signatures are efficient to calculate but have a huge size. % somewhere else explain that huge signature -> need much "memory"-> bad ? or is it obvious
 The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
 
@@ -625,21 +626,22 @@ For an example of using bitmasks in the Merkle tree and for one-time public key 
 All of modern cryptography relies on unproven assumptions, only a few cryptographic tasks can be achieved with perfect security (e.g. the one-time pad~\cite{one_time_pad_2013}). There clearly is a risk that at least some of these assumptions may be wrong. Therefore, it is important to only make assumptions that are really necessary.~\cite{minimal_security_assump_phd_2016}
 For all signature schemes shown in this work before, collision resistance of the used hash function is a security requirement (see also Section~\ref{sec:def_hashfunctions}). 
 With Grover’s algorithm, two ordinary collisions can be found in time $\mathcal{O}(2^{n/3})$, speeding up the classical birthday attack which requires $\mathcal{O}(2^{n/2})$ time (with $n$ being the output length of the specific used hash function)~\cite{colission_complexity_reduction_quantum_2019, birthday_attack_quantum_collision_1998}. % später: Hier auf Grovers-Algo section 
-For maintaining the security of the digital signature system, the requirement for collision resistance hash is omitted, so the only necessary security assumptions are preimage- and second preimage-resistance of the used hash function.
-To achieve this, keyed hash functions (see Equation~\ref{eq:keyed_hashfc_general} ) and bitmasks are used. % source xmss draft? or paper 
-A keyed hash function $H_{keyed}$ takes a public key $K$ and a string of arbitrary length (in this work, it will be the message digest $m$) and maps it to an output of length $n$. The public key $K$ is an element of the key space~$\mathcal{K}$, $\mathcal{K}=\{0,1\}^n$.~\cite{keyed_hashfct_introduct_2006}
+For maintaining the security of the digital signature system, the requirement for collision resistance is omitted, so the only necessary security assumptions are preimage- and second preimage-resistance of the used hash function.
+To achieve this, a keyed hash functions (see Equation~\ref{eq:keyed_hashfc_general}) in combination with random bitmasks is used for XMSS. % source xmss draft? or paper, add reference to bitmask equation in this sentence
+
+
+\subsection{WOTS+}
+This section describes the main difference between WOTS+ and WOTS (see Section~\ref{sec:wots_general}): The hash function used for WOTS+ is a \textit{keyed} hash function with \textit{random bitmask} as additional input for each function call. The rest of WOTS+ works just like WOTS.
+In general, a keyed hash function $h_{keyed}$ takes a public key $K$ and a string of arbitrary length and maps it to an output of length $n$. The public key $K$ is an element of the key space~$\mathcal{K}$, $\mathcal{K}=\{0,1\}^n$.~\cite{keyed_hashfct_introduct_2006}
 
 % keyed hashfunction
 \begin{equation}
 \label{eq:keyed_hashfc_general}
-H_{keyed}: \mathcal{K} \times \{0, 1\}^* \rightarrow \{0, 1 \}^n
+h_{keyed}: \mathcal{K} \times \{0, 1\}^* \rightarrow \{0, 1 \}^n 
 \end{equation}
+The keyed hash function in combination with the bitmasks is denoted as tweakable hash function, a principle introduced by Bernstein et al.~\cite{tweakable_basispaper_sphincs_2019} and adapted by Campos et al.~\cite{fabio_paper_lms_vs_xmss}. The following definitions are based on the work of Campos et al.~\cite{fabio_paper_lms_vs_xmss}.
 
-% keyed hashfunction paper (eigentlich - coll. res. ohne keys omitten, aber gute introduction für keyed hashfunctions): https://web.cs.ucdavis.edu/~rogaway/papers/ignorance.pdf
-% keyed hashfunction explaining website: https://cryptographyacademy.com/hash-functions/
-
-\subsection{WOTS+}
-...
+A tweakable hash function $h_{k,b}$... % evtl name aendern von fct, siehe notizen, continue here
 
 
 \subsection{XMSS Key Generation}
