@@ -758,11 +758,11 @@ For an explanatory depiction of the key generation process, see Figure~\ref{img:
 
 
 \subsubsection{WOTS+ Signature Generation \& Verification}
-The WOTS+ signature generation and verification works just as for WOTS (see Section~\ref{sec:wots-verification}/WOTS Verification), except that (like for WOTS+ key generation) instead of the function $f$, the tweakable hash function $h_{tweak}$ is used. The seed $sd_{pub}$ and all bitmasks $B_{wots+}$ (see Equation~\ref{eq:wots+_all_bitmasks}) are known to the verifier.
+The WOTS+ signature generation and verification works just as for WOTS (see Section~\ref{sec:wots-verification}, WOTS Verification), except that (like for WOTS+ key generation) instead of the function $f$, the tweakable hash function $h_{tweak}$ is used. The seed $sd_{pub}$ and all bitmasks $B_{wots+}$ (see Equation~\ref{eq:wots+_all_bitmasks}) are known to the verifier.
 
 
 \subsection{XMSS Key Generation}
-For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_complete_tree_example}). % correct the tree
+For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_tree}). % correct the tree
 First, the signer chooses the WOTS+ parameters $n, w$ (see Section~\ref{sec:wots+_keygen}/WOTS+ Key Generation).
 Then, $2^d$ WOTS+ one-time private keys (see Equation~\ref{eq:wots+_privkey}) are generated, $d$ denotes the height of the Merkle tree inside the XMSS tree. % ref to merkle tree inside xmss tree 
 Each leaf of the MSS tree in the XMSS tree is one WOTS+ one-time public key. 
@@ -794,10 +794,10 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 \centering 
 \begin{tikzpicture}
 [	
-	level 1/.style = {sibling distance = 3cm},
-	level 2/.style = {sibling distance = 6.5cm},
+	level 1/.style = {sibling distance = 3.5cm},
+	level 2/.style = {sibling distance = 6cm},
 	level 3/.style = {sibling distance = 3.2cm},
-    level 4/.style = {sibling distance = 0.6cm},
+    level 4/.style = {sibling distance = 0.8cm},
     level 5/.style = {sibling distance = 1cm},
     level 6/.style = {sibling distance = 1cm},
     level 7/.style = {sibling distance = 0.5cm},
@@ -807,8 +807,8 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 	child{node[circle, draw](L1N1){} edge from parent[draw=none] %1.layer 1.node
 		child{node[circle, draw]{}
 			child{node[circle,draw]{} % 3. layer 1.node
-				child{node[circle,draw,color=green]{}  % 1st L-Tree layer 1.node 
-					child{node[circle,draw]{} edge from parent[]
+				child{node[circle,draw,color=green](L4N1LTree1){}  % 1st L-Tree layer 1.node 
+					child{node[circle,draw](L5N1LTree1){} edge from parent[draw=none]
 						child{node[circle,draw]{} %1. child 1. L-Tree
 							child{node[circle,draw,fill=darkblue_tud]{}}
 							child{node[circle,draw,fill=darkblue_tud]{}}
@@ -820,9 +820,9 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					}
 					child{node[]{} edge from parent[draw=none]} 
 				}
-				child{node[circle,draw,color=green]{} % 1. L-Tree layer 2. node
-						child{node[]{$\cdots$} %
-							child{node[circle,draw]{} % 1.L-Tree last child
+				child{node[circle,draw,color=green](L4N2LTree1){} % 1.L-Tree, 2.node
+						child{node[]{} edge from parent[draw=none] % 1.L-Tree, 5.layer (invisible)
+							child{node[circle,draw](L5N3LTree1){} edge from parent[draw=none] % 1.L-Tree last child
 								child{node[]{$\cdots$} edge from parent[draw=none]}
 								child{node[circle,draw,fill=darkblue_tud]{}}			
 							}
@@ -877,7 +877,29 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 						} 
 				}  			
 			} 
-			child{node[]{$\cdots$}} %3. layer 4.node
+			child{node[circle,draw]{}  %3. layer 4.node ToDo
+				child{node[circle,draw,color=green]{}  % 4. L-Tree layer 1.node 
+					child{node[circle,draw]{} edge from parent[]
+						child{node[circle,draw]{} %1. child 4.L-Tree
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}
+						}
+						child{node[circle,draw]{} %2. child 4.L-Tree	
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}			
+						} 			
+					}
+					child{node[]{} edge from parent[draw=none]} 
+				}
+				child{node[circle,draw,color=green]{} % 4. L-Tree layer 2. node
+						child{node[]{$\cdots$} %
+							child{node[circle,draw]{} % 4.L-Tree last child
+								child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							}
+						} 
+				} 			
+			}
 		}
 	}
 	child{node[](L1N2){} edge from parent[draw=none] %1.layer 2.node (invisible)
@@ -911,6 +933,8 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 	};
 \draw[dotted](root) -- (L2N3);
 \draw[dotted](root) -- (L1N1);
+\draw[dotted](L4N1LTree1) -- (L5N1LTree1);
+\draw[dotted](L4N2LTree1) -- (L5N3LTree1);
 \end{tikzpicture}
 \caption{Example depiction of a XMSS tree. The example is based in Figure~1 in Campos et al.~\cite{fabio_paper_lms_vs_xmss}.}
 \label{img:xmss_tree}
