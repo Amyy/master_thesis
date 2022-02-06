@@ -794,17 +794,17 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 \centering 
 \begin{tikzpicture}
 [	
-	level 1/.style = {sibling distance = 5cm},
-	level 2/.style = {sibling distance = 5cm},
-	level 3/.style = {sibling distance = 3cm},
-    level 4/.style = {sibling distance = 1cm},
-    level 5/.style = {sibling distance = 1.5cm},
+	level 1/.style = {sibling distance = 3cm},
+	level 2/.style = {sibling distance = 6.5cm},
+	level 3/.style = {sibling distance = 3.2cm},
+    level 4/.style = {sibling distance = 0.6cm},
+    level 5/.style = {sibling distance = 1cm},
     level 6/.style = {sibling distance = 1cm},
     level 7/.style = {sibling distance = 0.5cm},
     edge from parent fork down, <-
 ]
-\node(root)[]{$H_{root}$}
-	child{node[circle, draw]{} %1. layer
+\node(root)[](root){$H_{root}$}
+	child{node[circle, draw](L1N1){} edge from parent[draw=none] %1.layer 1.node
 		child{node[circle, draw]{}
 			child{node[circle,draw]{} % 3. layer 1.node
 				child{node[circle,draw,color=green]{}  % 1st L-Tree layer 1.node 
@@ -831,20 +831,86 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 			} 
 			child{node[circle,draw]{} %3. layer 2.node
 				child{node[circle,draw,color=green]{} % 1.L-Tree layer 3.node
+					child{node[circle,draw]{} edge from parent[]
+							child{node[circle,draw]{} %1. child 2. L-Tree
+								child{node[circle,draw,fill=darkblue_tud]{}}
+								child{node[circle,draw,fill=darkblue_tud]{}}
+							}
+							child{node[circle,draw]{} %2. child 2. L-Tree	
+								child{node[circle,draw,fill=darkblue_tud]{}}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							} 			
+						}
+					child{node[]{} edge from parent[draw=none]} 
 				} 	
-				child{node[circle,draw,color=green]{}} % 1.L-Tree layer 4.node		
+				child{node[circle,draw,color=green]{} % 2.L-Tree layer 4.node
+						child{node[]{$\cdots$} %
+							child{node[circle,draw]{} % 2.L-Tree last child
+								child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							}
+						} 					
+				} 	
 			} 	
 		}
 		child{node[circle, draw]{}
-			child{node[circle,draw]{}} %3. layer
-			child{node[]{$\cdots$}} %3. layer	
+			child{node[circle,draw]{}  %3. layer 3.node
+				child{node[circle,draw,color=green]{}  % 3. L-Tree layer 1.node 
+					child{node[circle,draw]{} edge from parent[]
+						child{node[circle,draw]{} %1. child 3.L-Tree
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}
+						}
+						child{node[circle,draw]{} %2. child 3.L-Tree	
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}			
+						} 			
+					}
+					child{node[]{} edge from parent[draw=none]} 
+				}
+				child{node[circle,draw,color=green]{} % 3. L-Tree layer 2. node
+						child{node[]{$\cdots$} %
+							child{node[circle,draw]{} % 3.L-Tree last child
+								child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							}
+						} 
+				}  			
+			} 
+			child{node[]{$\cdots$}} %3. layer 4.node
 		}
 	}
-	child{node[]{$\cdots$} %1. layer
-		child{node[]{} edge from parent[draw=none]} 
-		child{node[circle, draw]{}}
+	child{node[](L1N2){} edge from parent[draw=none] %1.layer 2.node (invisible)
+		child{node[]{} edge from parent[draw=none]}
+		child{node[circle, draw] (L2N3){} edge from parent[draw=none] %2.layer 3.node
+			child{node[]{} edge from parent[draw=none]}
+			child{node[circle,draw]{}
+								child{node[circle,draw,color=green]{} % last.L-Tree layer 3.node
+					child{node[circle,draw]{} edge from parent[]
+							child{node[circle,draw]{} %1.child, last L-Tree
+								child{node[circle,draw,fill=darkblue_tud]{}}
+								child{node[circle,draw,fill=darkblue_tud]{}}
+							}
+							child{node[circle,draw]{} %2.child, last L-Tree	
+								child{node[circle,draw,fill=darkblue_tud]{}}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							} 			
+						}
+					child{node[]{} edge from parent[draw=none]} 
+				} 	
+				child{node[circle,draw,color=green]{}
+						child{node[]{$\cdots$}
+							child{node[circle,draw]{}
+								child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							}
+						} 					
+				} 			
+			}			
+		} 
 	};
-%\draw (LC13) -- (L12);
+\draw[dotted](root) -- (L2N3);
+\draw[dotted](root) -- (L1N1);
 \end{tikzpicture}
 \caption{Example depiction of a XMSS tree. The example is based in Figure~1 in Campos et al.~\cite{fabio_paper_lms_vs_xmss}.}
 \label{img:xmss_tree}
