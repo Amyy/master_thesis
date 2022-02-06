@@ -798,143 +798,165 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 	level 2/.style = {sibling distance = 6cm},
 	level 3/.style = {sibling distance = 3.2cm},
     level 4/.style = {sibling distance = 0.8cm},
-    level 5/.style = {sibling distance = 1cm},
-    level 6/.style = {sibling distance = 1cm},
-    level 7/.style = {sibling distance = 0.5cm},
+    level 5/.style = {sibling distance = 0.6cm},
+    level 6/.style = {sibling distance = 0.8cm},
+    level 7/.style = {sibling distance = 0.4cm},
+ 	common/.style={circle, draw, inner sep=3pt},
+ 	pubkey/.style={circle, draw,fill=darkblue_tud, inner sep=3pt},
     edge from parent fork down, <-
 ]
 \node(root)[](root){$H_{root}$}
-	child{node[circle, draw](L1N1){} edge from parent[draw=none] %1.layer 1.node
-		child{node[circle, draw]{}
-			child{node[circle,draw]{} % 3. layer 1.node
-				child{node[circle,draw,color=green](L4N1LTree1){}  % 1st L-Tree layer 1.node 
-					child{node[circle,draw](L5N1LTree1){} edge from parent[draw=none]
-						child{node[circle,draw]{} %1. child 1. L-Tree
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}
+	child{node[common](L1N1){} edge from parent[draw=none] %1.layer 1.node
+		child{node[common]{}
+			child{node[common]{} % 3. layer 1.node
+				child{node[common,color=green](L4N1LTree1){}  % 1st L-Tree layer 1.node 
+					child{node[common](L5N1LTree1){} edge from parent[draw=none]
+						child{node[common]{} %1. child 1. L-Tree
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}
 						}
-						child{node[circle,draw]{} %2. child 1. L-Tree	
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}			
+						child{node[common]{} %2. child 1. L-Tree	
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
 				}
-				child{node[circle,draw,color=green](L4N2LTree1){} % 1.L-Tree, 2.node
-						child{node[]{} edge from parent[draw=none] % 1.L-Tree, 5.layer (invisible)
-							child{node[circle,draw](L5N3LTree1){} edge from parent[draw=none] % 1.L-Tree last child
-								child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
+				child{node[common,color=green](L4N2LTree1){} %4.layer, 2.node
+					child{node[]{} edge from parent[draw=none]} % invisible
+					child{node[]{} edge from parent[draw=none] %5.layer,1.L-Tree (invisible)
+						child{node[common](L5N3LTree1){} edge from parent[draw=none] % 1.L-Tree last child
+							child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[pubkey]{}}			
 							}
 						} 
 				}  
 			} 
-			child{node[circle,draw]{} %3. layer 2.node
-				child{node[circle,draw,color=green]{} % 1.L-Tree layer 3.node
-					child{node[circle,draw]{} edge from parent[]
-							child{node[circle,draw]{} %1. child 2. L-Tree
-								child{node[circle,draw,fill=darkblue_tud]{}}
-								child{node[circle,draw,fill=darkblue_tud]{}}
-							}
-							child{node[circle,draw]{} %2. child 2. L-Tree	
-								child{node[circle,draw,fill=darkblue_tud]{}}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
-							} 			
+			child{node[common]{} %3. layer 2.node
+				child{node[common,color=green](L4N3LTree2){}  % 2.L-Tree layer 1.node 
+					child{node[common](L5N3LTree2){} edge from parent[draw=none]
+						child{node[common]{} %1. child 2.L-Tree
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}
 						}
+						child{node[common]{} %2. child 2.L-Tree	
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}			
+						} 			
+					}
 					child{node[]{} edge from parent[draw=none]} 
-				} 	
-				child{node[circle,draw,color=green]{} % 2.L-Tree layer 4.node
-						child{node[]{$\cdots$} %
-							child{node[circle,draw]{} % 2.L-Tree last child
-								child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
+				}
+				child{node[common,color=green](L4N4LTree2){}
+					child{node[]{} edge from parent[draw=none]} % invisible
+					child{node[]{} edge from parent[draw=none] %5.layer,2.L-Tree (invisible)
+						child{node[common](L5N6LTree2){} edge from parent[draw=none] % 1.L-Tree last child
+							child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[pubkey]{}}			
 							}
-						} 					
-				} 	
+						} 
+				}  	
 			} 	
 		}
-		child{node[circle, draw]{}
-			child{node[circle,draw]{}  %3. layer 3.node
-				child{node[circle,draw,color=green]{}  % 3. L-Tree layer 1.node 
-					child{node[circle,draw]{} edge from parent[]
-						child{node[circle,draw]{} %1. child 3.L-Tree
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}
+		child{node[common]{}
+			child{node[common]{}  %3. layer 3.node
+				child{node[common,color=green](L4N5LTree3){}  % 3.L-Tree layer 1.node 
+					child{node[common](L5N5LTree3){} edge from parent[draw=none]
+						child{node[common]{} %1. child 3.L-Tree
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}
 						}
-						child{node[circle,draw]{} %2. child 3.L-Tree	
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}			
+						child{node[common]{} %2. child 3.L-Tree	
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
 				}
-				child{node[circle,draw,color=green]{} % 3. L-Tree layer 2. node
-						child{node[]{$\cdots$} %
-							child{node[circle,draw]{} % 3.L-Tree last child
-								child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
+				child{node[common,color=green](L4N6LTree3){}
+					child{node[]{} edge from parent[draw=none]} % invisible
+					child{node[]{} edge from parent[draw=none] %5.layer,3.L-Tree (invisible)
+						child{node[common](L5N6LTree3){} edge from parent[draw=none] % 3.L-Tree last child
+							child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[pubkey]{}}			
 							}
 						} 
-				}  			
-			} 
-			child{node[circle,draw]{}  %3. layer 4.node ToDo
-				child{node[circle,draw,color=green]{}  % 4. L-Tree layer 1.node 
-					child{node[circle,draw]{} edge from parent[]
-						child{node[circle,draw]{} %1. child 4.L-Tree
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}
+				}  
+			}
+			child{node[common]{}  %3. layer 4.node
+				child{node[common,color=green](L4N7LTree4){}  % 4.L-Tree layer 1.node 
+					child{node[common](L5N7LTree4){} edge from parent[draw=none]
+						child{node[common]{} %1.child 4.L-Tree
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}
 						}
-						child{node[circle,draw]{} %2. child 4.L-Tree	
-							child{node[circle,draw,fill=darkblue_tud]{}}
-							child{node[circle,draw,fill=darkblue_tud]{}}			
+						child{node[common]{} %2.child 4.L-Tree	
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
 				}
-				child{node[circle,draw,color=green]{} % 4. L-Tree layer 2. node
-						child{node[]{$\cdots$} %
-							child{node[circle,draw]{} % 4.L-Tree last child
-								child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
+				child{node[common,color=green](L4N8LTree4){}
+					child{node[]{} edge from parent[draw=none]} % invisible
+					child{node[]{} edge from parent[draw=none] %5.layer,4.L-Tree (invisible)
+						child{node[common](L5N8LTree4){} edge from parent[draw=none] % 4.L-Tree last child
+							child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[pubkey]{}}			
 							}
 						} 
-				} 			
+				}			
 			}
 		}
 	}
 	child{node[](L1N2){} edge from parent[draw=none] %1.layer 2.node (invisible)
 		child{node[]{} edge from parent[draw=none]}
-		child{node[circle, draw] (L2N3){} edge from parent[draw=none] %2.layer 3.node
+		child{node[common] (L2N3){} edge from parent[draw=none] %2.layer 3.node
 			child{node[]{} edge from parent[draw=none]}
-			child{node[circle,draw]{}
-								child{node[circle,draw,color=green]{} % last.L-Tree layer 3.node
-					child{node[circle,draw]{} edge from parent[]
-							child{node[circle,draw]{} %1.child, last L-Tree
-								child{node[circle,draw,fill=darkblue_tud]{}}
-								child{node[circle,draw,fill=darkblue_tud]{}}
-							}
-							child{node[circle,draw]{} %2.child, last L-Tree	
-								child{node[circle,draw,fill=darkblue_tud]{}}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
-							} 			
+			child{node[common]{} %3.layer, 3.node
+				child{node[common,color=green](L4N9LTree5){}  % last.L-Tree layer 1.node 
+					child{node[common](L5N9LTree5){} edge from parent[draw=none]
+						child{node[common]{} %1.child last L-Tree
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}
 						}
+						child{node[common]{} %2.child last L-Tree	
+							child{node[pubkey]{}}
+							child{node[pubkey]{}}			
+						} 			
+					}
 					child{node[]{} edge from parent[draw=none]} 
-				} 	
-				child{node[circle,draw,color=green]{}
-						child{node[]{$\cdots$}
-							child{node[circle,draw]{}
-								child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[circle,draw,fill=darkblue_tud]{}}			
+				}
+				child{node[common,color=green](L4N10LTree5){}
+					child{node[]{} edge from parent[draw=none]} % invisible
+					child{node[]{} edge from parent[draw=none] %5.layer,last L-Tree (invisible)
+						child{node[common](L5N10LTree5){} edge from parent[draw=none] % last L-Tree, last child
+							child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[pubkey]{}}			
 							}
-						} 					
-				} 			
+						} 
+				}			
 			}			
 		} 
 	};
-\draw[dotted](root) -- (L2N3);
+\draw[dotted](root) -- (L2N3); % L2=Layer2,L3=Node3 etc.
 \draw[dotted](root) -- (L1N1);
+
 \draw[dotted](L4N1LTree1) -- (L5N1LTree1);
 \draw[dotted](L4N2LTree1) -- (L5N3LTree1);
+
+\draw[dotted](L4N3LTree2) -- (L5N3LTree2);
+\draw[dotted](L4N4LTree2) -- (L5N6LTree2);
+
+\draw[dotted](L4N5LTree3) -- (L5N5LTree3);
+\draw[dotted](L4N6LTree3) -- (L5N6LTree3);
+
+\draw[dotted](L4N7LTree4) -- (L5N7LTree4);
+\draw[dotted](L4N8LTree4) -- (L5N8LTree4);
+
+\draw[dotted](L4N9LTree5) -- (L5N9LTree5);
+\draw[dotted](L4N10LTree5) -- (L5N10LTree5);
+
+%\draw[dotted]( ) -- ( );
 \end{tikzpicture}
 \caption{Example depiction of a XMSS tree. The example is based in Figure~1 in Campos et al.~\cite{fabio_paper_lms_vs_xmss}.}
 \label{img:xmss_tree}
