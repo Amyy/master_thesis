@@ -762,7 +762,7 @@ The WOTS+ signature generation and verification works just as for WOTS (see Sect
 
 
 \subsection{XMSS Key Generation}
-For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_complete_tree_example}). % correct tree
+For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_complete_tree_example}). % correct the tree
 First, the signer chooses the WOTS+ parameters $n, w$ (see Section~\ref{sec:wots+_keygen}/WOTS+ Key Generation).
 Then, $2^d$ WOTS+ one-time private keys (see Equation~\ref{eq:wots+_privkey}) are generated, $d$ denotes the height of the Merkle tree inside the XMSS tree. % ref to merkle tree inside xmss tree 
 Each leaf of the MSS tree in the XMSS tree is one WOTS+ one-time public key. 
@@ -772,57 +772,12 @@ The leaf index $s_{next}$ of the next unused WOTS+ one-time private key (because
 \label{eq:xmss_priv_key}
 X_{XMSS} = ((X_0, \cdots, X_{2^d-1}), s_{next}, sd_{pub})
 \end{align}
-
 The public key $Y_{XMSS}$ consists of the root of the XMSS tree and the public seed $sd_{pub}$.
-% ! depict root of xmss tree as H_{d,0} / depict it otherwise but then change it here
+% ! depict root of xmss tree as H_{d,0} / depict it otherwise but then change it here, add reference to xmss tree
 \begin{equation}
 \label{eq:xmss_pubkey}
 Y_{XMSS} = (H_{d,0}, sd_{pub})
 \end{equation}
-% reference auf xmss baum nötig, baum wird gebaut etc.
-
-
-% source https://eprint.iacr.org/2011/484.pdf:
-%\begin{equation}
-%\label{eq:xmss_bitmasks}
-%H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right})
-%\end{equation}
-
-% explain bitmasks on xmss with little tree image:
-%\begin{figure}
-%\centering
-%\begin{tikzpicture}[edge from parent fork down]
-%\node(root){$H_{i,j}$}
-%	child{node[rectangle, draw](root2){Hashfunction $h$} edge from parent [<-]
-%		child {node(a)[circle, draw] {\tiny XOR} edge from parent [<-]
-%			child {node(c) {$H_{i-1,2j}$}}
-%		}
-%		child{node(b)[circle, draw] {\tiny XOR} edge from parent [<-]
-%			child{node(d) {$H_{i-1,2j+1}$}}	
-%		}
-%	};
-%	
-%% left bitmask	
-%\node[left=1 of a] (la) {$b_{i,left}$}; 
-%
-%% right bitmask
-%\node[right=1 of b] (rb) {$b_{i,right}$};
-%
-%% arrow from left bitmask to left XOR
-%\draw[<-] %line from la (left bitmask) -> left XOR
-%    ($(a.west)$) -- (la);	
-%
-%% arrow from right bitmask to right XOR
-%\draw[<-] %line from rb (right bitmask) -> right XOR
-%    ($(b.east)$) -- (rb);	
-%
-%\end{tikzpicture}
-%\caption{An example parent node $H_{i,j}$ with the corresponding children $H_{i-1,2j},H_{i-1,2j+1}$ of a XMSS tree. The node $H_{i,j}$ is calculated by adding two bitmasks $b_{i,left}, b_{i,right}$ to its children. The result is concatenated and used as input for the hashfunction~$h$ (see Equation~\ref{eq:xmss_bitmasks}).} % Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
-%\label{img:example_xmss_minitree}
-%\end{figure}
-
-
-
 
 \subsection{XMSS Signature Generation}
 % Quelle: RFC xmss
@@ -834,6 +789,66 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 \sigma_{XMSS} = (s, \sigma_{OTS}, A_s, ...) 
 \end{equation}
 
+% complete xmss example graph
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+[	
+	level 1/.style = {sibling distance = 5cm},
+	level 2/.style = {sibling distance = 5cm},
+	level 3/.style = {sibling distance = 3cm},
+    level 4/.style = {sibling distance = 1cm},
+    level 5/.style = {sibling distance = 1.5cm},
+    level 6/.style = {sibling distance = 1cm},
+    level 7/.style = {sibling distance = 0.5cm},
+    edge from parent fork down, <-
+]
+\node(root)[]{$H_{root}$}
+	child{node[circle, draw]{} %1. layer
+		child{node[circle, draw]{}
+			child{node[circle,draw]{} % 3. layer 1.node
+				child{node[circle,draw,color=green]{}  % 1st L-Tree layer 1.node 
+					child{node[circle,draw]{} edge from parent[]
+						child{node[circle,draw]{} %1. child 1. L-Tree
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}
+						}
+						child{node[circle,draw]{} %2. child 1. L-Tree	
+							child{node[circle,draw,fill=darkblue_tud]{}}
+							child{node[circle,draw,fill=darkblue_tud]{}}			
+						} 			
+					}
+					child{node[]{} edge from parent[draw=none]} 
+				}
+				child{node[circle,draw,color=green]{} % 1. L-Tree layer 2. node
+						child{node[]{$\cdots$} %
+							child{node[circle,draw]{} % 1.L-Tree last child
+								child{node[]{$\cdots$} edge from parent[draw=none]}
+								child{node[circle,draw,fill=darkblue_tud]{}}			
+							}
+						} 
+				}  
+			} 
+			child{node[circle,draw]{} %3. layer 2.node
+				child{node[circle,draw,color=green]{} % 1.L-Tree layer 3.node
+				} 	
+				child{node[circle,draw,color=green]{}} % 1.L-Tree layer 4.node		
+			} 	
+		}
+		child{node[circle, draw]{}
+			child{node[circle,draw]{}} %3. layer
+			child{node[]{$\cdots$}} %3. layer	
+		}
+	}
+	child{node[]{$\cdots$} %1. layer
+		child{node[]{} edge from parent[draw=none]} 
+		child{node[circle, draw]{}}
+	};
+%\draw (LC13) -- (L12);
+\end{tikzpicture}
+\caption{Example depiction of a XMSS tree. The example is based in Figure~1 in Campos et al.~\cite{fabio_paper_lms_vs_xmss}.}
+\label{img:xmss_tree}
+\end{figure}
 
 % complete xmss example graph
 \begin{figure}
@@ -849,7 +864,7 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
     % edge from parent fork down -> would be forked tree style
 ]
 % Merkle Tree
-\node(root)[]{public key}
+\node(root)[]{$H_{root}$}
 	child{node[circle, draw]{}
 		child{node[circle, draw]{}
 			child{node(left_lowest_merkle)[circle, draw]{}
@@ -1021,6 +1036,45 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 \label{img:xmss_complete_tree_example}
 \end{figure}
 
+
+% source https://eprint.iacr.org/2011/484.pdf:
+%\begin{equation}
+%\label{eq:xmss_bitmasks}
+%H_{i,j} =  h(H_{i-1,2j} \oplus b_{i,left} \concat H_{i-1,2j+1} \oplus b_{i,right})
+%\end{equation}
+
+% explain bitmasks on xmss with little tree image:
+%\begin{figure}
+%\centering
+%\begin{tikzpicture}[edge from parent fork down]
+%\node(root){$H_{i,j}$}
+%	child{node[rectangle, draw](root2){Hashfunction $h$} edge from parent [<-]
+%		child {node(a)[circle, draw] {\tiny XOR} edge from parent [<-]
+%			child {node(c) {$H_{i-1,2j}$}}
+%		}
+%		child{node(b)[circle, draw] {\tiny XOR} edge from parent [<-]
+%			child{node(d) {$H_{i-1,2j+1}$}}	
+%		}
+%	};
+%	
+%% left bitmask	
+%\node[left=1 of a] (la) {$b_{i,left}$}; 
+%
+%% right bitmask
+%\node[right=1 of b] (rb) {$b_{i,right}$};
+%
+%% arrow from left bitmask to left XOR
+%\draw[<-] %line from la (left bitmask) -> left XOR
+%    ($(a.west)$) -- (la);	
+%
+%% arrow from right bitmask to right XOR
+%\draw[<-] %line from rb (right bitmask) -> right XOR
+%    ($(b.east)$) -- (rb);	
+%
+%\end{tikzpicture}
+%\caption{An example parent node $H_{i,j}$ with the corresponding children $H_{i-1,2j},H_{i-1,2j+1}$ of a XMSS tree. The node $H_{i,j}$ is calculated by adding two bitmasks $b_{i,left}, b_{i,right}$ to its children. The result is concatenated and used as input for the hashfunction~$h$ (see Equation~\ref{eq:xmss_bitmasks}).} % Each non-leaf tree node is computed by first concatenating the values of its child nodes, computing the XOR with a bitmask, and applying the keyed hash function H to the result. 
+%\label{img:example_xmss_minitree}
+%\end{figure}
 
 % -------- EXAMPLE GRAPH -------------------
 %\begin{figure}
