@@ -801,13 +801,16 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
     level 5/.style = {sibling distance = 0.6cm},
     level 6/.style = {sibling distance = 0.8cm},
     level 7/.style = {sibling distance = 0.4cm},
- 	common/.style={circle, draw, inner sep=3pt},
+    level 8/.style = {edge from parent/.style={dashed,draw},level distance=0.8cm},
+    level 9/.style = {edge from parent/.style={solid,draw},level distance=0.55cm},
+ 	common/.style={solid,circle, draw, inner sep=3pt},
  	pubkey/.style={circle, draw,fill=darkblue_tud, inner sep=3pt},
+ 	privkey/.style={solid,draw,circle,fill=cyan_tud, inner sep=3pt},
 	interrupt/.style={
 		postaction={decorate, decoration={markings,
                     						mark= at position 0.5 with {
                     				\fill[white](-0.1,-0.3) rectangle(0.4,0.4); 
-                            		\node[] at (0.13,-0.05){$\cdots$};
+                            		\node[] at (0.2,-0.04){$\cdots$};
                             }
 			}
 		}
@@ -821,12 +824,36 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 				child{node[common,color=green](L4N1LTree1){}  % 1st L-Tree layer 1.node 
 					child{node[common](L5N1LTree1){} edge from parent[draw=none]
 						child{node[common]{} %1. child 1. L-Tree
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}
+							child{node[pubkey]{}
+								child{node[common]{}
+									child{node[common]{}
+										child{node[privkey]{}}			
+										}				
+								}
+							}
+							child{node[pubkey]{}
+								child{node[common]{}
+									child{node[common]{}
+										child{node[privkey]{}}			
+										}				
+								}							
+							}
 						}
 						child{node[common]{} %2. child 1. L-Tree	
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}			
+							child{node[pubkey]{}
+								child{node[common]{}
+									child{node[common]{}
+										child{node[privkey]{}}			
+										}				
+								}							
+							}
+							child{node[pubkey]{}
+								child{node[common]{}
+									child{node[common]{}
+										child{node[privkey]{}}			
+										}				
+								}							
+							}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
@@ -836,7 +863,13 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					child{node[]{} edge from parent[draw=none] %5.layer,1.L-Tree (invisible)
 						child{node[common](L5N3LTree1){} edge from parent[draw=none] % 1.L-Tree last child
 							child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[pubkey]{}}			
+								child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}								
+								}			
 							}
 						} 
 				}  
@@ -845,12 +878,36 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 				child{node[common,color=green](L4N3LTree2){}  % 2.L-Tree layer 1.node 
 					child{node[common](L5N3LTree2){} edge from parent[draw=none]
 						child{node[common]{} %1. child 2.L-Tree
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
 						}
 						child{node[common]{} %2. child 2.L-Tree	
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}			
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
@@ -860,7 +917,13 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					child{node[]{} edge from parent[draw=none] %5.layer,2.L-Tree (invisible)
 						child{node[common](L5N6LTree2){} edge from parent[draw=none] % 1.L-Tree last child
 							child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[pubkey]{}}			
+								child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}								
+								}			
 							}
 						} 
 				}  	
@@ -871,12 +934,36 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 				child{node[common,color=green](L4N5LTree3){}  % 3.L-Tree layer 1.node 
 					child{node[common](L5N5LTree3){} edge from parent[draw=none]
 						child{node[common]{} %1. child 3.L-Tree
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
 						}
 						child{node[common]{} %2. child 3.L-Tree	
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}			
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
@@ -886,7 +973,13 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					child{node[]{} edge from parent[draw=none] %5.layer,3.L-Tree (invisible)
 						child{node[common](L5N6LTree3){} edge from parent[draw=none] % 3.L-Tree last child
 							child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[pubkey]{}}			
+								child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}								
+								}			
 							}
 						} 
 				}  
@@ -895,12 +988,36 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 				child{node[common,color=green](L4N7LTree4){}  % 4.L-Tree layer 1.node 
 					child{node[common](L5N7LTree4){} edge from parent[draw=none]
 						child{node[common]{} %1.child 4.L-Tree
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
 						}
 						child{node[common]{} %2.child 4.L-Tree	
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}			
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
@@ -910,7 +1027,13 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					child{node[]{} edge from parent[draw=none] %5.layer,4.L-Tree (invisible)
 						child{node[common](L5N8LTree4){} edge from parent[draw=none] % 4.L-Tree last child
 							child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[pubkey]{}}			
+								child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}								
+								}			
 							}
 						} 
 				}			
@@ -925,12 +1048,36 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 				child{node[common,color=green](L4N9LTree5){}  % last.L-Tree layer 1.node 
 					child{node[common](L5N9LTree5){} edge from parent[draw=none]
 						child{node[common]{} %1.child last L-Tree
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
 						}
 						child{node[common]{} %2.child last L-Tree	
-							child{node[pubkey]{}}
-							child{node[pubkey]{}}			
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}
+							child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}							
+							}			
 						} 			
 					}
 					child{node[]{} edge from parent[draw=none]} 
@@ -940,7 +1087,13 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 					child{node[]{} edge from parent[draw=none] %5.layer,last L-Tree (invisible)
 						child{node[common](L5N10LTree5){} edge from parent[draw=none] % last L-Tree, last child
 							child{node[]{$\cdots$} edge from parent[draw=none]}
-								child{node[pubkey]{}}			
+								child{node[pubkey]{}
+									child{node[common]{}
+										child{node[common]{}
+											child{node[privkey]{}}			
+										}				
+									}								
+								}			
 							}
 						} 
 				}			
