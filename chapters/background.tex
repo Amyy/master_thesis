@@ -794,7 +794,7 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 \centering 
 \begin{tikzpicture}
 [	
-	level 1/.style = {sibling distance = 3.5cm},
+	level 1/.style = {sibling distance = 3.5cm, level distance=1.2cm},
 	level 2/.style = {sibling distance = 6cm},
 	level 3/.style = {sibling distance = 3.2cm},
     level 4/.style = {sibling distance = 0.8cm},
@@ -803,9 +803,18 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
     level 7/.style = {sibling distance = 0.4cm},
  	common/.style={circle, draw, inner sep=3pt},
  	pubkey/.style={circle, draw,fill=darkblue_tud, inner sep=3pt},
+	interrupt/.style={
+		postaction={decorate, decoration={markings,
+                    						mark= at position 0.5 with {
+                    				\fill[white](-0.1,-0.3) rectangle(0.4,0.4); 
+                            		\node[] at (0.13,-0.05){$\cdots$};
+                            }
+			}
+		}
+	},
     edge from parent fork down, <-
 ]
-\node(root)[](root){$H_{root}$}
+\node(root)[](root){$Y_{XMSS}$}
 	child{node[common](L1N1){} edge from parent[draw=none] %1.layer 1.node
 		child{node[common]{}
 			child{node[common]{} % 3. layer 1.node
@@ -938,23 +947,23 @@ Y_{XMSS} = (H_{d,0}, sd_{pub})
 			}			
 		} 
 	};
-\draw[dotted](root) -- (L2N3); % L2=Layer2,L3=Node3 etc.
-\draw[dotted](root) -- (L1N1);
+\draw[interrupt](root) -- (L2N3); % L2=Layer2,L3=Node3 etc.
+\draw[interrupt](root) -- (L1N1);
 
-\draw[dotted](L4N1LTree1) -- (L5N1LTree1);
-\draw[dotted](L4N2LTree1) -- (L5N3LTree1);
+\draw[interrupt](L4N1LTree1) -- (L5N1LTree1);
+\draw[interrupt](L4N2LTree1) -- (L5N3LTree1);
 
-\draw[dotted](L4N3LTree2) -- (L5N3LTree2);
-\draw[dotted](L4N4LTree2) -- (L5N6LTree2);
+\draw[interrupt](L4N3LTree2) -- (L5N3LTree2);
+\draw[interrupt](L4N4LTree2) -- (L5N6LTree2);
 
-\draw[dotted](L4N5LTree3) -- (L5N5LTree3);
-\draw[dotted](L4N6LTree3) -- (L5N6LTree3);
+\draw[interrupt](L4N5LTree3) -- (L5N5LTree3);
+\draw[interrupt](L4N6LTree3) -- (L5N6LTree3);
 
-\draw[dotted](L4N7LTree4) -- (L5N7LTree4);
-\draw[dotted](L4N8LTree4) -- (L5N8LTree4);
+\draw[interrupt](L4N7LTree4) -- (L5N7LTree4);
+\draw[interrupt](L4N8LTree4) -- (L5N8LTree4);
 
-\draw[dotted](L4N9LTree5) -- (L5N9LTree5);
-\draw[dotted](L4N10LTree5) -- (L5N10LTree5);
+\draw[interrupt](L4N9LTree5) -- (L5N9LTree5);
+\draw[interrupt](L4N10LTree5) -- (L5N10LTree5);
 
 %\draw[dotted]( ) -- ( );
 \end{tikzpicture}
