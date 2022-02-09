@@ -762,10 +762,11 @@ After $w-1$ hash function calls applied consecutively on the private key of this
 
 
 \subsubsection{WOTS+ Signature Generation \& Verification}
-The WOTS+ signature generation and verification works just as for WOTS (see Section~\ref{sec:wots-verification}, WOTS Verification), except that (like for WOTS+ key generation) instead of the function $f$, the tweakable hash function $h_{tweak}$ is used. The seed $sd$ and all bitmasks $B_{wots+}$ (see Equation~\ref{eq:wots+_all_bitmasks}) are known to the verifier.
+The WOTS+ signature generation and verification works just as for WOTS (see Section~\ref{sec:wots-verification}, WOTS Verification), except that (like for WOTS+ key generation) instead of the function $f$, the tweakable hash function $h_{tweak}$ is used. The seed $sd$ and all bitmasks $B_{wots+}$ (see Equation~\ref{eq:wots+_all_bitmasks}) are known to the verifier. 
+Given all necessary parameters, a WOTS+ signature is denoted as follows:
 \begin{equation}
 \label{eq:wots+_sig_gen}
-\sigma_{wots+} = (h_{tweak}(sd,x_0))
+\sigma_{wots+} = (\sigma_0, \cdots, \sigma_i, \cdots \sigma_{l-1}) \text{ where } \sigma_i = h_{tweak}^{b_i}(sd,b_{i,j},x_i)
 \end{equation}
 
 \subsection{XMSS Key Generation}
@@ -908,8 +909,7 @@ The L-Tree is a concept to combine each WOTS+ one-time key into a leaf of the Me
 % A_s = authpath
 % ...
 The signature generation works like for MSS in combination with WOTS (see Section~\ref{sec:mss_sig_gen}), except the used hash function is $h_{tweak}$ (see Equation~\ref{eq:tweak_function_h1h2}) and the L-Tree structure (see Section~\ref{sec:l_tree}/L-Tree). 
-To sign a message $M$, the signature $\sigma_s$ is generated. 
-
+Given the message... % continue here
 
 \begin{equation}
 \label{eq:xmss_sign}
