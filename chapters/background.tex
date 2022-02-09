@@ -730,7 +730,10 @@ For an explanatory depiction of the key generation process, see Figure~\ref{img:
 
 \begin{figure}
 \centering
-\begin{tikzpicture}[edge from parent fork down]
+\begin{tikzpicture}
+[	level 1/.style = {level distance=1.2cm},
+	edge from parent fork down
+]
 \node[circle,draw,fill=darkblue_tud, inner sep=4]{}
 	child{node[rectangle, draw](hashfct2){$h_{tweak}$} edge from parent[<-]
 		child{node(cdots){$\cdots$} edge from parent[<-]
@@ -760,7 +763,10 @@ After $w-1$ hash function calls applied consecutively on the private key of this
 
 \subsubsection{WOTS+ Signature Generation \& Verification}
 The WOTS+ signature generation and verification works just as for WOTS (see Section~\ref{sec:wots-verification}, WOTS Verification), except that (like for WOTS+ key generation) instead of the function $f$, the tweakable hash function $h_{tweak}$ is used. The seed $sd_{pub}$ and all bitmasks $B_{wots+}$ (see Equation~\ref{eq:wots+_all_bitmasks}) are known to the verifier.
-
+\begin{equation}
+\label{eq:wots+_sig_gen}
+\sigma_{wots+} = (h_{tweak}(sd,x_0))
+\end{equation}
 
 \subsection{XMSS Key Generation}
 For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_tree}. 
@@ -779,17 +785,135 @@ The public key $Y_{XMSS}$ consists of the root of the XMSS tree $Y_{root}$ and t
 Y_{XMSS} = (Y_{root}, sd_{pub})
 \end{equation}
 
+\subsubsection{L-Tree}
+\label{sec:l_tree}
+The L-Tree is a concept to combine each WOTS+ one-time key into a leaf of the Merkle tree, see Figure~\ref{img:l_tree}: It compresses the WOTS+ public key into one value. As $h_{tweak}$ is used, $sd_{pub}$ and the corresponding bitmasks are also needed for generating the L-Tree.
+
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+[	level 1/.style = {level distance=1cm, sibling distance=2cm},
+	level 2/.style = {edge from parent/.style={solid,draw}, sibling distance=1cm, },
+	level 3/.style = {sibling distance=0.5cm},
+	level 4/.style = {edge from parent/.style={dashed,draw}, level distance=0.65cm},
+	level 5/.style = {edge from parent/.style={solid,draw}},
+ 	common/.style={solid,circle, draw, inner sep=2.8pt},
+ 	pubkey/.style={circle, draw,fill=darkblue_tud, inner sep=2.8pt},
+ 	privkey/.style={solid,draw,circle,fill=cyan_tud, inner sep=2.8pt},
+ 	merkleleaf/.style={solid,draw,circle,fill=grey_tud, inner sep=2.8pt},
+    edge from parent fork down
+]
+\node(root)[merkleleaf]{} 
+	child{node[common]{} edge from parent[<-] %1.layer 1.node 
+		child{node(L1C1)[common]{} %2.layer 1.node
+			child{node(L1pub1)[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node(L1priv1)[privkey]{}}
+					}			
+				}			
+			}	
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node[privkey]{}}					
+					}			
+				}			
+			}						
+		}
+		child{node[common]{}
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node[privkey]{}}					
+					}			
+				}				
+			}
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node(L1priv4)[privkey]{}}					
+					}			
+				}			
+			}	
+		}
+	}
+	child{node[common]{} edge from parent[<-]  %1.layer 2.node
+		child{node[common]{} 
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node[privkey]{}}					
+					}			
+				}			
+			}	
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node[privkey]{}}					
+					}			
+				}			
+			}		
+		}
+		child{node(2L2C)[common]{}
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node[privkey]{}}					
+					}			
+				}			
+			}	
+			child{node[pubkey]{} 
+				child{node[common]{}
+					child{node[common]{}
+						child{node(L2lastpriv)[privkey]{}}					
+					}			
+				}			
+			}
+		}	
+	};
+	
+
+\node[left=2cm of root](leftroot){}; 
+\node[left=of L1C1](leftL1C1){}; 
+\node[left=4pt of L1priv1](leftL1priv1){};
+\node[left=4pt of L1pub1](leftL1pub1){};
+
+% bracket log(l)
+\draw[decorate,decoration={brace,mirror,amplitude=2.5mm,aspect=0.3}](leftroot.5)--node[above left=6pt]{$\ceil{\log(l)}=3$}(leftL1C1);
+
+% helpline under log bracket
+\draw[color=grey_tud]($(L1C1)-(0.35,0)$)--(leftL1C1);
+% helpline root--log(l) bracket
+\draw[color=grey_tud]($(root)-(0.35,0)$)--($(leftroot)+(0.35,0)$);
+
+% bracket w-1
+\draw[decorate,decoration={brace,mirror,amplitude=2.5mm}]($(leftL1pub1)+(0,0.15)$)--node[left=7pt]{$w-1$}($(leftL1priv1)-(0,0.15)$);
+
+% bracket l
+\draw[decorate,decoration={brace,amplitude=2.5mm, raise=9pt}]($(L2lastpriv)+(0.2,0)$)--node[below=15pt]{$l=8$}($(L1priv1)-(0.22,0)$);
+
+% bracket L-Tree
+\draw[decorate,decoration={brace,amplitude=2.5mm, raise=20pt, aspect=0.4}](root)--node[above right=27pt]{L-Tree}($(2L2C)-(0,0.3)$);
+
+\end{tikzpicture}
+\caption{Example depiction of one L-Tree (see Section~\ref{sec:l_tree}/L-Tree), the WOTS+ one-time key has $l=8$ elements. Each \textcolor{cyan_tud}{cyan node} is the beginning of one WOTS+ chain, each \textcolor{darkblue_tud}{blue node} denotes the end of one WOTS+ chain. The L-Tree (with height $\ceil{\log(l)}=3$) combines each chain to one Merkle tree child (\textcolor{grey_tud}{grey node} at the root), see also Figure~\ref{img:xmss_tree}.
+} 
+\label{img:l_tree}
+\end{figure}
+
 \subsection{XMSS Signature Generation}
 % Quelle: RFC xmss
 % s = index of the WOTS keypair/leaf used for this signature
 % A_s = authpath
 % ...
+The signature generation works like for MSS in combination with WOTS (see Section~\ref{sec:mss_sig_gen}), except the used hash function is $h_{tweak}$ (see Equation~\ref{eq:tweak_function_h1h2}) and the L-Tree structure (see Section~\ref{sec:l_tree}/L-Tree). 
+To sign a message $M$, the signature $\sigma_s$ is generated. 
 
-% CONTINUE HERE
 
 \begin{equation}
 \label{eq:xmss_sign}
-\sigma_{XMSS} = (s, \sigma_{OTS}, A_s, ...) 
+\sigma_{xmss} = (s, \sigma_{OTS}, A_s, ...) 
 \end{equation}
 
 % complete xmss example graph
