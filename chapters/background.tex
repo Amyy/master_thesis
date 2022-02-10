@@ -559,6 +559,7 @@ Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}
 
 
 \subsection{MSS Signature Verification}
+\label{sec:mss_sign_verif}
 When receiving $\sigma_s$ (see Equation~\ref{eq:complete_merkle_signature_for_one_Ys}), the verifier uses $\sigma_{s/OTS}$ to calculate $Y_s$. This works specifically because W-OTS is used in combination with the Merkle tree: Applying the hash function $h$ for a specific amount of times to $\sigma_s$ (this is determined by the underlying W-OTS, see section~\ref{sec:wots-verification}) automatically generates $Y_s$.
 Because of the index $s$, the verifier knows the leaf-position of the calculated $Y_s$ in the Merkle tree. 
 In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree: 
@@ -904,19 +905,22 @@ The L-Tree is a concept to combine each WOTS+ one-time key into a leaf of the Me
 \end{figure}
 
 \subsection{XMSS Signature Generation}
-% Quelle: RFC xmss
-% s = index of the WOTS keypair/leaf used for this signature
-% A_s = authpath
-% ...
-The signature generation works like for MSS in combination with WOTS (see Section~\ref{sec:mss_sig_gen}), except the used hash function is $h_{tweak}$ (see Equation~\ref{eq:tweak_function_h1h2}) and the L-Tree structure (see Section~\ref{sec:l_tree}/L-Tree). 
-Given the message... % continue here
+The signature generation works like for MSS in combination with WOTS (see Section~\ref{sec:mss_sig_gen}), but the used hash function is $h_{tweak}$ with its corresponding inputs $sd, B_{wots+}$ (see Equation~\ref{eq:tweak_function_h1h2}). Moreover, the L-Tree structure (see Section~\ref{sec:l_tree}/L-Tree) is used to generate the Merkle leaves out of the WOTS+ key pairs.
+Given the message $M$, the message digest is computed with $h_{tweak}$. 
+A XMSS signature $\sigma_{xmss}$ for $m$ contains the WOTS+ signature $\sigma_{wots+}$, the authentication path $A_s$, and the index $s$ (indicates the WOTS+ key pair used for this signature). For a more specific explanation of these parameters, see also Section~\ref{sec:mss_sig_gen}.
 
 \begin{equation}
 \label{eq:xmss_sign}
-\sigma_{xmss} = (s, \sigma_{OTS}, A_s, ...) 
+\sigma_{XMSS} = (s, \sigma_{wots+}, A_s) 
 \end{equation}
+After signing the message digest $m$, the index $s_{next}$ of the next unused one-time key pair in the private key $X_{XMSS}$ is updated.
 
-% complete xmss example graph
+\subsection{XMSS Signature Verification}
+The signature verification also works similar to MSS in combination with WOTS (see Section~\ref{sec:mss_sign_verif}). Like in the steps before, the hash function $h_{tweak}$ is used.
+Given the public key $Y_{XMSS}$ and signature $\sigma_{XMSS}$, the verifier takes $\sigma_{wots+} \in \sigma_{XMSS}$ to calculate the leaves of the L-Tree (or in other words, the public one-time WOTS+ key). Then, the root of the L-Tree or respectively the leaf of the Merkle tree is created (see also Figure~\ref{img:l_tree} and Figure~\ref{img:xmss_tree}). With $A_s \in \sigma_{XMSS}$, the verifier calculates a path from the Merkle tree leaf to the root of the XMSS tree. Now, the root calculated by the verifier is compared to $Y_{root} \in Y_{XMSS}$. The verification succeeds only if the calculated root value matches the value $Y_{root}$.
+For a more specific explanation of the signing process and the used parameters, see also Section~\ref{sec:mss_sign_verif}.
+
+% xmss example tree
 \begin{figure}
 \centering 
 \begin{tikzpicture}
@@ -1387,9 +1391,6 @@ The depiction is based on Figure~1 in Campos et al.~\cite{fabio_paper_lms_vs_xms
 %\label{img:example_tree}
 %\end{figure}
 % ---------------- END EXAMPLE GRAPH ---------------------------
-
-
-\subsection{XMSS Signature Verification}
 
 % Additional XMSS stuff:
 % For further details on the security model of XMSS, we refer to [21] and for further security notions for the defined constructions, we refer to [5].-> fabios paper
