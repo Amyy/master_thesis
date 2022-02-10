@@ -276,7 +276,7 @@ $Y = (y_0, \cdots, y_{t-1}) = (y_0, y_1, y_2, y_3) =
 \item %The signature $\sigma$ is created by applying $f$ to each element in $X$.
 %The block $B$ determines the amount of applying $f$ to $X$
 The signature $\sigma$ of $m$ is determined by the parameter $B$ and one-way function $f$: \\ % hier besser erklären dass man dezimalrepr. von B und X nimmt?
-$\sigma = (f^{b_0}(x_0), f^{b_1}(x_1),f^{b_2}(x_2),f^{b_3}(x_3)) = (f^1(5),f^1(7),f^1(3),f^2(6)) = (\sigma_0, \sigma_1, \sigma_2, \sigma_3) = 
+$\sigma = (f^{b_0}(x_0), f^{b_1}(x_1),f^{b_2}(x_2),f^{b_3}(x_3)) = (f^1(5),f^1(7),f^1(3),f^2(6)) = (\sigma_0, \sigma_1, \sigma_2, \sigma_3) = \\
 \begin{psmallmatrix}
 1 & 0 & 1 & 0 \\
 1 & 0 & 0 & 1 \\
@@ -284,7 +284,7 @@ $\sigma = (f^{b_0}(x_0), f^{b_1}(x_1),f^{b_2}(x_2),f^{b_3}(x_3)) = (f^1(5),f^1(7
 \end{psmallmatrix} \in \{0,1\}^{(3,4)} $
 
 \item The verifier knows $Y, w, n$ and therefore $t_1, t_2$ and $t$. After receiving $m, \sigma$ from the signer, the block $B$ is calculated as explained in the previous steps. The validity of the signature $\sigma$ is checked by calculating: \\
-$( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^{2^w-1-b_3}(\sigma_3)) = (f^2(7) , f^2(1), f^2(5), f^1(2)) = \begin{psmallmatrix}
+$( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^{2^w-1-b_3}(\sigma_3)) = (f^2(7) , f^2(1), f^2(5), f^1(2)) = \\ \begin{psmallmatrix}
 0 & 1 & 0 & 1 \\
 1 & 0 & 0 & 0 \\
 1 & 1 & 1 & 0
@@ -484,7 +484,7 @@ In summary, one MSS signature contains the following elements:
     level 1/.style = {sibling distance = 8cm},
     level 2/.style = {sibling distance = 4cm},
     level 3/.style = {sibling distance = 2.5cm},
-    level 4/.style = {level distance = 1cm}
+    level 4/.style = {level distance = 1cm, sibling distance = 1cm}
     %level 5/.style = {level distance = 1.5cm}
 ]
 \node [darkblue_tud] {$H_{3,0} = p_3 \? Y_{MSS}$ }
@@ -600,23 +600,36 @@ The Winternitz one-time signature scheme that now includes bitmasks is referred 
 % l = number of Winternitz chains used in a single OTS operation -> ? why, check this
 % maybe add: SEED (public), idx (Blatt index), w, n, hashfunctions...
 \begin{table}
+\centering
+\begin{tabular}{c c l} 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c }{\textbf{symbol}} \\
+ WOTS & WOTS+ & meaning  \\ 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{$n$} & security parameter \\ %the length in bytes of the message digest as well as each node 
+ \multicolumn{2}{c}{$w$} & Winternitz parameter  \\ 
+%  \hline
+ $t$ & $l$ & amount of elements in private/public key, signature \\ 
+ \hline
+\end{tabular}
+\caption{Symbols and their meanings used for WOTS and WOTS+ respectively.}
+\label{table:wots_wots+_diff}
+\end{table}
+
+\begin{table}
 \begin{center}
-\begin{tabular}{c l} 
- \hline
- symbol & meaning  \\ 
- \hline
- $n$ & security parameter \\ %the length in bytes of the message digest as well as each node 
- $w$ & Winternitz parameter  \\ 
+\begin{tabular}{c l}
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{XMSS symbols/parameters} \\
+ \hline\noalign{\smallskip}
+ $l$ & amount of leaves of the L-Tree \\ 
  $d$ & height of Merkle tree in the XMSS tree  \\ 
- $t$ & number of elements used in a single Winternitz entity (one-time key or signature) / \\ 
-     & amount of leaves of the L-Tree \\ 
- $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
-% $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
- $PRF$ & pseudorandom function \\
- $K$ & key for the keyed hash function, corresponds to XMSS private/public seed \\
  $sd$ & public seed for keyed hash function \\
  $s_{next}$ & index of next unused WOTS+ keypair \\
- \hline
+ $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
+ $K$ & key for the keyed hash function, corresponds to XMSS private/public seed \\
+ % $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
+ \hline 
 \end{tabular}
 \caption{Symbols and parameters used for describing XMSS.}
 \label{table:xmms_param}
