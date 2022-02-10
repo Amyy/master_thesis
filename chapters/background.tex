@@ -958,7 +958,7 @@ For a more specific explanation of the signing process and the used parameters, 
  	pubkey/.style={circle, draw,fill=darkblue_tud, inner sep=2.8pt},
  	privkey/.style={solid,draw,circle,fill=cyan_tud, inner sep=2.8pt},
  	merkleleaf/.style={solid,draw,circle,fill=grey_tud, inner sep=2.8pt},
-	interrupt/.style={
+	interrupt/.style={<-,
 		postaction={decorate, decoration={markings,
                     						mark= at position 0.5 with {
                     				\fill[white](-0.1,-0.3) rectangle(0.35,0.35); 
@@ -967,11 +967,11 @@ For a more specific explanation of the signing process and the used parameters, 
 			}
 		}
 	},
-    edge from parent fork down, <-
+    edge from parent fork down
 ]
 \node(root)[](root){$Y_{root}$}
 	child{node[common](L1N1){} edge from parent[draw=none] %1.layer 1.node
-		child{node[common]{}
+		child{node[common]{} edge from parent[<-]
 			child{node(L3N1)[merkleleaf]{} % 3.layer 1.node
 				child{node[common](L4N1LTree1){}  % 1st L-Tree layer 1.node 
 					child{node[common](L5N1LTree1){} edge from parent[draw=none]
@@ -1081,7 +1081,7 @@ For a more specific explanation of the signing process and the used parameters, 
 				}  	
 			} 	
 		}
-		child{node[common]{}
+		child{node[common]{} edge from parent[<-]
 			child{node[merkleleaf]{}  %3. layer 3.node
 				child{node[common](L4N5LTree3){}  % 3.L-Tree layer 1.node 
 					child{node[common](L5N5LTree3){} edge from parent[draw=none]
@@ -1196,7 +1196,7 @@ For a more specific explanation of the signing process and the used parameters, 
 		child{node[]{} edge from parent[draw=none]}
 		child{node[common] (L2N3){} edge from parent[draw=none] %2.layer 3.node
 			child{node[]{} edge from parent[draw=none]}
-			child{node[merkleleaf]{} %3.layer, 5.node
+			child{node[merkleleaf]{} edge from parent[<-] %3.layer, 5.node
 				child{node[common](L4N9LTree5){}  % last.L-Tree layer 1.node 
 					child{node[common](L5N9LTree5){} edge from parent[draw=none]
 						child{node[common]{} %1.child last L-Tree
