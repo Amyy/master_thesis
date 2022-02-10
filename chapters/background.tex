@@ -591,50 +591,6 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 \label{sec:xmss}
 The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an extension of the Merkle Signature Scheme in combination with W-OTS (see Section~\ref{sec:mss}). One of the main advantages of XMSS is that it does not rely on the collision resistance of the used hash functions, but on weaker properties (preimage-resistance, second preimage-resistance). This is achieved by using additional randomly chosen bitmasks for each invocation of the hash function.
 The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+} (see Section~\ref{sec:wots+_general}). XMSS is a \textit{stateful} signature scheme, so the private key changes after every signature generation. The notation of parameters used for XMSS in this work is shown in Table~\ref{table:xmms_param}. This section is mostly based on the XMSS RFC~\cite{xmss_RFC8391}.
-% Maybe add this to "stateful": If a secret key state is used twice, no cryptographic security guarantees remain. (There exists a possibility to make digital signature system with underlying one-time signature scheme stateless - SPHINCS+.) -> or add to keygen
-
-
-%param for tree/xmss
-% D = complete height of the tree (pubkeys WOTS+ as leaves)c -> in xmss RFC, they don't distinguish heigth merkle + height LMS trees, uses complete height of xmss tree
-% source https://eprint.iacr.org/2020/470.pdf
-% l = number of Winternitz chains used in a single OTS operation -> ? why, check this
-% maybe add: SEED (public), idx (Blatt index), w, n, hashfunctions...
-\begin{table}
-\centering
-\begin{tabular}{c c l} 
- \hline\noalign{\smallskip}
- \multicolumn{2}{c }{\textbf{symbol}} \\
- WOTS & WOTS+ & meaning  \\ 
- \hline\noalign{\smallskip}
- \multicolumn{2}{c}{$n$} & security parameter \\ %the length in bytes of the message digest as well as each node 
- \multicolumn{2}{c}{$w$} & Winternitz parameter  \\ 
-%  \hline
- $t$ & $l$ & amount of elements in private/public key, signature \\ 
- \hline
-\end{tabular}
-\caption{Symbols and their meanings used for WOTS and WOTS+ respectively.}
-\label{table:wots_wots+_diff}
-\end{table}
-
-\begin{table}
-\begin{center}
-\begin{tabular}{c l}
- \hline\noalign{\smallskip}
- \multicolumn{2}{c}{XMSS symbols/parameters} \\
- \hline\noalign{\smallskip}
- $l$ & amount of leaves of the L-Tree \\ 
- $d$ & height of Merkle tree in the XMSS tree  \\ 
- $sd$ & public seed for keyed hash function \\
- $s_{next}$ & index of next unused WOTS+ keypair \\
- $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
- $K$ & key for the keyed hash function, corresponds to XMSS private/public seed \\
- % $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
- \hline 
-\end{tabular}
-\caption{Symbols and parameters used for describing XMSS.}
-\label{table:xmms_param}
-\end{center}
-\end{table}
 
 \subsection{Omitting Collision Resistance}
 All of modern cryptography relies on unproven assumptions, only a few cryptographic tasks can be achieved with perfect security (e.g. the one-time pad~\cite{one_time_pad_2013}). There clearly is a risk that at least some of these assumptions may be wrong. Therefore, it is important to only make assumptions that are really necessary.~\cite{minimal_security_assump_phd_2016}
@@ -646,7 +602,7 @@ To achieve this, a keyed hash functions (see Equation~\ref{eq:keyed_hashfc_gener
 
 \subsection{WOTS+}
 \label{sec:wots+_general}
-This section describes the main difference between WOTS+ and WOTS (see Section~\ref{sec:wots_general}): The hash function used for WOTS+ is a \textit{keyed} hash function with \textit{random bitmask} as additional input for each function call. The rest of WOTS+ works just like WOTS.
+This section describes the main difference between WOTS+ and WOTS (see Section~\ref{sec:wots_general}), an overview is given in Table~\ref{table:wots_wots+_diff}. The hash function used for WOTS+ is a \textit{keyed} hash function with \textit{random bitmask} as additional input for each function call. The rest of WOTS+ works just like WOTS.
 In general, a keyed hash function $h_{keyed}$ takes a public key $K$ and a message $M$ of arbitrary length and maps it to an output of fixed length $n$. The public key $K$ is an element of the key space~$\mathcal{K}$, $\mathcal{K}=\{0,1\}^n$, $M$ is an element of the message space $\mathcal{M}, M=\{0,1\}$.~\cite{keyed_hashfct_introduct_2006} In XMSS, the key $K$ corresponds to a public seed $sd$. 
 
 % keyed hashfunction
@@ -704,6 +660,25 @@ As defined in Equation~\ref{eq:tweak_function_h1h2}, additional distinct random 
 \label{img:h_tweak}
 \end{figure}
 
+\begin{table}
+\centering
+\begin{tabular}{c c l} 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c }{\textbf{symbol}} & \textbf{meaning} \\
+ WOTS & WOTS+ &  \\ 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{$n$} & security parameter / output length of used hash function \\
+ \multicolumn{2}{c}{$w$} & Winternitz parameter / blocksize  \\ 
+ \multicolumn{2}{c}{$b_i \in B$} & one block element (of size $w$) \\ 
+ $t$ & $l$ & amount of elements in private/public key, signature \\ 
+ $f$ & $h_{tweak}$ & used hash function \\
+ - & $B_{wots+}$ & bitmasks necessary for $h_{tweak}$ \\
+ - & $sd$ & public seed necessary for $h_{tweak}$ \\ 
+ \hline
+\end{tabular}
+\caption{Symbols and their meaning used for WOTS (see Section~\ref{sec:wots_general}) and WOTS+ (see Section~\ref{sec:wots+_general}) respectively.}
+\label{table:wots_wots+_diff}
+\end{table}
 
 \subsubsection{WOTS+ Key Generation}
 \label{sec:wots+_keygen}
@@ -738,7 +713,6 @@ B_{wots+} = (b_{0,0}, \cdots, b_{i,j}, \cdots, b_{l,w-1})
 &y_i \in Y = h_{tweak}^{w-1}(sd,b_{i,j}, x_i) \text{ with } j= 0,\cdots,w-1 \\
 &Y = (y_0, \cdots, y_{l-1})
 \end{align}
-
 For an explanatory depiction of the key generation process, see Figure~\ref{img:wots+_bitmask_hashcall}.
 
 
@@ -785,6 +759,26 @@ Given all necessary parameters, a WOTS+ signature is denoted as follows:
 
 \subsection{XMSS Key Generation}
 For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img:xmss_tree}. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{c l}
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{XMSS symbols/parameters} \\
+ \hline\noalign{\smallskip}
+ $l$ & amount of leaves of the L-Tree \\ 
+ $d$ & height of Merkle tree in the XMSS tree  \\ 
+ $sd$ & public seed for keyed hash function \\
+ $s_{next}$ & index of next unused WOTS+ keypair \\
+ $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
+ $K$ & key for the keyed hash function, corresponds to XMSS public seed $sd$ \\
+ % $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
+ \hline 
+\end{tabular}
+\caption{Symbols and parameters used for describing XMSS.}
+\label{table:xmms_param}
+\end{center}
+\end{table}
 First, the signer chooses the WOTS+ parameters $n, w$ (see Section~\ref{sec:wots+_keygen}/WOTS+ Key Generation).
 Then, $2^d$ WOTS+ one-time private keys (see Equation~\ref{eq:wots+_privkey}) are generated, $d$ denotes the height of the Merkle tree inside the XMSS tree. % ref to merkle tree inside xmss tree 
 Each leaf of the MSS tree in the XMSS tree is one WOTS+ one-time public key. 
@@ -929,7 +923,8 @@ A XMSS signature $\sigma_{xmss}$ for $m$ contains the WOTS+ signature $\sigma_{w
 After signing the message digest $m$, the index $s_{next}$ of the next unused one-time key pair in the private key $X_{XMSS}$ is updated.
 
 \subsection{XMSS Signature Verification}
-The signature verification also works similar to MSS in combination with WOTS (see Section~\ref{sec:mss_sign_verif}). Like in the steps before, the hash function $h_{tweak}$ is used.
+The signature verification also works similar to MSS in combination with WOTS (see Section~\ref{sec:mss_sign_verif}). For an overview of the parameters used for XMSS, see Table~\ref{table:xmms_param}.
+ Like in the steps before, the hash function $h_{tweak}$ is used.
 Given the public key $Y_{XMSS}$ and signature $\sigma_{XMSS}$, the verifier takes $\sigma_{wots+} \in \sigma_{XMSS}$ to calculate the leaves of the L-Tree (or in other words, the public one-time WOTS+ key). Then, the root of the L-Tree or respectively the leaf of the Merkle tree is created (see also Figure~\ref{img:l_tree} and Figure~\ref{img:xmss_tree}). With $A_s \in \sigma_{XMSS}$, the verifier calculates a path from the Merkle tree leaf to the root of the XMSS tree. Now, the root calculated by the verifier is compared to $Y_{root} \in Y_{XMSS}$. The verification succeeds only if the calculated root value matches the value $Y_{root}$.
 For a more specific explanation of the signing process and the used parameters, see also Section~\ref{sec:mss_sign_verif}.
 
