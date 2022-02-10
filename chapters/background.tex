@@ -664,7 +664,8 @@ As defined in Equation~\ref{eq:tweak_function_h1h2}, additional distinct random 
 \centering
 \begin{tabular}{c c l} 
  \hline\noalign{\smallskip}
- \multicolumn{2}{c }{\textbf{symbol}} & \textbf{meaning} \\
+ \multicolumn{2}{l}{\textbf{symbol}} & \textbf{meaning} \\
+ \noalign{\smallskip}
  WOTS & WOTS+ &  \\ 
  \hline\noalign{\smallskip}
  \multicolumn{2}{c}{$n$} & security parameter / output length of used hash function \\
@@ -764,15 +765,16 @@ For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img
 \begin{center}
 \begin{tabular}{c l}
  \hline\noalign{\smallskip}
- \multicolumn{2}{c}{XMSS symbols/parameters} \\
- \hline\noalign{\smallskip}
- $l$ & amount of leaves of the L-Tree \\ 
- $d$ & height of Merkle tree in the XMSS tree  \\ 
- $sd$ & public seed for keyed hash function \\
- $s_{next}$ & index of next unused WOTS+ keypair \\
+ \textbf{symbol} & \textbf{meaning} \\
+ XMSS & \\
+ \hline\noalign{\smallskip} 
+ $l$ & amount of leaves of the L-Tree / elements in one WOTS+ key  \\ 
  $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
- $K$ & key for the keyed hash function, corresponds to XMSS public seed $sd$ \\
- % $b_{i,j}$ & bitmask in XMSS tree on position $i,j$ \\
+ $d$ & height of Merkle tree in the XMSS tree  \\ 
+ $h_{tweak}$ & tweakable hash function \\
+ $sd$ & public seed, key for hash function $h_{tweak}$ \\
+ $b_{i,j} \in B_{XMSS}$ & bitmask in XMSS tree on position $i,j$ \\
+ $s_{next}$ & index of next unused WOTS+ keypair \\
  \hline 
 \end{tabular}
 \caption{Symbols and parameters used for describing XMSS.}
@@ -782,7 +784,8 @@ For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img
 First, the signer chooses the WOTS+ parameters $n, w$ (see Section~\ref{sec:wots+_keygen}/WOTS+ Key Generation).
 Then, $2^d$ WOTS+ one-time private keys (see Equation~\ref{eq:wots+_privkey}) are generated, $d$ denotes the height of the Merkle tree inside the XMSS tree. % ref to merkle tree inside xmss tree 
 Each leaf of the MSS tree in the XMSS tree is one WOTS+ one-time public key. 
-The leaf index $s_{next}$ of the next unused WOTS+ one-time private key (because each one-time key must only be used once), and a seed $sd$ for randomized signature generation (it corresponds to the key $K$ when using $h_{tweak}$, see Equation~\ref{eq:tweak_function_h1h2}). The leaf index $s_{next}$ is initialized to zero when the XMSS private key is created.
+The leaf index $s_{next}$ denotes the next unused WOTS+ one-time private key (to ensure it is only used once), a seed $sd$ (it corresponds to the key $K$ when using $h_{tweak}$, see Equation~\ref{eq:tweak_function_h1h2}), and the bitmasks $B_{XMSS}$ (one $b_{i,j} \in B_{XMSS}$ corresponds to $B$ when using $h_{tweak}$, see Equation~\ref{eq:tweak_function_h1h2}) for randomized signature generation.
+The leaf index $s_{next}$ is initialized to zero when the XMSS private key is created.
 % sd corresponds to seed... address already known to verifier
 \begin{align}
 \label{eq:xmss_priv_key}
