@@ -1272,8 +1272,8 @@ For a more specific explanation of the signing process and the used parameters, 
 \draw[interrupt](L4N9LTree5) -- (L5N9LTree5);
 \draw[interrupt](L4N10LTree5) -- (L5N10LTree5);
 
-% L-Tree bracket
-\draw[decorate,decoration={brace,mirror,amplitude=5mm, aspect=0.55, raise=2pt}]($(root)+(-0.8,0.25)$) -- node[above left=18pt]{L-Tree}($(L3N1)+(-1.3,0.3)$);
+% Merkle tree bracket
+\draw[decorate,decoration={brace,mirror,amplitude=5mm, aspect=0.55, raise=2pt}]($(root)+(-0.8,0.25)$) -- node[above left=18pt]{Merkle tree}($(L3N1)+(-1.3,0.3)$);
 
 \end{tikzpicture}
 \caption{Example depiction of a XMSS tree. The root is the public $XMSS$ key $Y_{XMSS}$, the first $d$ layers are the Merkle tree. The \textcolor{darkblue_tud}{blue nodes} are the public keys, the \textcolor{cyan_tud}{cyan nodes} are the private keys of the WOTS+ chains. One leaf of the Merkle tree (\textcolor{grey_tud}{grey nodes}) or respectively one L-Tree corresponds to a complete one-time WOTS+ public key.
