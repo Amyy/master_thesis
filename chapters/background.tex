@@ -435,7 +435,6 @@ The signer publishes the public key $Y_{MSS}$.
 \caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digests of their corresponding \textcolor{grey_tud}{one-time public key} (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}). Because W-OTS is used, the signer generates the \textcolor{grey_tud}{public one-time keys} by applying the hash function~$h$ for $2^w-1$ times to the corresponding \textcolor{grey_tud}{private one-time keys $X_i \in X_{MSS}$} (see Equations~\ref{eq:wots-generation-one-time-public-key} and~\ref{eq:xmss_priv_key}).}
 \label{img:merkle_tree}
 \end{figure}
-% soll treehash algo hier auch erklärt werden?
 
 \subsection{MSS Signature Generation}
 \label{sec:mss_sig_gen}
