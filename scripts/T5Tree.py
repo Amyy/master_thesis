@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
@@ -12,8 +13,8 @@ def xor(left_input: int, right_input: int):
     return left_input ^ right_input
 
 
-# != authpath, tree_height = T5Block Tree height
-def calc_path(ot_key_pos: int, tree_height: int):
+# != authpath, tree_height = T5Block Tree height, != path calculated by verifier
+def calc_t5_path(ot_key_pos: int, tree_height: int):
     path_list = []
     i = ot_key_pos
     for _ in range(tree_height):
@@ -21,6 +22,71 @@ def calc_path(ot_key_pos: int, tree_height: int):
         path_list.insert(0, j)  # 1st position of list
         i = (i - j) // 5  # relative position in T5 Block
     return path_list  # list: from root to leaf
+
+
+# path calculated by verifier
+def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one_time_signature: int):
+    # calc depth of tree
+    tree_depth = int(math.log(child_count, 5))
+    path_t5 = calc_t5_path(key_pos, tree_depth)
+    last_result = one_time_signature  # later: last_result == output of leaf before
+
+    for index in reversed(path_t5):  # reverse because path calc is bottom to root; index == child pos. in T5 Block
+        if index == 0:  # case m1
+            m2 = auth_path[-3]
+            h2 = auth_path[-2]
+            m5 = auth_path[-1]
+            h1 = hash_t5(last_result, m2)
+            h1_xor = xor(h1, m5)
+            h2_xor = xor(h2, m5)
+            h3 = hash_t5(h1_xor, h2_xor)
+            last_result = xor(h3, m5)  # end result, h3 XOR m5
+            auth_path = auth_path[:-3]  # remove already used elements of authpath
+
+        elif index == 1:  # case m2
+            m1 = auth_path[-3]
+            h2 = auth_path[-2]
+            m5 = auth_path[-1]
+            h1 = hash_t5(m1, last_result)  # last_result == m2
+            h1_xor = xor(h1, m5)
+            h2_xor = xor(h2, m5)
+            h3 = hash_t5(h1_xor, h2_xor)
+            last_result = xor(h3, m5)  # end result, h3 XOR m5
+            auth_path = auth_path[:-3]  # remove already used elements of authpath
+
+        elif index == 2:  # case m3
+            m4 = auth_path[-3]
+            h1 = auth_path[-2]
+            m5 = auth_path[-1]
+            h2 = hash_t5(last_result, m4)  # last_result == m3
+            h1_xor = xor(h1, m5)
+            h2_xor = xor(h2, m5)
+            h3 = hash_t5(h1_xor, h2_xor)
+            last_result = xor(h3, m5)  # end result, h3 XOR m5
+            auth_path = auth_path[:-3]  # remove already used elements of authpath
+
+        elif index == 3:  # case m4
+            m3 = auth_path[-3]
+            h1 = auth_path[-2]
+            m5 = auth_path[-1]
+            h2 = hash_t5(m3, last_result)  # last_result == m4
+            h1_xor = xor(h1, m5)
+            h2_xor = xor(h2, m5)
+            h3 = hash_t5(h1_xor, h2_xor)
+            last_result = xor(h3, m5)  # end result, h3 XOR m5
+            auth_path = auth_path[:-3]  # remove already used elements of authpath
+
+        elif index == 4:  # case: m5
+            # here: last_result == m5
+            h1 = auth_path[-2]
+            h2 = auth_path[-1]
+            h1_xor = xor(h1, last_result)
+            h2_xor = xor(h2, last_result)
+            h3 = hash_t5(h1_xor, h2_xor)
+            last_result = xor(h3, last_result)
+            auth_path = auth_path[:-2]  # remove already used elements of authpath
+
+    return last_result  # return root
 
 
 class T5Node(ABC):  # ABC == abstract class
@@ -39,6 +105,10 @@ class T5Node(ABC):  # ABC == abstract class
     def calc_auth_path(self, path: List[int]) -> List[int]:
         pass
 
+    @abstractmethod
+    def get_child_count(self) -> int:
+        pass
+
 
 class T5Block(T5Node):
     def __init__(self, m1: T5Node, m2: T5Node, m3: T5Node, m4: T5Node, m5: T5Node):
@@ -50,6 +120,13 @@ class T5Block(T5Node):
         self.m5: T5Node = m5
         self.h1: Optional[int] = None
         self.h2: Optional[int] = None
+
+    def get_child_count(self) -> int:
+        return self.m1.get_child_count() + \
+               self.m2.get_child_count() + \
+               self.m3.get_child_count() + \
+               self.m4.get_child_count() + \
+               self.m5.get_child_count()
 
     def calc_end_hash(self):
         h1 = self.calc_h1()
@@ -86,24 +163,24 @@ class T5Block(T5Node):
         if child_pos == 0:  # if "key" = m0
             auth_path.append(self.m2.calc_end_hash())  # value of m2 "before" current node
             auth_path.append(self.calc_h2())
-            auth_path.append(self.m5.get_hash_count())
+            auth_path.append(self.m5.calc_end_hash())
             auth_path.extend(self.m1.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
         elif child_pos == 1:
             auth_path.append(self.m1.calc_end_hash())  # value of m1 "before" current node
             auth_path.append(self.calc_h2())
-            auth_path.append(self.m5.get_hash_count())
+            auth_path.append(self.m5.calc_end_hash())
             auth_path.extend(self.m2.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
 
         elif child_pos == 2:
             auth_path.append(self.m4.calc_end_hash())
             auth_path.append(self.calc_h1())
-            auth_path.append(self.m5.get_hash_count())
+            auth_path.append(self.m5.calc_end_hash())
             auth_path.extend(self.m3.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
 
         elif child_pos == 3:
             auth_path.append(self.m3.calc_end_hash())
             auth_path.append(self.calc_h1())
-            auth_path.append(self.m5.get_hash_count())
+            auth_path.append(self.m5.calc_end_hash())
             auth_path.extend(self.m5.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
 
         elif child_pos == 4:  # special case m5
@@ -128,18 +205,33 @@ class T5Leaf(T5Node):
     def calc_auth_path(self, path: List[int]) -> List[int]:
         return []
 
+    def get_child_count(self) -> int:
+        return 1
+
 
 if __name__ == '__main__':
-    print(calc_path(113, 3))
+    curr_leaf = 22  # one-time key used by the signer
+    one_time_signature = 22  # is one-time signature (has same value as position it's on)
 
-    quit()
+    path = calc_t5_path(curr_leaf, 2)
+    print('Path:', path)
+
     # Amount T5Leafs -> has to be power of 5
     t5tree = T5Block(
-        T5Block(T5Leaf(1), T5Leaf(2), T5Leaf(3), T5Leaf(4), T5Leaf(5)),
-        T5Block(T5Leaf(6), T5Leaf(7), T5Leaf(8), T5Leaf(9), T5Leaf(10)),
-        T5Block(T5Leaf(11), T5Leaf(12), T5Leaf(13), T5Leaf(14), T5Leaf(15)),
-        T5Block(T5Leaf(16), T5Leaf(17), T5Leaf(18), T5Leaf(19), T5Leaf(20)),
-        T5Block(T5Leaf(21), T5Leaf(22), T5Leaf(23), T5Leaf(24), T5Leaf(25))
+        T5Block(T5Leaf(0), T5Leaf(1), T5Leaf(2), T5Leaf(3), T5Leaf(4)),
+        T5Block(T5Leaf(5), T5Leaf(6), T5Leaf(7), T5Leaf(8), T5Leaf(9)),
+        T5Block(T5Leaf(10), T5Leaf(11), T5Leaf(12), T5Leaf(13), T5Leaf(14)),
+        T5Block(T5Leaf(15), T5Leaf(16), T5Leaf(17), T5Leaf(18), T5Leaf(19)),
+        T5Block(T5Leaf(20), T5Leaf(21), T5Leaf(22), T5Leaf(23), T5Leaf(24))
     )
-    print(t5tree.calc_end_hash())
-    print('hashcount: ', t5tree.get_hash_count())
+
+    child_count = t5tree.get_child_count()
+    print('amount of children', child_count)
+
+    print('Hash of root:', t5tree.calc_end_hash())  # public key Y from signer
+
+    print('Hash count:', t5tree.get_hash_count())
+
+    auth_path = t5tree.calc_auth_path(path)
+    print('Auth. path', auth_path)
+    print('Path calculated by verifier:', calc_path_verifier(auth_path, curr_leaf, child_count, one_time_signature))
