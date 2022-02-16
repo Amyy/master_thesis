@@ -26,6 +26,9 @@ def calc_t5_path(ot_key_pos: int, tree_height: int):
 
 # path calculated by verifier
 def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one_time_signature: int):
+    # count hashcalls for authentication
+    hash_count = 0
+
     # calc depth of tree
     tree_depth = int(math.log(child_count, 5))
     path_t5 = calc_t5_path(key_pos, tree_depth)
@@ -42,6 +45,7 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             h3 = hash_t5(h1_xor, h2_xor)
             last_result = xor(h3, m5)  # end result, h3 XOR m5
             auth_path = auth_path[:-3]  # remove already used elements of authpath
+            hash_count += 2  # 2 hash calls were used
 
         elif index == 1:  # case m2
             m1 = auth_path[-3]
@@ -53,6 +57,8 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             h3 = hash_t5(h1_xor, h2_xor)
             last_result = xor(h3, m5)  # end result, h3 XOR m5
             auth_path = auth_path[:-3]  # remove already used elements of authpath
+            hash_count += 2  # 2 hash calls were used
+
 
         elif index == 2:  # case m3
             m4 = auth_path[-3]
@@ -64,6 +70,8 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             h3 = hash_t5(h1_xor, h2_xor)
             last_result = xor(h3, m5)  # end result, h3 XOR m5
             auth_path = auth_path[:-3]  # remove already used elements of authpath
+            hash_count += 2  # 2 hash calls were used
+
 
         elif index == 3:  # case m4
             m3 = auth_path[-3]
@@ -75,6 +83,8 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             h3 = hash_t5(h1_xor, h2_xor)
             last_result = xor(h3, m5)  # end result, h3 XOR m5
             auth_path = auth_path[:-3]  # remove already used elements of authpath
+            hash_count += 2  # 2 hash calls were used
+
 
         elif index == 4:  # case: m5
             # here: last_result == m5
@@ -85,8 +95,9 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             h3 = hash_t5(h1_xor, h2_xor)
             last_result = xor(h3, last_result)
             auth_path = auth_path[:-2]  # remove already used elements of authpath
+            hash_count += 1  # 1 hashcall is used for special case 5
 
-    return last_result  # return root
+    return last_result, hash_count  # return root, amount of used hash calls
 
 
 class T5Node(ABC):  # ABC == abstract class
@@ -210,8 +221,8 @@ class T5Leaf(T5Node):
 
 
 if __name__ == '__main__':
-    curr_leaf = 22  # one-time key used by the signer
-    one_time_signature = 22  # is one-time signature (has same value as position it's on)
+    curr_leaf = 24  # one-time key used by the signer
+    one_time_signature = 24  # is one-time signature (has same value as position it's on)
 
     path = calc_t5_path(curr_leaf, 2)
     print('Path:', path)
@@ -234,4 +245,6 @@ if __name__ == '__main__':
 
     auth_path = t5tree.calc_auth_path(path)
     print('Auth. path', auth_path)
-    print('Path calculated by verifier:', calc_path_verifier(auth_path, curr_leaf, child_count, one_time_signature))
+    auth_path_by_verifier, hash_count_authentication = calc_path_verifier(auth_path, curr_leaf, child_count, one_time_signature)
+    print('Path calculated by verifier:', auth_path_by_verifier)
+    print('Hash count used for Auth. path calculation:', hash_count_authentication)
