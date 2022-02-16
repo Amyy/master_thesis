@@ -4,13 +4,22 @@ from abc import ABC, abstractmethod
 
 
 def hash_t5(left_input: int, right_input: int):
-    # return left_input + right_input
     return hash((left_input, right_input))
 
 
 def xor(left_input: int, right_input: int):
     return left_input ^ right_input
-    # return left_input + right_input  # later: real XOR
+
+
+# != authpath, tree_height = T5Block Tree height
+def calc_path(ot_key_pos: int, tree_height: int):
+    path_list = []
+    i = ot_key_pos
+    for _ in range(tree_height):
+        j = i % 5
+        path_list.insert(0, j)  # 1st position of list
+        i = (i - j) // 5  # relative position in T5 Block
+    return path_list  # list: from root to leaf
 
 
 class T5Node(ABC):  # ABC == abstract class
@@ -45,7 +54,7 @@ class T5Block(T5Node):
         h3 = hash_t5(h11, h21)
         return xor(h3, m5_endhash)
 
-    def get_hash_count(self):
+    def get_hash_count(self):  # notably: XOR count == hash count
         return self.m1.get_hash_count() + \
                self.m2.get_hash_count() + \
                self.m3.get_hash_count() + \
@@ -61,11 +70,16 @@ class T5Leaf(T5Node):
     def calc_end_hash(self):
         return self.leaf
 
-    def get_hash_count(self) -> int:
+    def get_hash_count(self) -> int:  # leaf does not have previous hash calls
         return 0
 
 
 if __name__ == '__main__':
+
+    print(calc_path(113,3))
+
+    quit()
+    # Amount T5Leafs -> has to be power of 5
     t5tree = T5Block(
         T5Block(T5Leaf(1), T5Leaf(2), T5Leaf(3), T5Leaf(4), T5Leaf(5)),
         T5Block(T5Leaf(6), T5Leaf(7), T5Leaf(8), T5Leaf(9), T5Leaf(10)),
