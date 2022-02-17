@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import math
 from abc import ABC, abstractmethod
 from typing import List, Optional
@@ -13,13 +12,14 @@ def xor(left_input: int, right_input: int):
     return left_input ^ right_input
 
 
-# != authpath, tree_height = T5Block Tree height, != path calculated by verifier
+# necessary/pre-step for auth.path calculation
+# != auth.path, tree_height = T5Block Tree height, != path calculated by verifier
 def calc_t5_path(ot_key_pos: int, tree_height: int):
     path_list = []
     i = ot_key_pos
     for _ in range(tree_height):
         j = i % 5
-        path_list.insert(0, j)  # 1st position of list
+        path_list.insert(0, j)  # insert in 1st position of list
         i = (i - j) // 5  # relative position in T5 Block
     return path_list  # list: from root to leaf
 
@@ -59,7 +59,6 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             auth_path = auth_path[:-3]  # remove already used elements of authpath
             hash_count += 2  # 2 hash calls were used
 
-
         elif index == 2:  # case m3
             m4 = auth_path[-3]
             h1 = auth_path[-2]
@@ -72,7 +71,6 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             auth_path = auth_path[:-3]  # remove already used elements of authpath
             hash_count += 2  # 2 hash calls were used
 
-
         elif index == 3:  # case m4
             m3 = auth_path[-3]
             h1 = auth_path[-2]
@@ -84,7 +82,6 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
             last_result = xor(h3, m5)  # end result, h3 XOR m5
             auth_path = auth_path[:-3]  # remove already used elements of authpath
             hash_count += 2  # 2 hash calls were used
-
 
         elif index == 4:  # case: m5
             # here: last_result == m5
@@ -221,13 +218,13 @@ class T5Leaf(T5Node):
 
 
 if __name__ == '__main__':
-    curr_leaf = 24  # one-time key used by the signer
-    one_time_signature = 24  # is one-time signature (has same value as position it's on)
+    s = 22  # leaf position of one-time key used by the signer
+    one_time_key = 22  # value of one-time key (here: has same value as position it's on, for debugging purposes)
 
-    path = calc_t5_path(curr_leaf, 2)
-    print('Path:', path)
+    path = calc_t5_path(s, 2)
+    print('Path "T5 layers":', path)
 
-    # Amount T5Leafs -> has to be power of 5
+    # Amount T5Leafs -> has to be power of 5, values of leaves == value of one-time public key
     t5tree = T5Block(
         T5Block(T5Leaf(0), T5Leaf(1), T5Leaf(2), T5Leaf(3), T5Leaf(4)),
         T5Block(T5Leaf(5), T5Leaf(6), T5Leaf(7), T5Leaf(8), T5Leaf(9)),
@@ -237,14 +234,17 @@ if __name__ == '__main__':
     )
 
     child_count = t5tree.get_child_count()
-    print('amount of children', child_count)
+    print('Amount of leaves', child_count)
 
-    print('Hash of root:', t5tree.calc_end_hash())  # public key Y from signer
+    print('Hash of root == public key:', t5tree.calc_end_hash())  # public key Y from signer
 
-    print('Hash count:', t5tree.get_hash_count())
+    print('# hash calls keygen / T5 tree generation:', t5tree.get_hash_count())
 
+    # signer uses already constructed path -> no new hashcalls necessary
     auth_path = t5tree.calc_auth_path(path)
-    print('Auth. path', auth_path)
-    auth_path_by_verifier, hash_count_authentication = calc_path_verifier(auth_path, curr_leaf, child_count, one_time_signature)
-    print('Path calculated by verifier:', auth_path_by_verifier)
-    print('Hash count used for Auth. path calculation:', hash_count_authentication)
+    print('Auth. path (calculated by signer):', auth_path)
+
+    auth_path_by_verifier, hash_count_authentication = calc_path_verifier(auth_path, s, child_count,
+                                                                          one_time_key)
+    print('Root calculated by verifier using Authentication path:', auth_path_by_verifier)
+    print('# hash calls verification (Path calculation by verifier):', hash_count_authentication)
