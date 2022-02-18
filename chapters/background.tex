@@ -592,6 +592,7 @@ The \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391} is an e
 The Winternitz one-time signature scheme that now includes bitmasks is referred to as \textit{W-OTS+} (see Section~\ref{sec:wots+_general}). XMSS is a \textit{stateful} signature scheme, so the private key changes after every signature generation. The notation of parameters used for XMSS in this work is shown in Table~\ref{table:xmms_param}. This section is mostly based on the XMSS RFC~\cite{xmss_RFC8391}.
 
 \subsection{Omitting Collision Resistance}
+\label{sec:omit_coll_res}
 All of modern cryptography relies on unproven assumptions, only a few cryptographic tasks can be achieved with perfect security (e.g. the one-time pad~\cite{one_time_pad_2013}). There clearly is a risk that at least some of these assumptions may be wrong. Therefore, it is important to only make assumptions that are really necessary.~\cite{minimal_security_assump_phd_2016}
 For all signature schemes shown in this work before, collision resistance of the used hash function is a security requirement (see also Section~\ref{sec:def_hashfunctions}). 
 With Grover’s algorithm, two ordinary collisions can be found in time $\mathcal{O}(2^{n/3})$, speeding up the classical birthday attack which requires $\mathcal{O}(2^{n/2})$ time (with $n$ being the output length of the specific used hash function)~\cite{colission_complexity_reduction_quantum_2019, birthday_attack_quantum_collision_1998}. % später: Hier auf Grovers-Algo section 
