@@ -9,13 +9,77 @@ Dodis et al.~\cite{T5_paper} propose a method called $T5$ for hashing five input
 \label{eq:t5_basic}
 T_5(m_1, m_2, m_3, m_4, m_5) = h_3(h_1(m_1,m_2) \oplus m_5, h_2(m_3,m_4) \oplus m_5) \oplus m_5
 \end{equation}
-It is proven that this construction matches Stam’s bound~\cite{stams_bound2008}, providing $\tilde{\mathcal{O}}(q^2/2^n)$ collision security and $\mathcal{O}(q^3/2^{2n}+nq/2^n)$, $q \leq 2^{n/2}$ preimage security. It provides birthday security $\mathcal{O}(2^{n/2})$ (see also Section~\ref{sec:omit_coll_res}) for hashing 5 inputs using three $2n$-to-$n$ compression calls, instead of only 4 inputs (in prior constructions). % what is q not sure
+It is proven by Dodis et al.~\cite{T5_paper} that the $T5$ construction matches Stam’s bound~\cite{stams_bound2008}, providing $\tilde{\mathcal{O}}(q^2/2^n)$ collision security and $\mathcal{O}(q^3/2^{2n}+nq/2^n)$, $q \leq 2^{n/2}$ preimage security. It provides birthday security $\mathcal{O}(2^{n/2})$ (see also Section~\ref{sec:omit_coll_res}) for hashing 5 inputs using three $2n$-to-$n$ compression calls, instead of only 4 inputs (in prior constructions). For the full proof of collision resistance and preimage resistance of $T5$, see Section~4.1 and Section~4.2 in~\cite{T5_paper}. % what is q not sure
 Therefore, $T5$ is improving the Merkle-D\aa mgard construction (with the initialization vector counted as message block) and Merkle trees by processing a fifth message block with the same number of compression function calls and basically the same level of collision security. 
-For this work, the construction of $T5$ in combination with Merkle trees is of interest.
+For this work, the construction of $T5$ in combination with Merkle trees is of interest.  
+
+\subsection{T5 Merkle Tree}
+In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \textit{T5-Block} out of a Merkle tree with height $d=2$ is shown:
+
+\begin{itemize}
+\item The variables  $m_1, m_2$ (respectively $m_3, m_4$) denote the left and right halves of input to compression function $h_1$ (respectively $h_2$).
+\item The variable $a$ (respectively $b$) denotes the output of $h_1$ (respectively $h_2$).
+\item The variables $c$ and $d$ denote the left and right halves of input to $h_3$.
+\item The variable $e$ denotes the output of $h_3$.
+\item The variable $f$ denotes the total output of $T5(m_1, m_2, m_3, m_4, m_5)$.
+\end{itemize}
+Therefore, the calculation of $T_5(m_1, m_2, m_3, m_4, m_5)$ consists of the following steps:
+\begin{enumerate}
+\item Calculation of the first layer of one $T_5$-Block (corresponds to compressing 4 leaves of a binary Merkle tree), two hash function calls $h_1, h_2$ are necessary:
+\begin{align}
+a = h_1(m_1, m_2) \\
+b = h_2(m_3, m_4)
+\end{align}
+
+\item Calculation of the first $T_5$-specific intermediate step, adding $m_5$:
+\begin{align}
+c = a \oplus m_5 \\
+d = b \oplus m_5
+\end{align}
+
+\item Calculation of the second layer of one $T_5$-Block (corresponds to compressing 2 nodes of a binary Merkle tree), one hash function calls $h_3$ is necessary:
+\begin{align}
+e = h_3(c,d)
+\end{align}
+
+\item Adding $m_5$ again (the second $T_5$ specific intermediate step) leads to the final result $f$:
+\begin{align}
+f = e \oplus m_5 = T_5(m_1, m_2, m_3, m_4, m_5)
+\end{align}
+\end{enumerate}
+
+
+
+%\begin{align}
+%& a = h_1(m_1, m_2) \\
+%& b = h_2(m_3, m_4)
+%\end{align}
+%
+%\begin{align}
+%c = a \oplus m_5 \\
+%d = b \oplus m_5
+%\end{align}
+%
+%\begin{align}
+%e = h_3(c, d)
+%\end{align}
 
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/abcd_paperT5_block_depiction.png}
-\caption{Depiction of one $T5$ compression call with five inputs $m_1, m_2, m_3, m_4, m_5$, also denoted as one $T5$ \textit{block}.~\cite{T5_paper}} % m's are somehow cut at the top but ok
+\caption{Modified Merkle tree $T_5(m_1, m_2, m_3, m_4, m_5)$ of height d = 2,   with an extra input $m_5$ for the same 3 hash calls $h_1, h_2, h_3$. In this work, it is referred to as one $T_5$-Block.~\cite{T5_paper}}
 \label{img:t5_paper_block_depiction}
 \end{figure}
+
+\subsection{T5 Openings}
+To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen}) in one T5-Block, two different approaches \textit{Conservative Opening} and \textit{Aggressive Opening} are shown by Dodis et al.~\cite{T5_paper}. 
+
+\begin{figure}
+\centering
+\includegraphics[]{images/Methods/aggr_conserv_opening_T5.png}
+\caption{Conservative and Aggressive Opening of one $T_5$-Block. The green variable denotes the current path value, the red variables are given in the authentication path for this $T_5$-Block.~\cite{T5_paper}.}
+\label{img:t5_conserv_aggr_opening}
+\end{figure}
+
+\section{"My Idea"} % T5 + LMS
+% describe "more aggressive" opening
