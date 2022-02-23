@@ -56,12 +56,57 @@ f = e \oplus m_5 = T_5(m_1, m_2, m_3, m_4, m_5)
 \end{figure}
 
 \subsection{T5 Openings}
-To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen}) in one T5-Block, two different approaches \textit{Conservative Opening} and \textit{Aggressive Opening} are shown by Dodis et al.~\cite{T5_paper}. 
+To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen} ) in one T5-Block, two different approaches \textit{Conservative Opening} and \textit{Aggressive Opening} are shown by Dodis et al.~\cite{T5_paper}. These two versions are depicted in Figure~\ref{img:t5_conserv_aggr_opening}.
+The process of calculating an authentication path is here referred to as \textit{opening}. 
+
+\subsubsection{Conservative Opening}
+Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the $T_5$-Block is to provide the remaining four nodes $m_{j \neq i}$. This is denoted as Conservative Opening and depicted in Figure~\ref{img:t5_conserv_aggr_opening}: The current node on the path is $m_1$ (colored green), the remaining four nodes (colored red) necessary for the authentication path to open $m_1$ are $m_2, m_3, m_4, m_5$. The functions $h_1, h_2, h_3$ (colored red) have to be calculated. The performance of the Conservative Method is less attractive than of the other methods and even worse than using a standard Merkle Tree: For authenticating one T5-Block, three hash calls and five elements in the authentication path are necessary, see also Table~\ref{table:conserv_opening}. Therefore, this method is not further considered in this work. % reference to authentication method with merkle tree -> #hashcalls, el. in authpath in table
+
+\begin{table}
+\centering
+\begin{tabular}{l c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{\textbf{Conservative Opening}} \\
+ \hline\noalign{\smallskip}
+ \# hashcalls & 3 \\
+ \# el. in auth. path & 4 \\
+ \hline
+\end{tabular}
+\caption{Performance of calculating the authentication path for one $T_5$-Block with Conservative Opening: The necessary amount of hashcalls and amount of elements in the authentication path are given.}
+\label{table:conserv_opening}
+\end{table}
+
+\subsubsection{Aggressive Opening}
+The second version of opening a $T_5$-Block with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decreases for this method, but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i, i \in \{1,2,3,4,5\}$, the function $open_{auth}$ returns the authentication path elements for the corresponding $T_5$-Block:
+
+\begin{align}
+&open_{aggr}(m_1) = (m_2, m_5, h_2(m_3,m_4) \oplus m_5) = (m_2, m_5, d) \label{eq:aggr_open_m1_example} \\
+&open_{aggr}(m_2) = (m_1, m_5, h_2(m_3,m_4) \oplus m_5) = (m_1, m_5, d) \\
+&open_{aggr}(m_3) = (m_4, m_5, h_1(m_1, m_2) \oplus m_5) = (m_4, m_5, c) \\ 
+&open_{aggr}(m_4) = (m_3, m_5, h_1(m_1, m_2) \oplus m_5) = (m_3, m_5, c) \\ 
+&open_{aggr}(m_5) = (m_1, m_2, h_2(m_3, m_4) \oplus m_5) = (m_1, m_2, d) \label{eq:aggr_open_m5_example}
+\end{align}
+In Figure~\ref{img:t5_conserv_aggr_opening}, Aggressive Opening is depicted as example for opening node $m_1$ (colored green), see Equation~\ref{eq:aggr_open_m1_example}. 
+As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}, with the Aggressive Opening method the authentication path always contains three elements and the verifier needs two hash calls ($h_1$ or $h_2$ respectively and always $h_3$) to calculate the "root" $f$ of one $T5$-Block, see Table~\ref{table:aggr_opening}.
+
+\begin{table}
+\centering
+\begin{tabular}{l c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{\textbf{Aggressive Opening}} \\
+ \hline\noalign{\smallskip}
+ \# hashcalls & 2 \\
+ \# el. in auth. path & 3 \\
+ \hline
+\end{tabular}
+\caption{Performance of calculating the authentication path for one $T_5$-Block with Aggressive Opening.}
+\label{table:aggr_opening}
+\end{table}
 
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/aggr_conserv_opening_T5.png}
-\caption{Conservative and Aggressive Opening of one $T_5$-Block. The green variable denotes the current path value, the red variables are given in the authentication path for this $T_5$-Block.~\cite{T5_paper}.}
+\caption{Conservative and Aggressive Opening of one $T_5$-Block. The green variable denotes the opening node, the red nodes are given in the authentication path for this $T_5$-Block. The hash functions denoted in red have to be calculated by the verifier to get the path for this $T_5$-Block.~\cite{T5_paper}}
 \label{img:t5_conserv_aggr_opening}
 \end{figure}
 
