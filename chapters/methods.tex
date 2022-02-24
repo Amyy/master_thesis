@@ -13,7 +13,8 @@ It is proven by Dodis et al.~\cite{T5_paper} that the $T5$ construction matches 
 Therefore, $T5$ is improving the Merkle-D\aa mgard construction (with the initialization vector counted as message block) and Merkle trees by processing a fifth message block with the same number of compression function calls and basically the same level of collision security. 
 For this work, the construction of $T5$ in combination with Merkle trees is of interest.  
 
-\subsection{T5 Merkle Tree}
+\subsection{T5 Block}
+\label{sec:t5_block}
 In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \textit{T5-Block} out of a Merkle tree with height $d=2$ is shown:
 
 \begin{itemize}
@@ -87,7 +88,7 @@ The second version of opening a $T_5$-Block with better performance than Conserv
 &open_{aggr}(m_5) = (m_1, m_2, h_2(m_3, m_4) \oplus m_5) = (m_1, m_2, d) \label{eq:aggr_open_m5_example}
 \end{align}
 In Figure~\ref{img:t5_conserv_aggr_opening}, Aggressive Opening is depicted as example for opening node $m_1$ (colored green), see Equation~\ref{eq:aggr_open_m1_example}. 
-As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}, with the Aggressive Opening method the authentication path always contains three elements and the verifier needs two hash calls ($h_1$ or $h_2$ respectively and always $h_3$) to calculate the "root" $f$ of one $T5$-Block, see Table~\ref{table:aggr_opening}.
+As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}, with the Aggressive Opening method the authentication path always contains three elements and the verifier needs two hash calls ($h_1$ or $h_2$ respectively and always $h_3$) to calculate the "root" $f$ of one $T_5$-Block, see Table~\ref{table:aggr_opening}.
 
 \begin{table}
 \centering
@@ -110,5 +111,37 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \label{img:t5_conserv_aggr_opening}
 \end{figure}
 
-\section{"My Idea"} % T5 + LMS
+\subsection{T5 Merkle Tree}
+Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree} can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the $T_5$ Merkle Tree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} should be self explanatory. % tree depth = amount of "layers" in binary tree compared with amount of layers in T5 tree (== amount of T5 Blocks * 2 because one T5 Block == 2 Merkle binary layers)
+
+\begin{table}
+\centering
+\begin{tabular}{l c c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{$T_5$ Merkle Tree Performance}} \\
+ \hline\noalign{\smallskip}
+ & Merkle Tree (standard) & Conserv. Opening &  Aggr. Opening \\
+ \hline\noalign{\smallskip}
+ build calls$/t$ & 1 & 0.75 & 0.75 \\
+ tree depth$/\log_2(t)$ & 1 & 0.86 & 0.86 \\
+ verify (hash calls)$/\log_2(t)$ & 1 & 1.29 & 0.86 \\
+ opening (length)$/\log_2(t)$ & 1 & 1.72 & 1.29 \\ 
+ \hline
+\end{tabular}
+\caption{Performance of the $T_5$ Merkle Tree with the opening variants Conservative- and Aggressive Opening in comparison to the standard Merkle Tree given by Dodis et al.~\cite{T5_paper}. The variable $t$ denotes the amount of children.}
+\label{table:t5_merkletree_dodis_performance}
+\end{table}
+
+\begin{figure}
+\centering
+\includegraphics[]{images/Methods/whole_tree_T5_paper.png}
+\caption{Construction of a complete $T_5$-Tree consisting of several $T_5$-Blocks~\cite{T5_paper}. The value $H$ denotes the root of the tree.}
+\label{img:t5_complete_tree_paper}
+\end{figure}
+
+\section{T5 in LMS} % "my idea"
 % describe "more aggressive" opening
+
+
+
+\subsection{More Aggressive Opening}
