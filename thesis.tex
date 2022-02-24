@@ -32,6 +32,9 @@
 %\usepackage{tikz-qtree} -> destroys current tikz-pictures, because changes arrow-tips
 \usetikzlibrary{trees,calc,arrows.meta,positioning,decorations.pathreplacing,decorations.markings,bending}
 
+\usepackage{listings} % for highlighting python code - appendix
+\usepackage{scrhack} % fix: deprecated komascript warning
+
 \begin{document}
 
 \faculty{Faculty of Computer Science}
@@ -72,6 +75,9 @@ This is a super cool abstract
 \include{chapters/background}
 \include{chapters/state_of_art}
 \include{chapters/methods}
+
+\appendix 
+\include{chapters/appendix1}
 
 \bibliography{bibliography}
 \bibliographystyle{IEEEtran}
