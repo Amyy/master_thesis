@@ -112,7 +112,7 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \end{figure}
 
 \subsection{T5 Merkle Tree}
-Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree} can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the $T_5$ Merkle Tree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} should be self explanatory. % tree depth = amount of "layers" in binary tree compared with amount of layers in T5 tree (== amount of T5 Blocks * 2 because one T5 Block == 2 Merkle binary layers)
+Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree} can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the $T_5$ Merkle Tree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in $T_5$ Merkle tree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one $T_5$ Block corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
 
 \begin{table}
 \centering
@@ -139,9 +139,7 @@ Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \te
 \label{img:t5_complete_tree_paper}
 \end{figure}
 
-\section{T5 in LMS} % "my idea"
-% describe "more aggressive" opening
-
-
+\section{Extended T5 Merkle Tree} % "my idea"
+In this section, the idea of the $T_5$ Merkle tree is extended by an opening method \textit{More Aggressive Opening}, and the performance is compared to the \textit{Aggressive Opening} of Dodis et al.~\cite{T5_paper}. There is also a python implementation of the extended $T_5$ Merkle tree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
 
 \subsection{More Aggressive Opening}
