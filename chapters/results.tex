@@ -1,0 +1,26 @@
+\chapter{Results}
+\label{cha:results}
+
+In this chapter, the performance results of the different methods (see Chapter~\ref{cha:methods}) are shown.
+
+% table with formulas
+\begin{table}
+\centering
+\begin{tabular}{l c c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{Performance in General}} \\
+ \hline\noalign{\smallskip}
+ & & \multicolumn{2}{c}{\textbf{\extree}} \\
+ \noalign{\smallskip}
+  & \textbf{Merkle Tree (standard)} & Aggr. & More Aggr. \\
+ \hline\noalign{\smallskip}
+ \# hash calls keygen & $\ell-1$ & \multicolumn{2}{c}{$\frac{3}{4}\ell$} \\
+ \# saved nodes (whole tree) & $2\ell-1$ & \multicolumn{2}{c}{$10\ell-1$} \\ % check if really true
+ \# hash calls sign (authpath generation) & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} \\
+ \# el. in authpath generation & $\log_2(\ell)$ & $3\log_5(\ell)$ & $2.8\log_5(\ell)$\\
+ \# hash calls path calculation & $\log_2(\ell)$ & $3\log_5(\ell)$ & $1.8\log_5(\ell)$\\ 
+ \hline
+\end{tabular}
+\caption{Performance of the the standard Merkle tree and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and ~\ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}
+\label{table:general_formulas_t5_merkle}
+\end{table}
