@@ -78,6 +78,7 @@ Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the $T_5$
 \end{table}
 
 \subsubsection{Aggressive Opening}
+\label{sec:aggr_opening}
 The second version of opening a $T_5$-Block with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decreases for this method, but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i, i \in \{1,2,3,4,5\}$, the function $open_{auth}$ returns the authentication path elements for the corresponding $T_5$-Block:
 
 \begin{align}
@@ -145,3 +146,79 @@ In this section, the idea of the $T_5$ Merkle Tree is extended by an opening met
 The performance of \extree is compared to the Aggressive Opening of Dodis et al.~\cite{T5_paper}. There is also a python implementation of \extree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
 
 \subsection{More Aggressive Opening}
+\label{sec:more_aggr_opening}
+In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:more_aggr_opening}. 
+
+\begin{figure}
+\centering
+\includegraphics[]{images/Methods/more_aggr_opening.png}
+\caption{More Aggressive Opening for one $T_5$-Block. The green variable denotes the opening node, the red nodes are given in the authentication path for this $T_5$-Block. The hash functions denoted in red have to be calculated by the verifier to get the path for this $T_5$-Block.}
+\label{img:t5_more_aggr_opening}
+\end{figure}
+
+% try to draw "more aggressive" with forest -> doesn't work so well
+%\begin{figure}
+%\centering
+%\tikzset{xor/.style={draw,circle,append after command={
+%        [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+%        (\tikzlastnode.north) edge (\tikzlastnode.south)
+%        (\tikzlastnode.east) edge (\tikzlastnode.west)
+%        }
+%    }
+%}
+%
+%\forestset{
+%  mystyle/.style={
+%    for tree={
+%    l sep-=2em, % edge length / level distance
+%    inner sep=3pt, % inner sep of boxes around nodes
+%%      parent anchor=south,
+%      child anchor=north,
+%      if n children=3{ % if a node has 3 children
+%        for children={ % align the middle child with its parent
+%          if n=2{calign with current}{}
+%        }
+%      }{},
+%    }
+%  }
+%}
+%\begin{forest}
+%mystyle
+%[root
+%	[,xor, name=xor3
+%		[$h_3$, draw
+%	    	[,xor, name=xor1
+%	    		[$h_1$, draw [$m_1$][$m_2$]
+%	    		]
+%	   	 	]
+%	   	 	[$m_5$, name=m5, no edge]
+%			[, xor, name=xor2 
+%				[$h_2$, draw [$m_3$][$m_4$]
+%				]
+%			]
+%		]
+%	]
+%]
+%\draw[<-] (xor1)--(m5);
+%\draw[<-] (xor2)--(m5);
+%%\draw[<-] (xor3) to[out=south west,in=north west] (m5);
+%\end{forest} \quad
+%\begin{forest}
+%[root
+%	[$\oplus$
+%		[$h_3$, align=center
+%	    	[$\oplus$
+%	    		[$h_1$ [$m_1$][$m_2$]]
+%	   	 	]
+%			[$m_5$, no edge]	   	 	
+%			[$\oplus$ 
+%				[$h_2$ [$m_3$][$m_4$]]
+%			]
+%		]
+%	]
+%]
+%\end{forest}
+%\caption{More Aggressive Opening.}
+%\label{img:more_aggr_opening}
+%\end{figure}
+

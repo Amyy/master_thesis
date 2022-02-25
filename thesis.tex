@@ -32,6 +32,9 @@
 %\usepackage{tikz-qtree} -> destroys current tikz-pictures, because changes arrow-tips
 \usetikzlibrary{trees,calc,arrows.meta,positioning,decorations.pathreplacing,decorations.markings,bending}
 
+\usepackage{forest} % forest library
+%\usepackage{tikz-qtree}
+
 % for highlighting python code - appendix 
 %https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
 \usepackage{listings} 
@@ -45,7 +48,7 @@
 %\department{department?}
 \institute{Institute of Systems Architecture}
 \chair{Chair of Privacy and Security}
-\date{15.05.2021}
+\date{09.03.2022}
 \title{%
   Hash-based Digital Signature Schemes
 }
@@ -79,6 +82,7 @@ This is a super cool abstract
 \include{chapters/background}
 \include{chapters/state_of_art}
 \include{chapters/methods}
+\include{chapters/results}
 
 \appendix 
 \include{chapters/appendix1}
