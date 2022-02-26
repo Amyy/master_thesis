@@ -148,13 +148,33 @@ The performance of \extree is compared to the Aggressive Opening of Dodis et al.
 
 \subsection{More Aggressive Opening}
 \label{sec:more_aggr_opening}
-In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:t5_more_aggr_opening}. It has better overall performance than Conservative- and Aggressive Opening (see Section~\ref{sec:aggr_opening} and \ref{sec:conserv_opening}) for the signing and verifying process. But notably, the length of the authentication is not constant.
-There are two cases distinguished for on \tfblock: 
+In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:t5_more_aggr_opening}. It has better overall performance than Conservative- and Aggressive Opening (see Section~\ref{sec:aggr_opening} and \ref{sec:conserv_opening}) for the signing and verifying process, see Table~\ref{table:more_aggr_opening}. But notably, the length of the authentication path is \textbf{not} constant.
+There are two cases distinguished for one \tfblock:
+
+\begin{itemize}
+\item \textbf{Case~1}: The possible opening nodes are $m_i, i \in \{1,2,3,4\}$. For a given opening node $m_i$, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
+\begin{align}
+open_{auth}(m_1) = (m_2, m_5, h_2(m_3, m_4)) = (m_2, m_5, b) \label{eq:more_aggr_m1_example} \\
+open_{auth}(m_2) = (m_1, m_5, h_2(m_3, m_4)) = (m_1, m_5, b) \\
+open_{auth}(m_3) = (m_4, m_5, h_1(m_1, m_2)) = (m_4, m_5, a) \\
+open_{auth}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a)
+\end{align} 
+An example of $m_1$ as opening node is depicted on the left side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $m_2, m_5, b$ in the authentication path (see Equation~\ref{eq:more_aggr_m1_example}). The verifier needs two hash calls ($h_1, h_3$) to calculate the path to the root $f$.
+Therefore, the authentication path has always three elements and the verifier always needs two hash calls to calculate the path to the root of one \tfblock for case~1.
+
+\item \textbf{Case~2}: The opening node is $m_5$. This case is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}. For $m_5$ as opening node, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
+\begin{equation}
+\label{eq:more_aggr_opening_m5_example}
+open_{auth}(m_5) = (h_1(m_1, m_2), h_2(m_3, m_4)) = (a, b)
+\end{equation}
+An example of $m_5$ as opening node is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $a, b$ in the authentication path (see Equation~\ref{eq:more_aggr_opening_m5_example}). The verifier needs one hash call $h_3$ to calculate the path to the root $f$.
+Therefore, the authentication path has always two elements and the verifier always needs one hash call to calculate the path to the root for one \tfblock for case~2.
+\end{itemize} 
 
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/more_aggr_opening.png}
-\caption{More Aggressive Opening for one $T_5$-Block, with case differentiation. The green variable denotes the opening node, the red nodes are given in the authentication path the respective $T_5$-Block. The hash functions denoted in red have to be calculated by the verifier to get the path for this $T_5$-Block.}
+\caption{More Aggressive Opening for one \tfblock, with case differentiation. The green variable denotes the opening node, the red nodes are given in the authentication path the respective \tfblock. The hash functions denoted in red have to be calculated by the verifier to get the path for this \tfblock.}
 \label{img:t5_more_aggr_opening}
 \end{figure}
 
@@ -164,7 +184,7 @@ There are two cases distinguished for on \tfblock:
  \hline\noalign{\smallskip}
  \multicolumn{3}{c}{\textbf{More Aggressive Opening}} \\
  \hline\noalign{\smallskip}
- & case $m_i, i \in \{1,2,3,4\}$ & case $m_5$ \\
+ & case 1: $m_i, i \in \{1,2,3,4\}$ & case 2: $m_5$ \\
  \# hashcalls & 2 & 1 \\
  \# el. in auth. path & 3 & 2 \\
  \hline
