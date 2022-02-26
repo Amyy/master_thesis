@@ -61,6 +61,7 @@ To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen} ) i
 The process of calculating an authentication path is here referred to as \textit{opening}. 
 
 \subsubsection{Conservative Opening}
+\label{sec:conserv_opening}
 Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the $T_5$-Block is to provide the remaining four nodes $m_{j \neq i}$. This is denoted as Conservative Opening and depicted in Figure~\ref{img:t5_conserv_aggr_opening}: The current node on the path is $m_1$ (colored green), the remaining four nodes (colored red) necessary for the authentication path to open $m_1$ are $m_2, m_3, m_4, m_5$. The functions $h_1, h_2, h_3$ (colored red) have to be calculated. The performance of the Conservative Method is less attractive than of the other methods and even worse than using a standard Merkle Tree: For authenticating one T5-Block, three hash calls and five elements in the authentication path are necessary, see also Table~\ref{table:conserv_opening}. Therefore, this method is not further considered in this work. % reference to authentication method with merkle tree -> #hashcalls, el. in authpath in table
 
 \begin{table}
@@ -113,7 +114,7 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \end{figure}
 
 \subsection{T5 Merkle Tree}
-Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree} can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the $T_5$ Merkle Tree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in $T_5$ Merkle tree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one $T_5$ Block corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
+Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree}, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
 
 \begin{table}
 \centering
@@ -147,14 +148,31 @@ The performance of \extree is compared to the Aggressive Opening of Dodis et al.
 
 \subsection{More Aggressive Opening}
 \label{sec:more_aggr_opening}
-In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:t5_more_aggr_opening}. 
+In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:t5_more_aggr_opening}. It has better overall performance than Conservative- and Aggressive Opening (see Section~\ref{sec:aggr_opening} and \ref{sec:conserv_opening}) for the signing and verifying process. But notably, the length of the authentication is not constant.
+There are two cases distinguished for on \tfblock: 
 
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/more_aggr_opening.png}
-\caption{More Aggressive Opening for one $T_5$-Block. The green variable denotes the opening node, the red nodes are given in the authentication path for this $T_5$-Block. The hash functions denoted in red have to be calculated by the verifier to get the path for this $T_5$-Block.}
+\caption{More Aggressive Opening for one $T_5$-Block, with case differentiation. The green variable denotes the opening node, the red nodes are given in the authentication path the respective $T_5$-Block. The hash functions denoted in red have to be calculated by the verifier to get the path for this $T_5$-Block.}
 \label{img:t5_more_aggr_opening}
 \end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{l c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{3}{c}{\textbf{More Aggressive Opening}} \\
+ \hline\noalign{\smallskip}
+ & case $m_i, i \in \{1,2,3,4\}$ & case $m_5$ \\
+ \# hashcalls & 2 & 1 \\
+ \# el. in auth. path & 3 & 2 \\
+ \hline
+\end{tabular}
+\caption{Performance of calculating the authentication path and amount of elements in the authentication path for More Aggressive Opening. The two cases $m_i, i \in \{1,2,3,4\}$ and $m_5$ as opening node are shown.}
+\label{table:more_aggr_opening}
+\end{table}
+
 
 % try to draw "more aggressive" with forest -> doesn't work so well
 %\begin{figure}

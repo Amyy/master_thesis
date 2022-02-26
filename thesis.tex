@@ -15,6 +15,7 @@
 % https://tex.stackexchange.com/questions/42271/floor-and-ceiling-functions#42274
 \newcommand{\?}{\stackrel{?}{=}} % =? stacked symbol
 \usepackage{microtype} % automatically fix overfull hboxes
+\usepackage{xspace} % insert spacing after newcommands
 
 % custom colors - TU Dresden colors
 \usepackage{xcolor}
@@ -40,7 +41,9 @@
 \usepackage{listings} 
 \usepackage{scrhack} % fix: deprecated komascript warning
 
-\newcommand{\extree}{$T_5$-Tree$^+$}
+\newcommand{\extree}{$T_5$-Tree$^+$\xspace}
+\newcommand{\tftree}{$T_5$-Tree\xspace}
+\newcommand{\tfblock}{$T_5$-Block\xspace}
 
 \begin{document}
 
