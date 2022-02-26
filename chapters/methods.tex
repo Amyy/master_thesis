@@ -197,14 +197,14 @@ The process of tree generation, signing and verifying with Aggressive Opening  o
 % ! children have to be power of 5
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Generation}
-The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
+The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree}, Section~\ref{cha:mss_keygen} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
 % maybe pseudocode but too complex -> just read appendix
 
 % here equations for #hashcalls tree generation etc.?
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
 The signature generation for \extree works as follows: After calculating the complete \extree, the signer first calculates the $T_5$-Path (see also line~17, \mintinline{python}{def calc_t5_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
-Now, the signer calculates the authentication path out of the $T_5$-Path (see also line~167, \mintinline{python}{def calc_auth_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
+Now, the signer calculates the authentication path out of the $T_5$-Path (see also line~167, \mintinline{python}{def calc_auth_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation} and Section~\ref{sec:mss_sig_gen}).
 
 % pseudocode - not working with for()
 %\begin{algorithm}
@@ -229,7 +229,7 @@ Now, the signer calculates the authentication path out of the $T_5$-Path (see al
 
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Verification}
-
+After receiving the authentication path by the signer, the verifier calculates the path through the \extree to its root (see also line~28, \mintinline{python}{def calc_path_verifier(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}). The verifier compares the calculated root with the public key of the signer, if they match, the signature is valid (see Section~\ref{sec:mss_sign_verif}).
 
 % try to draw "more aggressive" with forest -> doesn't work so well
 %\begin{figure}
