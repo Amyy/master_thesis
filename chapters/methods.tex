@@ -114,6 +114,7 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \end{figure}
 
 \subsection{T5 Merkle Tree}
+\label{sec:dodis_t5_merkle_tree}
 Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree}, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
 
 \begin{table}
@@ -143,8 +144,8 @@ Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \te
 
 \section{Extended T5 Merkle Tree}
 \label{sec:ext_t5_tree} % "my idea"
-In this section, the idea of the $T_5$ Merkle Tree is extended by an opening method \textit{More Aggressive Opening}, denoted as \textit{\extree}.
-The performance of \extree is compared to the Aggressive Opening of Dodis et al.~\cite{T5_paper}. There is also a python implementation of \extree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
+In this section, the idea of the \tftree is extended by an opening method \textit{More Aggressive Opening}. When implemented in the whole $T_5$~Merkle tree, the tree construction is denoted as \textit{\extree}.
+The performance of \extree is compared to \tftree with Aggressive Opening of Dodis et al.~\cite{T5_paper}. There is also a python implementation of \extree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
 
 \subsection{More Aggressive Opening}
 \label{sec:more_aggr_opening}
@@ -160,7 +161,7 @@ open_{auth}(m_3) = (m_4, m_5, h_1(m_1, m_2)) = (m_4, m_5, a) \\
 open_{auth}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a)
 \end{align} 
 An example of $m_1$ as opening node is depicted on the left side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $m_2, m_5, b$ in the authentication path (see Equation~\ref{eq:more_aggr_m1_example}). The verifier needs two hash calls ($h_1, h_3$) to calculate the path to the root $f$.
-Therefore, the authentication path has always three elements and the verifier always needs two hash calls to calculate the path to the root of one \tfblock for case~1.
+Therefore, the authentication path has always three elements and the verifier always needs two hash calls to calculate the path to the root of one \tfblock for case~1, see also Table~\ref{table:more_aggr_opening}.
 
 \item \textbf{Case~2}: The opening node is $m_5$. This case is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}. For $m_5$ as opening node, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
 \begin{equation}
@@ -168,7 +169,7 @@ Therefore, the authentication path has always three elements and the verifier al
 open_{auth}(m_5) = (h_1(m_1, m_2), h_2(m_3, m_4)) = (a, b)
 \end{equation}
 An example of $m_5$ as opening node is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $a, b$ in the authentication path (see Equation~\ref{eq:more_aggr_opening_m5_example}). The verifier needs one hash call $h_3$ to calculate the path to the root $f$.
-Therefore, the authentication path has always two elements and the verifier always needs one hash call to calculate the path to the root for one \tfblock for case~2.
+Therefore, the authentication path has always two elements and the verifier always needs one hash call to calculate the path to the root for one \tfblock for case~2, see also Table~\ref{table:more_aggr_opening}.
 \end{itemize} 
 
 \begin{figure}
@@ -189,9 +190,45 @@ Therefore, the authentication path has always two elements and the verifier alwa
  \# el. in auth. path & 3 & 2 \\
  \hline
 \end{tabular}
-\caption{Performance of calculating the authentication path and amount of elements in the authentication path for More Aggressive Opening. The two cases $m_i, i \in \{1,2,3,4\}$ and $m_5$ as opening node are shown.}
+\caption{Performance of calculating the authentication path and amount of elements in the authentication path for More Aggressive Opening. The case~1 with $m_i, i \in \{1,2,3,4\}$ as possible opening nodes and case~2 with $m_5$ as opening node are shown.}
 \label{table:more_aggr_opening}
 \end{table}
+The process of tree generation, signing and verifying with Aggressive Opening  of the \extree is shown in the following section. 
+% ! children have to be power of 5
+
+\subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Generation}
+The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
+% maybe pseudocode but too complex -> just read appendix
+
+% here equations for #hashcalls tree generation etc.?
+
+\subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
+The signature generation for \extree works as follows: After calculating the complete \extree, the signer first calculates the $T_5$-Path (see also line~17, \mintinline{python}{def calc_t5_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
+Now, the signer calculates the authentication path out of the $T_5$-Path (see also line~167, \mintinline{python}{def calc_auth_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
+
+% pseudocode - not working with for()
+%\begin{algorithm}
+%\caption{Calculate $T_5$-Path of \extree. Requirement for authentication path calculation.}
+%\begin{algorithmic} 
+%\REQUIRE Current one-time key: $s$, height of $T_5$-Tree: $T$ 
+%\STATE $T_5$-Path = $\emptyset$
+%\end{algorithmic}
+%\end{algorithm}
+
+% whole codeblock of function to calculate t5-path:
+%\begin{minted}[breaklines]{python}
+%def calc_t5_path(ot_key_pos: int, tree_height: int):
+%    path_list = []
+%    i = ot_key_pos
+%    for _ in range(tree_height): 
+%        j = i % 5
+%        path_list.insert(0, j) 
+%        i = (i - j) // 5  # relative position in T5 Block
+%    return path_list  
+%\end{minted}
+
+
+\subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Verification}
 
 
 % try to draw "more aggressive" with forest -> doesn't work so well
