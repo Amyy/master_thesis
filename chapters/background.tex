@@ -331,12 +331,15 @@ The main disadvantage of the one-time signature schemes introduced in Section~\r
 To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair, the \textit{Merkle Signature Scheme (MSS)}. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
 The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. Therefore, the chosen one-time signature scheme for MSS in this chapter is W-OTS. The cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
+
+Notably, the combination of W-OTS with the Merkle Tree is also used in the \textit{Leighton-Micali Signature Scheme (LMS)}, see Section~\ref{sec:lms} (and with an advanced Merkle Tree in XMSS, see Section~\ref{sec:xmss}).
 % Moreover, when using LD-OTS: All X_s (for signature) + corresponding Y_s are needed. Not enough when verifier knows only the X_s that are needed for OTS-signature, moreover the rest of Y_s are needed (because all "leaves" are needed) to build the merkle tree.
 
 \subsection{MSS Key Generation}
 \label{cha:mss_keygen}
 For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
-The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$.
+The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$. 
+
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
 H_{i,j} = h(Y_j) \\ 
@@ -359,6 +362,8 @@ X_{MSS} &= (X_0, \cdots, X_j, \cdots, X_{2^d - 1} ) \\
 Y_{MSS} &= H_{d,0} \nonumber
 \end{align}
 The signer publishes the public key $Y_{MSS}$.
+
+For simplification, in this section, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $> 1$ Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. These are explained in detail for LMS (hashing them together, see Section~\ref{sec:lms}) and XMSS (with L-Trees, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}).
 
 \begin{figure}
 \centering
@@ -578,13 +583,24 @@ h(p_{i-1} \concat a_{i-1}) \text{ if } \floor{s/2^{i-1}} \equiv 0 \mod{2}
 \end{matrix}\right.  \nonumber \\
 &0 \leq i \leq d  \nonumber 
 \end{align}
-The verification of signature $\sigma_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$. The one-time key $Y_s$ and therefore the one-time signature $\sigma_s/OTS$ are implicitly validated, as $Y_s$ is calculated "on the way" to the root of the Merkle tree by the verifier.
+The verification of signature $\sigma_s$ is only successful if the root $p_d$ calculated by the verifier matches the public key $Y_{MSS}$. The one-time key $Y_s$ and therefore the one-time signature $\sigma_s/OTS$ are implicitly validated, as $Y_s$ is calculated on the way to the root of the Merkle tree by the verifier.
 This section is also explained in detail with a depiction of the Merkle tree in Figure~\ref{img:merkle_tree_signature_gen}.
 
-% \subsection{Leighton-Micali Signature Scheme (LMS)} -> move to state of the art?`
-% insert description of LMS here / "this is basically LMS but LMS also has a seed"
 
-%!!! https://eprint.iacr.org/2020/470.pdf : Example picture to show XMSS + L-trees
+\section{Leighton-Micali Signature Scheme (LMS)}
+\label{sec:lms}
+% insert description of LMS here / "this is basically LMS but LMS also has a seed"
+% insert winternitz param / table with param
+The \textit{Leighton-Micali Signature Scheme (LMS)} is basically the Merkle Signature Scheme in combination with W-OTS (see Section~\ref{sec:mss}), but LMS has additional features: The transition from each Winternitz one-time key (which includes several Winternitz chains, see Section~\ref{sec:wots_general}) to the leaf of the Merkle Tree is defined.
+
+\subsection{LMS Key Generation}
+% calculation hashcalls + wots hashcalls
+
+\subsection{LMS Signature Generation}
+% calculation hashcalls + wots hashcalls
+
+\subsection{LMS Signature Verification}
+% calculation hashcalls + wots hashcalls
 
 \section{Extended Merkle Signature Scheme (XMSS)}
 \label{sec:xmss}
