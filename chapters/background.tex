@@ -363,9 +363,6 @@ Y_{MSS} &= H_{d,0} \nonumber
 \end{align}
 The signer publishes the public key $Y_{MSS}$.
 
-For simplification, in this section, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $> 1$ Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. 
-These methods are explained in detail for LMS (hashing $p$ Winternitz chains together, see Section~\ref{sec:lms}) and XMSS (combining $l$ Winternitz chains with one L-Tree, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}). % ! reference to specific section in LMS, where transition from one-time key to leaf is explained
-
 \begin{figure}
 \centering
 % unsichtbare Kante: edge from parent[draw=none]
@@ -441,6 +438,11 @@ These methods are explained in detail for LMS (hashing $p$ Winternitz chains tog
 \caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digests of their corresponding \textcolor{grey_tud}{one-time public key} (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}). Because W-OTS is used, the signer generates the \textcolor{grey_tud}{public one-time keys} by applying the hash function~$h$ for $2^w-1$ times to the corresponding \textcolor{grey_tud}{private one-time keys $X_i \in X_{MSS}$} (see Equations~\ref{eq:wots-generation-one-time-public-key} and~\ref{eq:xmss_priv_key}).}
 \label{img:merkle_tree}
 \end{figure}
+
+\subsubsection{MSS Key Generation: Special Case}
+\label{sec:mss_special_keygen}
+For simplification, when explaining MSS, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain, $t = 1$). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $t > 1$, includes more than one Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. 
+These methods are explained in detail for LMS (hashing $p$ Winternitz chains together, see Section~\ref{sec:lms}) and XMSS (combining $l$ Winternitz chains with one L-Tree, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}). % ! reference to specific section in LMS, where transition from one-time key to leaf is explained
 
 \subsection{MSS Signature Generation}
 \label{sec:mss_sig_gen}
@@ -592,7 +594,7 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 \label{sec:lms}
 % insert description of LMS here / "this is basically LMS but LMS also has a seed"
 % insert winternitz param / table with param
-The \textit{Leighton-Micali Signature Scheme (LMS)} is basically the Merkle Signature Scheme in combination with W-OTS (see Section~\ref{sec:mss}), but LMS has additional features: The transition from each Winternitz one-time key (which includes several Winternitz chains, see Section~\ref{sec:wots_general}) to the leaf of the Merkle Tree is defined.
+The \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} is basically the Merkle Signature Scheme in combination with W-OTS (see Section~\ref{sec:mss}), but the transition from each Winternitz one-time key (which includes several Winternitz chains, see Section~\ref{sec:wots_general}) to the leaf of the Merkle Tree is defined in detail. 
 The parameters of LMS are defined in Table~\ref{table:lms_param}.
 
 \begin{table}
@@ -603,18 +605,36 @@ The parameters of LMS are defined in Table~\ref{table:lms_param}.
  symbol & meaning \\ 
  \hline\noalign{\smallskip}
  $n$ & security parameter / length of the hash digest \\
- $w$ & Winternitz parameter \\ % LMS RFC: $w \in \{1,2,4,8}$
+ $w$ & Winternitz parameter, $w \in \{1,2,4,8\}$ \\ % LMS RFC says $w \in \{1,2,4,8}$
  $d$ & height of Merkle Tree \\
- $p$ & amount of elements/Winternitz chains in a single one-time key \\
+ $t$ & amount of elements/Winternitz chains in a single one-time key \\
+ $s$ & next unused W-OTS keypair in Merkle Tree \\
+ $\ell$ & amount of leaves Merkle Tree / amount of one-time keys, $\ell = 2^d$ \\
+ $h$ & cryptographic secure hash function, see Equation~\ref{eq:basic_hashfunc} \\
  \hline
 \end{tabular}
-\caption{Parameter used for LMS, see Section~\ref{sec:lms}.}
+\caption{Parameter used for LMS, see Section~\ref{sec:lms}.~\cite{LMS_RFC8554}}
 \label{table:lms_param}
 \end{table}
 
 \subsection{LMS Key Generation}
 % calculation hashcalls + wots hashcalls
 % reference to mss
+The key generation works like for MSS (see Section~\ref{sec:mss}): First, the W-OTS parameters $w, n$ are chosen and $t$ is calculated as in Section~\ref{sec:WOTS_keygen}. In difference to MSS, the amount of Winternitz chains for each one-time key can be greater than one, $t \geq 1$ (see Section~\ref{sec:mss_special_keygen}, MSS Key Generation: Special Case).
+Notably, the LMS RFC~\cite{LMS_RFC8554} states slightly different equations for calculating $t$, but this is irrelevant for the scope of this work. 
+With the given parameters, $\ell \times$Winternitz one-time keys $x_i, 0 \leq i \leq \ell-1$ are randomly generated. These amount to the private key $X_{LMS}$:
+
+\begin{equation}
+X_{LMS} = (x_0, \cdots, x_i, \cdots, x_{\ell-1})
+\end{equation} 
+To generate the one-time public key $y_i, 0 \leq i \leq \ell-1$ out of each Winternitz private key, the hash function $f$ is applied $2^{w-1}$-times on each Winterintz chain in each $x_i \in X_{LMS}$, see also Equation~\ref{eq:wots-generation-one-time-public-key}.
+
+% ! here should be depiction: CHAINS get hashed to ONE VALUE -> t*n -> n (?)
+\begin{equation}
+y_i = f^{2^w-1}(x_i), 0 \leq i \leq \ell-1
+\end{equation}
+
+Inner nodes and root of the Merkle tree are generated (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}, \ref{eq:inner_nodes_merkle_tree_keygen} and \ref{eq:mss_priv_key} respectively). The root is the public key $Y_{LMS}$.
 
 \subsection{LMS Signature Generation}
 % calculation hashcalls + wots hashcalls
