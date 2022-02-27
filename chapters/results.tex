@@ -1,7 +1,25 @@
-\chapter{Results}
+\chapter{Results} % maybe rename in "Evaluation"
 \label{cha:results}
 
 In this chapter, the performance results of the different methods (see Chapter~\ref{cha:methods}) are shown.
+
+% table with power of 2 - NIST Table
+\begin{table}
+\centering
+\begin{tabular}{l c c l l} 
+ \hline\noalign{\smallskip}
+ \textbf{LMS Parameter Sets} & \textbf{Numeric Identifier} & \textbf{$m$} & \textbf{$h$} & $\ell$ \\
+ \hline\noalign{\smallskip}
+ LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 & $32$ \\
+ LMS\_SHA256\_M32\_H10 & 0x00000006  & 32 & 10 & $1024$ \\
+ LMS\_SHA256\_M32\_H15 & 0x00000007  & 32 & 15 & $32768$ \\
+ LMS\_SHA256\_M32\_H20 & 0x00000008  & 32 & 20 & $1048576$ \\
+ LMS\_SHA256\_M32\_H35 & 0x00000009  & 32 & 25 & $33554432$ \\
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{NIST LMS parameter sets for SHA-256~\cite{stateful_hashbased_sign_schemes_NIST_2020}. The variable $m$ denotes the number of bytes associated with each node in the LMS Merkle tree (used by LMS), the parameter $h$ denotes the height and $\ell = 2^h$ denotes the amount of children of the Merkle tree.} % insert reference to LMS section here
+\label{table:nist_param_lms}
+\end{table}
 
 % table with formulas
 \begin{table}
@@ -24,3 +42,7 @@ In this chapter, the performance results of the different methods (see Chapter~\
 \caption{Performance of the the standard Merkle tree and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and ~\ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}
 \label{table:general_formulas_t5_merkle}
 \end{table}
+
+% \section{Discussion}
+
+% \section{Future Work}
