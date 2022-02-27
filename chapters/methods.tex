@@ -146,6 +146,24 @@ Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \te
 \label{sec:ext_t5_tree} % "my idea"
 In this section, the idea of the \tftree is extended by an opening method \textit{More Aggressive Opening}. When implemented in the whole $T_5$~Merkle tree, the tree construction is denoted as \textit{\extree}.
 The performance of \extree is compared to \tftree with Aggressive Opening of Dodis et al.~\cite{T5_paper}. There is also a python implementation of \extree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
+The parameters used for \extree construction are denoted in Table~\ref{table:t5_ext_parameter}.
+
+
+\begin{table}
+\centering
+\begin{tabular}{c l}
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{\textbf{\extree Parameter}} \\
+ symbol & meaning \\
+ \hline\noalign{\smallskip} 
+ $T$ & height of the tree in $T_5$-Blocks. $T = \log_5(\ell)$ \\
+  $\ell$ & amount of leaves. $\ell = 5^T$ \\
+ $d$ & height of the tree in actual Merkle nodes. $d = 3T$ \\
+ \hline
+\end{tabular}
+\caption{The parameters of \extree. Notably, one \tfblock contains three Merkle layers, see Figure~\ref{img:t5_paper_block_depiction}.} % explain correlation T, d -> d = 3T really correct? maybe picture of T5Tree+?`
+\label{table:t5_ext_parameter}
+\end{table}
 
 \subsection{More Aggressive Opening}
 \label{sec:more_aggr_opening}
@@ -199,8 +217,8 @@ The process of tree generation, signing and verifying with Aggressive Opening  o
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Generation}
 The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree}, Section~\ref{cha:mss_keygen} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
 % maybe pseudocode but too complex -> just read appendix
-
-% here equations for #hashcalls tree generation etc.?
+% 
+The amount of hash calls needed to construct the \extree dependent on the leaves are derived as follows: For one \tfblock, three hash calls are necessary, see Section~\ref{sec:t5_block}. 
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
 The signature generation for \extree works as follows: After calculating the complete \extree, the signer first calculates the $T_5$-Path (see also line~17, \mintinline{python}{def calc_t5_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
