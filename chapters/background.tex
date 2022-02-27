@@ -363,7 +363,8 @@ Y_{MSS} &= H_{d,0} \nonumber
 \end{align}
 The signer publishes the public key $Y_{MSS}$.
 
-For simplification, in this section, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $> 1$ Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. These are explained in detail for LMS (hashing them together, see Section~\ref{sec:lms}) and XMSS (with L-Trees, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}).
+For simplification, in this section, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $> 1$ Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. 
+These methods are explained in detail for LMS (hashing $p$ Winternitz chains together, see Section~\ref{sec:lms}) and XMSS (combining $l$ Winternitz chains with one L-Tree, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}). % ! reference to specific section in LMS, where transition from one-time key to leaf is explained
 
 \begin{figure}
 \centering
@@ -592,15 +593,36 @@ This section is also explained in detail with a depiction of the Merkle tree in 
 % insert description of LMS here / "this is basically LMS but LMS also has a seed"
 % insert winternitz param / table with param
 The \textit{Leighton-Micali Signature Scheme (LMS)} is basically the Merkle Signature Scheme in combination with W-OTS (see Section~\ref{sec:mss}), but LMS has additional features: The transition from each Winternitz one-time key (which includes several Winternitz chains, see Section~\ref{sec:wots_general}) to the leaf of the Merkle Tree is defined.
+The parameters of LMS are defined in Table~\ref{table:lms_param}.
+
+\begin{table}
+\centering
+\begin{tabular}{c l} 
+ \hline\noalign{\smallskip}
+ \multicolumn{2}{c}{\textbf{LMS Parameter}} \\
+ symbol & meaning \\ 
+ \hline\noalign{\smallskip}
+ $n$ & security parameter / length of the hash digest \\
+ $w$ & Winternitz parameter \\ % LMS RFC: $w \in \{1,2,4,8}$
+ $d$ & height of Merkle Tree \\
+ $p$ & amount of elements/Winternitz chains in a single one-time key \\
+ \hline
+\end{tabular}
+\caption{Parameter used for LMS, see Section~\ref{sec:lms}.}
+\label{table:lms_param}
+\end{table}
 
 \subsection{LMS Key Generation}
 % calculation hashcalls + wots hashcalls
+% reference to mss
 
 \subsection{LMS Signature Generation}
 % calculation hashcalls + wots hashcalls
+% reference to mss
 
 \subsection{LMS Signature Verification}
 % calculation hashcalls + wots hashcalls
+% reference to mss
 
 \section{Extended Merkle Signature Scheme (XMSS)}
 \label{sec:xmss}
@@ -680,7 +702,8 @@ As defined in Equation~\ref{eq:tweak_function_h1h2}, additional distinct random 
 \centering
 \begin{tabular}{c c l} 
  \hline\noalign{\smallskip}
- \multicolumn{2}{l}{\textbf{symbol}} & \textbf{meaning} \\
+ \multicolumn{3}{c}{\textbf{WOTS/WOTS+ Parameter}} \\
+ \multicolumn{2}{c}{symbol} & meaning \\
  \noalign{\smallskip}
  WOTS & WOTS+ &  \\ 
  \hline\noalign{\smallskip}
@@ -781,8 +804,8 @@ For a depiction of the XMSS tree referenced in this section, see Figure~\ref{img
 \begin{center}
 \begin{tabular}{c l}
  \hline\noalign{\smallskip}
- \textbf{symbol} & \textbf{meaning} \\
- XMSS & \\
+ \multicolumn{2}{c}{\textbf{XMSS Parameter}} \\
+ symbol & meaning \\
  \hline\noalign{\smallskip} 
  $l$ & amount of leaves of the L-Tree / elements in one WOTS+ key  \\ 
  $\ceil{log(l)}$ & height of one L-Tree in the XMSS tree \\
