@@ -220,15 +220,15 @@ The \extree Generation works like tree generation for the \tftree, see Section~\
 % 
 The performance equations for building an \extree are derived as follows (see also Table~\ref{table:t5_ext_parameter}). the total amount of \tfblocks in one \extree is:
 \begin{equation}
-\sum_{i=0}^{T-1} 5^i
+\text{\#\tfblocks}(T)= \sum_{i=0}^{T-1} 5^i
 \end{equation} 
 For one \tfblock, three hash calls are necessary (see Section~\ref{sec:t5_block}). Therefore, the total amount of hash calls for building \extree based on $T$ is:\\
 \begin{equation}
-3 \cdot \sum_{i=0}^{T-1} 5^i
+\text{\# hash calls/\tfblock}(T) = 3 \cdot \sum_{i=0}^{T-1} 5^i
 \end{equation}
 To get the hash calls based on the leaves $\ell$, $T$ is substituted by $\log_5(\ell)$.
 \begin{equation}
-3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
+\text{\# hash calls/\tfblock}(\ell)=3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
 \end{equation}
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
