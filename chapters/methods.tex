@@ -1,6 +1,6 @@
 \chapter{Methods}
 \label{cha:methods}
-This chapter contains the methods used for extending the existing hash based digital signature systems in this work.
+In Chapter~\ref{cha:background}, the digital signature systems LMS and XMSS, based on a classical Merkle Tree, are introduced. Dodis et al.~\cite{T5_paper} propose a method $T_5$ that can be used to speed up the classical Merkle Tree. In this chapter, the $T_5$ method is explained in detail, equations for speedup calculations are introduced, a new method More Aggressive Opening is proposed and the extended Merkle Tree scheme \textit{\extree} is constructed.
 
 \section{T5 Hashing}
 Dodis et al.~\cite{T5_paper} propose a method called $T5$ for hashing five inputs with three hash compression calls. The $5n$-to-$n$ compression function $T5$ (with $n$ being the hash digest length) is constructed out of $2n$-to-$n$ compression functions $h_1, h_2, h_3$:
