@@ -85,6 +85,7 @@ def calc_path_verifier(auth_path: List[int], key_pos: int, child_count: int, one
 
         elif index == 4:  # case: m5
             # here: last_result == m5
+            # other possibility: auth_path[-3] has padding with 0 (to get same authpath length for every case)
             h1 = auth_path[-2]
             h2 = auth_path[-1]
             h1_xor = xor(h1, last_result)
@@ -192,6 +193,7 @@ class T5Block(T5Node):
             auth_path.extend(self.m5.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
 
         elif child_pos == 4:  # special case m5
+            # other possibility: add padding with 0 here to get same authpath len for every case
             auth_path.append(self.calc_h1())
             auth_path.append(self.calc_h2())
             auth_path.extend(self.m5.calc_auth_path(remaining_path))  # path[1:] -> give rest of path to subtrees of m0
@@ -222,7 +224,7 @@ if __name__ == '__main__':
     one_time_key = 22  # value of one-time key (here: has same value as position it's on, for debugging purposes)
 
     path = calc_t5_path(s, 2)
-    print('Path "T5 layers":', path)
+    print('t5_path "T5 layers":', path)
 
     # Amount T5Leafs -> has to be power of 5, values of leaves == value of one-time public key
     t5tree = T5Block(
@@ -244,7 +246,6 @@ if __name__ == '__main__':
     auth_path = t5tree.calc_auth_path(path)
     print('Auth. path (calculated by signer):', auth_path)
 
-    auth_path_by_verifier, hash_count_authentication = calc_path_verifier(auth_path, s, child_count,
-                                                                          one_time_key)
+    auth_path_by_verifier, hash_count_authentication = calc_path_verifier(auth_path, s, child_count, one_time_key)
     print('Root calculated by verifier using Authentication path:', auth_path_by_verifier)
     print('# hash calls verification (Path calculation by verifier):', hash_count_authentication)
