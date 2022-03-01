@@ -171,12 +171,13 @@ In this work, the new opening method \textit{More Aggressive Opening} is propose
 There are two cases distinguished for one \tfblock:
 
 \begin{itemize}
+\label{list:case1_case_2}
 \item \textbf{Case~1}: The possible opening nodes are $m_i, i \in \{1,2,3,4\}$. For a given opening node $m_i$, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
 \begin{align}
 open_{auth}(m_1) = (m_2, m_5, h_2(m_3, m_4)) = (m_2, m_5, b) \label{eq:more_aggr_m1_example} \\
 open_{auth}(m_2) = (m_1, m_5, h_2(m_3, m_4)) = (m_1, m_5, b) \\
 open_{auth}(m_3) = (m_4, m_5, h_1(m_1, m_2)) = (m_4, m_5, a) \\
-open_{auth}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a)
+open_{auth}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a) \label{eq:more_aggr_m4_example}
 \end{align} 
 An example of $m_1$ as opening node is depicted on the left side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $m_2, m_5, b$ in the authentication path (see Equation~\ref{eq:more_aggr_m1_example}). The verifier needs two hash calls ($h_1, h_3$) to calculate the path to the root $f$.
 Therefore, the authentication path has always three elements and the verifier always needs two hash calls to calculate the path to the root of one \tfblock for case~1, see also Table~\ref{table:more_aggr_opening}.
@@ -220,20 +221,31 @@ The \extree Generation works like tree generation for the \tftree, see Section~\
 % 
 The performance equations for building an \extree are derived as follows (see also Table~\ref{table:t5_ext_parameter}). the total amount of \tfblocks in one \extree is:
 \begin{equation}
-\text{\#\tfblocks}(T)= \sum_{i=0}^{T-1} 5^i
+\text{\#\tfblocks} = \sum_{i=0}^{T-1} 5^i
 \end{equation} 
 For one \tfblock, three hash calls are necessary (see Section~\ref{sec:t5_block}). Therefore, the total amount of hash calls for building \extree based on $T$ is:\\
 \begin{equation}
-\text{\# hash calls/\tfblock}(T) = 3 \cdot \sum_{i=0}^{T-1} 5^i
+\text{\# hash calls/\tfblock (depending on $T$)} = 3 \cdot \sum_{i=0}^{T-1} 5^i
 \end{equation}
 To get the hash calls based on the leaves $\ell$, $T$ is substituted by $\log_5(\ell)$.
 \begin{equation}
-\text{\# hash calls/\tfblock}(\ell)=3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
+\text{\# hash calls/\tfblock (depending on $\ell$)}=3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
 \end{equation}
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
-The signature generation for \extree works as follows: After calculating the complete \extree, the signer first calculates the $T_5$-Path (see also line~17, \mintinline{python}{def calc_t5_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}).
-Now, the signer calculates the authentication path out of the $T_5$-Path (see also line~167, \mintinline{python}{def calc_auth_path(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation} and Section~\ref{sec:mss_sig_gen}).
+The signature generation for \extree works as follows: After calculating the complete \extree, the signer first calculates the $T_5$-Path (see also line~17, \mintinline{python}{def calc_t5_path}~($\cdots$) in Appendix~\ref{cha:appendix_t5_tree_implementation}).
+Now, the signer calculates the authentication path out of the $T_5$-Path (see also line~167, \mintinline{python}{def calc_auth_path}~($\cdots$) in Appendix~\ref{cha:appendix_t5_tree_implementation} and Section~\ref{sec:mss_sig_gen}).
+
+For this version of the \extree, it is assumed the signer saves the whole tree  after key generation. Therefore, no additional hash calls are necessary for generating the authentication path. % maybe insert #hashcalls for winternitz ots generation
+As \extree uses More Aggressive Opening, the length of the authentication path differs on the case, see Section~\ref{sec:more_aggr_opening}.
+For \textbf{case~1}, there are always three elements in the authentication path for one \tfblock, see Equation~\ref{eq:more_aggr_m1_example}-\ref{eq:more_aggr_m4_example}.
+For \textbf{case~2}, there are always two elements in the authentication path, see Equation~\ref{eq:more_aggr_opening_m5_example}. For of all signatures used in one \extree, the average of \textbf{case~1} is $\frac{4}{5}$ , whereas the average \textbf{case~2} is $\frac{1}{5}$.
+Therefore, the average amount of elements in the authentication path is calculated as follows:
+\begin{equation}
+\label{eq:more_aggr_len_authpath}
+\text{\# el auth.path (average)} = 3 \cdot \frac{4}{5} + 2 \cdot \frac{1}{5} = 2.8
+\end{equation}
+
 
 % pseudocode - not working with for()
 %\begin{algorithm}
@@ -258,7 +270,7 @@ Now, the signer calculates the authentication path out of the $T_5$-Path (see al
 
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Verification}
-After receiving the authentication path by the signer, the verifier calculates the path through the \extree to its root (see also line~28, \mintinline{python}{def calc_path_verifier(...)} in Appendix~\ref{cha:appendix_t5_tree_implementation}). The verifier compares the calculated root with the public key of the signer, if they match, the signature is valid (see Section~\ref{sec:mss_sign_verif}).
+After receiving the authentication path by the signer, the verifier calculates the path through the \extree to its root (see also line~28, \mintinline{python}{def calc_path_verifier}~($\cdots$) in Appendix~\ref{cha:appendix_t5_tree_implementation}). The verifier compares the calculated root with the public key of the signer, if they match, the signature is valid (see Section~\ref{sec:mss_sign_verif}).
 
 % try to draw "more aggressive" with forest -> doesn't work so well
 %\begin{figure}
