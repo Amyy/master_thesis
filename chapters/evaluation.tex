@@ -26,19 +26,19 @@ In order to compare the different concepts, the performance is calculated for th
 An overview of the equations for performance calculation introduced in Chapter~\ref{cha:methods} is given in Table~\ref{table:general_formulas_t5_merkle}.
 \begin{table}
 \centering
-\begin{tabular}{l c c c} 
+\begin{tabular}{l c c c c} 
  \hline\noalign{\smallskip}
- \multicolumn{4}{c}{\textbf{Summary Equations for Performance Calculation}} \\
+ \multicolumn{5}{c}{\textbf{Summary Equations for Performance Calculation}} \\
  \hline\noalign{\smallskip}
- & & \textbf{\tftree} & \textbf{\extree} \\
+ & & \textbf{\tftree} & \textbf{\extree} & \\
  \noalign{\smallskip}
-  & \textbf{Merkle Tree} & Aggr. & More Aggr. \\
+  & \textbf{Merkle Tree} & Aggr. & More Aggr. & \textbf{Source} \\
  \hline\noalign{\smallskip}
- \# hash calls keygen (Eq.~\ref{eq:lms_hashcalls_tree_treegen} ,\ref{eq:t5_tree_gen_hashcalls})& $\ell-1$ & \multicolumn{2}{c}{$\frac{3}{4}(\ell-1)$} \\
+ \# hash calls keygen & $\ell-1$ & \multicolumn{2}{c}{$\frac{3}{4}(\ell-1)$} & Eq.~\ref{eq:lms_hashcalls_tree_treegen}, \ref{eq:t5_tree_gen_hashcalls} \\
 % \# saved nodes (whole tree) & $2\ell-1$ & \multicolumn{2}{c}{$10\ell-1$} \\ % check if really true
- \# hash calls sign & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} \\ % auth.path generation
- \# el. in auth.path & $\log_2(\ell)$ & $3\log_5(\ell)$ & $2.8\log_5(\ell)$\\
- \# hash calls verify & $\log_2(\ell)$ & $3\log_5(\ell)$ & $1.8\log_5(\ell)$\\  % path calculation
+ \# hash calls sign & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} & \\ % auth.path generation
+ \# el. in auth.path & $1.44\log(\ell) $ & $3\log_5(\ell)$ & $1.74\log(\ell)$ & Eq.\ref{eq:lms_authpath_el},..,\ref{eq:ext_t5_len_authpath} \\
+ \# hash calls verify & $1.44\log(\ell)$ & $3\log_5(\ell)$ & $1.12\log(\ell)$ & Eq.\ref{eq:lms_hashcalls_verify},..,\ref{eq:ext_t5_hashcalls_verify} \\  % path calculation
  \hline
 \end{tabular}
 \caption{Performance of the the standard Merkle Tree (used in LMS) and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and \ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}

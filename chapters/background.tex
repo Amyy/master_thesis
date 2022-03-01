@@ -733,6 +733,7 @@ Inner nodes and root of the Merkle tree are generated like in MSS (see Equation~
 % amount of hashcalls tree generation  binary tree
 The amount of hash calls necessary for calculating the Merkle Tree \textit{excluding} the Winternitz chains (i.e. the leaves are already known) is denoted in the following equation:
 \begin{equation}
+\label{eq:lms_hashcalls_tree_treegen}
 \text{\# hashcalls Merkle Tree generation} = \ell - 1
 \end{equation}
 The amount of hash calls necessary for generating all Merkle Tree leaves is calculated as follows:
@@ -749,6 +750,7 @@ In summary, the amount of hash calls for generating the public key $Y_{LMS}$ is:
 Signature generation works just like in MSS (see Section~\ref{sec:mss_sig_gen}), except the amount of Winternitz chains $t \geq 1$ (see Equation~\ref{eq:wots_sign_calc}).
 The length of the authentication path in LMS can be calculated as follow:
 \begin{equation}
+\label{eq:lms_authpath_el}
 \text{\# elements in authpath} = d = \log_2(\ell) = 1.44 \cdot \log(\ell)
 \end{equation}
 
@@ -756,6 +758,7 @@ The length of the authentication path in LMS can be calculated as follow:
 Signature verification works just like in MSS (see Section~\ref{sec:mss_sig_gen}), except the amount of Winternitz chains $t \geq 1$ (see Equation~\ref{eq:wots_verify}).
 The amount of hash calls for signature verification by the verifier are calculated as follows:
 \begin{equation}
+\label{eq:lms_hashcalls_verify}
 \text{\# hash calls verify} = \log_2(\ell) = 1.44 \cdot \log(\ell)  
 \end{equation}
 
