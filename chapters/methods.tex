@@ -70,8 +70,8 @@ Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the $T_5$
  \hline\noalign{\smallskip}
  \multicolumn{2}{c}{\textbf{Conservative Opening}} \\
  \hline\noalign{\smallskip}
- \# hashcalls & 3 \\
  \# el. in auth. path & 4 \\
+  \# hashcalls verify & 3 \\
  \hline
 \end{tabular}
 \caption{Performance of calculating the authentication path for one $T_5$-Block with Conservative Opening: The necessary amount of hashcalls and amount of elements in the authentication path are given.}
@@ -80,7 +80,7 @@ Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the $T_5$
 
 \subsubsection{Aggressive Opening}
 \label{sec:aggr_opening}
-The second version of opening a $T_5$-Block with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decreases for this method, but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i, i \in \{1,2,3,4,5\}$, the function $open_{auth}$ returns the authentication path elements for the corresponding $T_5$-Block:
+The second version of opening a $T_5$-Block with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decreases for this method, but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i, i \in \{1,2,3,4,5\}$, the function $open_{aggr}$ returns the authentication path elements for the corresponding $T_5$-Block:
 
 \begin{align}
 &open_{aggr}(m_1) = (m_2, m_5, h_2(m_3,m_4) \oplus m_5) = (m_2, m_5, d) \label{eq:aggr_open_m1_example} \\
@@ -98,8 +98,8 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
  \hline\noalign{\smallskip}
  \multicolumn{2}{c}{\textbf{Aggressive Opening}} \\
  \hline\noalign{\smallskip}
- \# hashcalls & 2 \\
  \# el. in auth. path & 3 \\
+ \# hashcalls verify & 2 \\
  \hline
 \end{tabular}
 \caption{Performance of calculating the authentication path for one $T_5$-Block with Aggressive Opening.}
@@ -168,24 +168,26 @@ The parameters used for \extree construction are denoted in Table~\ref{table:t5_
 \subsection{More Aggressive Opening}
 \label{sec:more_aggr_opening}
 In this work, the new opening method \textit{More Aggressive Opening} is proposed, see Figure~\ref{img:t5_more_aggr_opening}. It has better overall performance than Conservative- and Aggressive Opening (see Section~\ref{sec:aggr_opening} and \ref{sec:conserv_opening}) for the signing and verifying process, see Table~\ref{table:more_aggr_opening}. But notably, the length of the authentication path is \textbf{not} constant.
-There are two cases distinguished for one \tfblock:
+
+\subsubsection{Signature Generation: \texorpdfstring{\tfblock}{T5-Block}}
+When calculating the authentication path (generating the signature) for one \tfblock, two cases distinguished:
 
 \begin{itemize}
 \label{list:case1_case_2}
-\item \textbf{Case~1}: The possible opening nodes are $m_i, i \in \{1,2,3,4\}$. For a given opening node $m_i$, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
+\item \textbf{Case~1}: The possible opening nodes are $m_i, i \in \{1,2,3,4\}$. For a given opening node $m_i$, the function $open_{aggr+}$ returns the authentication path for the corresponding \tfblock:
 \begin{align}
-open_{auth}(m_1) = (m_2, m_5, h_2(m_3, m_4)) = (m_2, m_5, b) \label{eq:more_aggr_m1_example} \\
-open_{auth}(m_2) = (m_1, m_5, h_2(m_3, m_4)) = (m_1, m_5, b) \\
-open_{auth}(m_3) = (m_4, m_5, h_1(m_1, m_2)) = (m_4, m_5, a) \\
-open_{auth}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a) \label{eq:more_aggr_m4_example}
+open_{aggr+}(m_1) = (m_2, m_5, h_2(m_3, m_4)) = (m_2, m_5, b) = A_{m_1+} \label{eq:more_aggr_m1_example} \\
+open_{aggr+}(m_2) = (m_1, m_5, h_2(m_3, m_4)) = (m_1, m_5, b) = A_{m_2+} \\
+open_{aggr+}(m_3) = (m_4, m_5, h_1(m_1, m_2)) = (m_4, m_5, a) = A_{m_3+} \\
+open_{aggr+}(m_4) = (m_3, m_5, h_1(m_1, m_2)) = (m_3, m_5, a) = A_{m_4+} \label{eq:more_aggr_m4_example}
 \end{align} 
 An example of $m_1$ as opening node is depicted on the left side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $m_2, m_5, b$ in the authentication path (see Equation~\ref{eq:more_aggr_m1_example}). The verifier needs two hash calls ($h_1, h_3$) to calculate the path to the root $f$.
 Therefore, the authentication path has always three elements and the verifier always needs two hash calls to calculate the path to the root of one \tfblock for case~1, see also Table~\ref{table:more_aggr_opening}.
 
-\item \textbf{Case~2}: The opening node is $m_5$. This case is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}. For $m_5$ as opening node, the function $open_{auth}$ returns the authentication path for the corresponding \tfblock:
+\item \textbf{Case~2}: The opening node is $m_5$. This case is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}. For $m_5$ as opening node, the function $open_{aggr+}$ returns the authentication path for the corresponding \tfblock:
 \begin{equation}
 \label{eq:more_aggr_opening_m5_example}
-open_{auth}(m_5) = (h_1(m_1, m_2), h_2(m_3, m_4)) = (a, b)
+open_{aggr+}(m_5) = (h_1(m_1, m_2), h_2(m_3, m_4)) = (a, b) = A_{m_5+}
 \end{equation}
 An example of $m_5$ as opening node is depicted on the right side of Figure~\ref{img:t5_more_aggr_opening}: The signer is putting the elements $a, b$ in the authentication path (see Equation~\ref{eq:more_aggr_opening_m5_example}). The verifier needs one hash call $h_3$ to calculate the path to the root $f$.
 Therefore, the authentication path has always two elements and the verifier always needs one hash call to calculate the path to the root for one \tfblock for case~2, see also Table~\ref{table:more_aggr_opening}.
@@ -205,15 +207,36 @@ Therefore, the authentication path has always two elements and the verifier alwa
  \multicolumn{3}{c}{\textbf{More Aggressive Opening}} \\
  \hline\noalign{\smallskip}
  & case 1: $m_i, i \in \{1,2,3,4\}$ & case 2: $m_5$ \\
- \# hashcalls & 2 & 1 \\
  \# el. in auth. path & 3 & 2 \\
+ \# hashcalls verify & 2 & 1 \\
  \hline
 \end{tabular}
-\caption{Performance of calculating the authentication path and amount of elements in the authentication path for More Aggressive Opening. The case~1 with $m_i, i \in \{1,2,3,4\}$ as possible opening nodes and case~2 with $m_5$ as opening node are shown.}
+\caption{Performance of calculating the authentication path and amount of elements in the authentication path for More Aggressive Opening. The case~1 with $m_i, i \in \{1,2,3,4\}$ as possible opening/path nodes and case~2 with $m_5$ as opening/path node are shown.}
 \label{table:more_aggr_opening}
 \end{table}
-The process of tree generation, signing and verifying with Aggressive Opening  of the \extree is shown in the following section. 
-% ! children have to be power of 5
+
+\subsubsection{Signature Verification: \texorpdfstring{\tfblock}{T5-Block}}
+When calculating the path (verifying the signature) for one \tfblock, the same two cases as for signature generation are distinguished (see Equation~\ref{eq:more_aggr_m1_example}-\ref{eq:more_aggr_m4_example} and Equation~\ref{eq:more_aggr_opening_m5_example} respectively). For an explanatory depiction of the two cases, see Figure~\ref{img:t5_more_aggr_opening}.
+
+\begin{itemize}
+\item \textbf{Case~1}: The possible leaves of the \tfblock, for which a path to the root $f$ will be calculated by the verifier, are $m_i, i \in \{1,2,3,4\}$. For leaf $m_i$ and the corresponding authentication path $A_{m_i+}$ (given by the signer, see Equation~\ref{eq:more_aggr_m1_example}-\ref{eq:more_aggr_m4_example}), the function $path(m_i,A_{m_i+})$ returns the root $f$ for the corresponding \tfblock:
+
+\begin{align}
+&path(m_1, A_{m_1+}) = path(m_1, (m_2, m_5, b)) = h_3(h_1(m_1, m_2) \oplus m_5, b \oplus m_5) \oplus m_5 = f \label{eq:more_aggr_path_m1}\\
+&path(m_2, A_{m_2+}) = path(m_2, (m_1, m_5, b)) = h_3(h_1(m_1, m_2) \oplus m_5, b \oplus m_5) \oplus m_5 = f\\
+&path(m_3, A_{m_3+}) = path(m_3, (m_4, m_5, a)) = h_3(a \oplus m_5, h_2(m_3, m_4) \oplus m_5) \oplus m_5 = f \\
+&path(m_4, A_{m_4+}) = path(m_4, (m_3, m_5, a)) = h_3(a \oplus m_5, h_2(m_3, m_4) \oplus m_5) \oplus m_5 = f \label{eq:more_aggr_path_m4}
+\end{align}
+
+\item \textbf{Case~2}: The path $f$ needs to be calculated for $m_5$ as given "leaf" of the \tfblock. Given $m_5$ and the corresponding authentication path $A_{m_5+}$ (given by the signer, see Equation~\ref{eq:more_aggr_opening_m5_example}) is calculated by $path(m_5, A_{m_5+})$:
+\begin{equation}
+\label{eq:more_aggr_path_m5}
+path(m_5, A_{m_5+}) =  path(m_5, (a,b)) = h_3(a \oplus m_5, b \oplus m_5) \oplus m_5 = f
+\end{equation}
+\end{itemize}
+
+The process of tree generation, signing and verifying using Aggressive Opening in the \extree is shown in the following section. 
+
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Generation}
 The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree}, Section~\ref{cha:mss_keygen} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
@@ -225,11 +248,11 @@ The performance equations for building an \extree are derived as follows (see al
 \end{equation} 
 For one \tfblock, three hash calls are necessary (see Section~\ref{sec:t5_block}). Therefore, the total amount of hash calls for building \extree based on $T$ is:\\
 \begin{equation}
-\text{\# hash calls/\tfblock (depending on $T$)} = 3 \cdot \sum_{i=0}^{T-1} 5^i
+\text{\# hash calls tree gen. (depending on $T$)} = 3 \cdot \sum_{i=0}^{T-1} 5^i
 \end{equation}
-To get the hash calls based on the leaves $\ell$, $T$ is substituted by $\log_5(\ell)$.
+To get the hash calls for tree generation based on the leaves $\ell$, $T$ is substituted by $\log_5(\ell)$.
 \begin{equation}
-\text{\# hash calls/\tfblock (depending on $\ell$)}=3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
+\text{\# hash calls tree gen. (depending on $\ell$)}=3 \cdot \sum_{i=0}^{\log_5(\ell)-1} 5^i = 3 \cdot \sum_{i=0}^{\frac{\log(\ell)}{\log(5)}-1} 5^i = \frac{3}{4} (\ell-1)
 \end{equation}
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Generation}
@@ -238,17 +261,20 @@ Now, the signer calculates the authentication path out of the $T_5$-Path (see al
 
 For this version of the \extree, it is assumed the signer saves the whole tree  after key generation. Therefore, no additional hash calls are necessary for generating the authentication path. % maybe insert #hashcalls for winternitz ots generation
 As \extree uses More Aggressive Opening, the length of the authentication path differs on the case, see Section~\ref{sec:more_aggr_opening}.
-For \textbf{case~1}, there are always three elements in the authentication path for one \tfblock, see Equation~\ref{eq:more_aggr_m1_example}-\ref{eq:more_aggr_m4_example}.
+For \textbf{case~1}, there are always three elements in the authentication path for one \tfblock, see Equation~\ref{eq:more_aggr_m1_example}-\ref{eq:more_aggr_m4_example} and Table~\ref{table:more_aggr_opening}.
 For \textbf{case~2}, there are always two elements in the authentication path, see Equation~\ref{eq:more_aggr_opening_m5_example}. For of all signatures used in one \extree, the average of \textbf{case~1} is $\frac{4}{5}$ , whereas the average \textbf{case~2} is $\frac{1}{5}$.
 Therefore, the average amount of elements in the authentication path is calculated as follows:
 \begin{equation}
 \label{eq:more_aggr_len_authpath}
-\text{\# el auth.path (average)} = 3 \cdot \frac{4}{5} + 2 \cdot \frac{1}{5} = 2.8
+\text{\# elements auth.path (average)} = 3 \cdot \frac{4}{5} + 2 \cdot \frac{1}{5} = 2.8
 \end{equation}
 
-
-
-\subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Verification}
+\subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Signature Verification}
 After receiving the authentication path by the signer, the verifier calculates the path through the \extree to its root (see also line~28, \mintinline{python}{def calc_path_verifier}~($\cdots$) in Appendix~\ref{cha:appendix_t5_tree_implementation}). The verifier compares the calculated root with the public key of the signer, if they match, the signature is valid (see Section~\ref{sec:mss_sign_verif}).
 
+With the More Aggressive opening variant used in the \extree, calculating the path for \textbf{case~1} needs two hash calls (see Equation~\ref{eq:more_aggr_path_m1}-\ref{eq:more_aggr_path_m4}) and calculating it for \textbf{case~2} needs one hash call (see Equation~\ref{eq:more_aggr_path_m5}). The average of each case over of all signature verifications (for one \extree), is $\frac{4}{5}$ for\ \textbf{case~1} and $\frac{1}{5}$ for \textbf{case~2}. Therefore, the average amount of hash calls necessary for calculating the root $f$ of the \extree is calculated as follows:
+
+\begin{equation}
+\text{\# hash calls path calculation} = \frac{4}{5} \cdot 2 + \frac{1}{5} = 1.8
+\end{equation}
 
