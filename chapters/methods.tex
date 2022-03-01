@@ -247,27 +247,6 @@ Therefore, the average amount of elements in the authentication path is calculat
 \end{equation}
 
 
-% pseudocode - not working with for()
-%\begin{algorithm}
-%\caption{Calculate $T_5$-Path of \extree. Requirement for authentication path calculation.}
-%\begin{algorithmic} 
-%\REQUIRE Current one-time key: $s$, height of $T_5$-Tree: $T$ 
-%\STATE $T_5$-Path = $\emptyset$
-%\end{algorithmic}
-%\end{algorithm}
-
-% whole codeblock of function to calculate t5-path:
-%\begin{minted}[breaklines]{python}
-%def calc_t5_path(ot_key_pos: int, tree_height: int):
-%    path_list = []
-%    i = ot_key_pos
-%    for _ in range(tree_height): 
-%        j = i % 5
-%        path_list.insert(0, j) 
-%        i = (i - j) // 5  # relative position in T5 Block
-%    return path_list  
-%\end{minted}
-
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Verification}
 After receiving the authentication path by the signer, the verifier calculates the path through the \extree to its root (see also line~28, \mintinline{python}{def calc_path_verifier}~($\cdots$) in Appendix~\ref{cha:appendix_t5_tree_implementation}). The verifier compares the calculated root with the public key of the signer, if they match, the signature is valid (see Section~\ref{sec:mss_sign_verif}).
