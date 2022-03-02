@@ -1,6 +1,6 @@
 \chapter{Methods}
 \label{cha:methods}
-In Chapter~\ref{cha:background}, the digital signature systems LMS and XMSS, based on a classical Merkle Tree, are introduced. Dodis et al.~\cite{T5_paper} propose a method $T_5$ that can be used to speed up the classical Merkle Tree. In this chapter, the $T_5$ method is explained in detail, equations for speedup calculations are introduced, a new method More Aggressive Opening is proposed and the extended Merkle Tree scheme \textit{\extree} is constructed.
+In Chapter~\ref{cha:background}, the digital signature systems LMS and XMSS, based on a classical Merkle Tree, are introduced. Dodis et al.~\cite{T5_paper} propose a method $T_5$ that can be used to speed up the classical Merkle Tree. In this chapter, the $T_5$ method is explained in detail, equations for speedup calculations are introduced, a new method More Aggressive Opening is proposed and the extended Merkle Tree scheme \textit{\extree} is constructed. The goal is to substitute the standard Merkle Tree with the \tftree and \extree concepts, to speed up LMS, XMSS and potentially other signature schemes based on Merkle Trees.
 
 \section{T5 Hashing}
 Dodis et al.~\cite{T5_paper} propose a method called $T5$ for hashing five inputs with three hash compression calls. The $5n$-to-$n$ compression function $T5$ (with $n$ being the hash digest length) is constructed out of $2n$-to-$n$ compression functions $h_1, h_2, h_3$:
@@ -253,7 +253,6 @@ When calculating the path (verifying the signature) for one \tfblock, the same t
 path(m_5, A_{m_5+}) =  path(m_5, (a,b)) = h_3(a \oplus m_5, b \oplus m_5) \oplus m_5 = f
 \end{equation}
 \end{itemize}
-
 The process of tree generation, signing and verifying using Aggressive Opening in the \extree is shown in the following section. 
 
 
