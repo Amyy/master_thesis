@@ -10,15 +10,15 @@ The general performance of the different tree concepts depending on the leaves $
 \centering
 \begin{tabular}{l c c c l} 
  \hline\noalign{\smallskip}
- \multicolumn{5}{c}{\textbf{Summary Equations for Performance Calculation}} \\
- \hline\noalign{\smallskip}
- & & \textbf{\tftree} & \textbf{\extree} & \\
+ \multicolumn{5}{c}{\textbf{Summary: Equations Performance Calculation}} \\
+\hline\noalign{\smallskip}
+ & Merkle Tree & \tftree & \extree & Source  \\
  \noalign{\smallskip}
-  & \textbf{Merkle Tree} & Aggr. & More Aggr. & \textbf{Source} \\
+  &  & Aggr. & More Aggr. & \\
  \hline\noalign{\smallskip}
  \# hash calls keygen & $\ell-1$ & \multicolumn{2}{c}{$\frac{3}{4}(\ell-1)$} & Eq.~\ref{eq:lms_hashcalls_tree_treegen}, \ref{eq:t5_tree_gen_hashcalls} \\
 % \# saved nodes (whole tree) & $2\ell-1$ & \multicolumn{2}{c}{$10\ell-1$} \\ % check if really true
- \# hash calls sign & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} & \\ % auth.path generation
+% \# hash calls sign & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} & \\ % auth.path generation -> remove because not really information necessary in this table
  \# el. in auth.path & $1.44\log(\ell) $ & $1.86\log(\ell)$ & $1.74\log(\ell)$ & Eq. \ref{eq:lms_authpath_el}, \ref{eq:t5_el_authpath}, \ref{eq:ext_t5_len_authpath} \\
  \# hash calls verify & $1.44\log(\ell)$ & $1.24\log(\ell)$ & $1.12\log(\ell)$ & Eq. \ref{eq:lms_hashcalls_verify}, \ref{eq:t5_path_calc_hashcalls}, \ref{eq:ext_t5_hashcalls_verify} \\  % path calculation
  \hline
