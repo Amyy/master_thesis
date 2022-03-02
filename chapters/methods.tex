@@ -15,7 +15,7 @@ For this work, the construction of $T5$ in combination with Merkle trees is of i
 
 \subsection{T5 Block}
 \label{sec:t5_block}
-In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \textit{T5-Block} out of a Merkle tree with height $d=2$ is shown:
+In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \textit{\tfblock} out of a Merkle tree with height $d=2$ is shown:
 
 \begin{itemize}
 \item The variables  $m_1, m_2$ (respectively $m_3, m_4$) denote the left and right halves of input to compression function $h_1$ (respectively $h_2$).
@@ -106,6 +106,9 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \label{table:aggr_opening}
 \end{table}
 
+% equations for aggr. opening
+
+
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/aggr_conserv_opening_T5.png}
@@ -113,9 +116,25 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 \label{img:t5_conserv_aggr_opening}
 \end{figure}
 
-\subsection{T5 Merkle Tree}
+\subsection{\texorpdfstring{\tftree}{T5 Merkle Tree}}
 \label{sec:dodis_t5_merkle_tree}
-Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree}, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
+Given the \tfblock construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree}, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
+
+In order to compare the performance of the \tftree to other tree variants (like binary Merkle Tree and \extree, see Chapter~\ref{cha:evaluation}), equations for performance calculations are constructed. 
+The amount of hash calls for constructing the whole \tftree works like for the \extree (for a detailed derivation of the formula see Section~\ref{sec:extree_sign_gen} and Equation~\ref{eq:t5_tree_gen_hashcalls}):
+\begin{equation}
+\text{\# hash calls tree gen. \tftree} = \frac{3}{4}(\ell-1)
+\end{equation}
+Let $\ell$ be the amount of leaves of the \tftree, the opening method is Aggressive Opening. Then, the length of the authentication path is calculated as follows:
+\begin{equation}
+\label{eq:t5_el_authpath}
+\text{\# el. in auth.path \tftree} = 3\log_5(\ell) = \frac{3\log_5(\ell)}{\log(5)} = 1.86\log(\ell)
+\end{equation}
+The amount of hash calls to calculate the path through the whole \tftree (corresponds to signature verification), given the authentication path (see Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}):
+\begin{equation}
+\label{eq:t5_path_calc_hashcalls}
+\text{\# hash calls path generation \tftree} = 2\log_5(\ell) = 2 \cdot \frac{\log(\ell)}{\log(5)} = 1.24\log(\ell)
+\end{equation}
 
 \begin{table}
 \centering
@@ -131,7 +150,7 @@ Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \te
  opening (length)$/\log_2(t)$ & 1 & 1.72 & 1.29 \\ 
  \hline
 \end{tabular}
-\caption{Performance of the $T_5$ Merkle Tree with the opening variants Conservative- and Aggressive Opening in comparison to the standard Merkle Tree given by Dodis et al.~\cite{T5_paper}. The variable $t$ denotes the amount of children.}
+\caption{Performance of the \tftree with the opening variants Conservative- and Aggressive Opening in comparison to the standard Merkle Tree given by Dodis et al.~\cite{T5_paper}. The variable $t$ denotes the amount of children.}
 \label{table:t5_merkletree_dodis_performance}
 \end{table}
 
@@ -142,7 +161,7 @@ Given the $T_5$-Block construction in Section~\ref{sec:t5_block}, a complete \te
 \label{img:t5_complete_tree_paper}
 \end{figure}
 
-\section{Extended T5 Merkle Tree}
+\section{Extended \texorpdfstring{\tftree}{T5 Merkle Tree}: \texorpdfstring{\extree}{T5-Tree+}}
 \label{sec:ext_t5_tree} % "my idea"
 In this section, the idea of the \tftree is extended by an opening method \textit{More Aggressive Opening}. When implemented in the whole $T_5$~Merkle tree, the tree construction is denoted as \textit{\extree}.
 The performance of \extree is compared to \tftree with Aggressive Opening of Dodis et al.~\cite{T5_paper}. There is also a python implementation of \extree as digital signature scheme that contains the steps from key generation to signature verification, see Appendix~\ref{cha:appendix_t5_tree_implementation}.
@@ -239,6 +258,7 @@ The process of tree generation, signing and verifying using Aggressive Opening i
 
 
 \subsection{\texorpdfstring{\extree}{Ext. T5-Tree} Generation}
+\label{sec:extree_sign_gen}
 The \extree Generation works like tree generation for the \tftree, see Section~\ref{sec:dodis_t5_merkle_tree}, Section~\ref{cha:mss_keygen} and Figure~\ref{img:t5_complete_tree_paper}. The implementation of the \extree construction in Python is shown in Appendix~\ref{cha:appendix_t5_tree_implementation}.
 % maybe pseudocode but too complex -> just read appendix
 % 
