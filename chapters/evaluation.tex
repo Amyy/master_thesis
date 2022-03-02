@@ -1,29 +1,11 @@
 \chapter{Evaluation}
 \label{cha:evaluation}
-In Chapter~\ref{cha:background}, the two most common quantum secure hash-based signature systems LMS and XMSS based on binary Merkle Trees are explained. In Chapter~\ref{cha:methods}, the concepts \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and \extree (see Section~\ref{sec:ext_t5_tree}) are proposed in order to speed up the common binary Merkle Tree and therefore the signature systems LMS and XMSS. 
+In Chapter~\ref{cha:background}, the two most common quantum secure hash-based signature systems based on binary Merkle Trees are explained: LMS (see Section~\ref{sec:lms}) and XMSS (see Section~\ref{sec:xmss}). In Chapter~\ref{cha:methods}, the concepts \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and \extree (see Section~\ref{sec:ext_t5_tree}) are proposed in order to speed up the common binary Merkle Tree and therefore the signature systems LMS and XMSS. 
 % ! xmss not so easy possible -> bitmasks!
 
-\section{NIST Parameter Sets}
-In order to compare the different concepts, the performance is calculated for the SHA-256 NIST parameter set for LMS~\cite{stateful_hashbased_sign_schemes_NIST_2020}, see Table~\ref{table:nist_param_lms}. 
+\section{Performance Comparison}
+The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the formulas in Tables~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}.
 
-\begin{table}
-\centering
-\begin{tabular}{l c c l l} 
- \hline\noalign{\smallskip}
- \textbf{LMS Parameter Sets} & \textbf{Numeric Identifier} & \textbf{$m$} & \textbf{$h$} & $\ell$ \\
- \hline\noalign{\smallskip}
- LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 & $32$ \\
- LMS\_SHA256\_M32\_H10 & 0x00000006  & 32 & 10 & $1024$ \\
- LMS\_SHA256\_M32\_H15 & 0x00000007  & 32 & 15 & $32768$ \\
- LMS\_SHA256\_M32\_H20 & 0x00000008  & 32 & 20 & $1048576$ \\
- LMS\_SHA256\_M32\_H35 & 0x00000009  & 32 & 25 & $33554432$ \\
- \hline\noalign{\smallskip}
- \end{tabular}
-\caption{NIST LMS parameter sets for SHA-256~\cite{stateful_hashbased_sign_schemes_NIST_2020}. The variable $m$ denotes the number of bytes associated with each node in the LMS Merkle tree (used by LMS), the parameter $h$ denotes the height and $\ell = 2^h$ denotes the amount of children of the Merkle tree.} % insert reference to LMS section here
-\label{table:nist_param_lms}
-\end{table}
-
-An overview of the equations for performance calculation introduced in Chapter~\ref{cha:methods} is given in Table~\ref{table:general_formulas_t5_merkle}.
 \begin{table}
 \centering
 \begin{tabular}{l c c c l} 
@@ -45,7 +27,54 @@ An overview of the equations for performance calculation introduced in Chapter~\
 \label{table:general_formulas_t5_merkle}
 \end{table}
 
+\subsection{NIST Parameter Set}
+There exist standardized sets of values that are used for the proposed signature systems. One common example is the LMS SHA-256 parameter set proposed by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}: It is denoted in Table~\ref{table:nist_param_lms}. 
+% maybe also add the one for xmss
+Notably, the values given in the LMS parameter set refer to the height $d$ of the Merkle Tree. However, the height $d$ of the \tftree and \extree is not directly comparable to the height $d$ of the Merkle Tree, because the same $d$ does \textit{not} result in the same amount of leaves. When used as digital signature scheme, the leaves of the tree correspond to the amount of one-time keys. Therefore, comparing the performance of the standard Merkle Tree, \tftree and \extree based on the amount of leaves $\ell$ is the best evaluation concept. 
+The leaves $\ell$ are derived from $d$ in the LMS parameter set, but for a binary Merkle Tree.
+
+% power of 2 table -> lower/upper bound for power of 5 children
+
+\begin{table}
+\centering
+\begin{tabular}{l c c l} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{LMS Parameter Sets: NIST}} \\
+ Parameter Set Name & Numeric Identifier & $n$ & $d$\\
+ \hline\noalign{\smallskip}
+ LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 \\
+ LMS\_SHA256\_M32\_H10 & 0x00000006  & 32 & 10 \\
+ LMS\_SHA256\_M32\_H15 & 0x00000007  & 32 & 15 \\
+ LMS\_SHA256\_M32\_H20 & 0x00000008  & 32 & 20 \\
+ LMS\_SHA256\_M32\_H35 & 0x00000009  & 32 & 25 \\
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{NIST SHA-256 parameter sets for LMS.~\cite{stateful_hashbased_sign_schemes_NIST_2020}. The variable $n$ denotes the number of bytes associated with each node in the (standard binary) Merkle tree, the parameter $d$ denotes the height of the Merkle Tree.}
+\label{table:nist_param_lms}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c l l c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set}} \\
+ \noalign{\smallskip} 
+ & Merkle Tree & \extree & lower bound & upper bound \\
+ $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
+  \hline\noalign{\smallskip}
+ 5 & $2^5 = 32$ & $5^5 = 3125$ & $2^{11}$ & $2^{12}$\\
+ 10 & $2^{10} = 1024$ & $5^{10} = 9765625$ & $2^{23}$ & $2^{24}$\\
+ 15 & $2^{15} = 32768$ & $5^{15} = 30517578125$ & $2^{34}$ & $2^{35}$\\ % 5^{15} 
+ 20 & $2^{20} = 1048576$ & $5^{20} = 95367431640625$ & $2^{46}$ & $2^{47}$\\ % 5^20 
+ 25 & $2^{25} = 33554432$ & $5^{25} = 298023223876953125$ & $2^{58}$ & $2^{59}$ \\ 
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms} converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.} % insert reference to LMS section here
+\label{table:nist_param_comparison}
+\end{table}
+
 % \section{Discussion}
 
 % \section{Future Work}
 % idea for xmss, not only calculating the speedup but also concept
+% concept for T5 tree when not every leaf is "filled"
