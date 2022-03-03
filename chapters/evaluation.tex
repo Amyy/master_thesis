@@ -35,7 +35,7 @@ There exist standardized sets of values that are used for the proposed signature
 \centering
 \begin{tabular}{l c c l} 
  \hline\noalign{\smallskip}
- \multicolumn{4}{c}{\textbf{LMS Parameter Sets: NIST}} \\
+ \multicolumn{4}{c}{\textbf{NIST Parameter Set, LMS}} \\
  Parameter Set Name & Numeric Identifier & $n$ & $d$\\
  \hline\noalign{\smallskip}
  LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 \\
@@ -61,7 +61,7 @@ For this evaluation, we assume each leaf contains a one-time public key (i.e. th
 \centering
 \begin{tabular}{c l l c c} 
  \hline\noalign{\smallskip}
- \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set}} \\
+ \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set, LMS}} \\
  \noalign{\smallskip} 
  & Merkle Tree & \tftree\xspace/ \extree & lower bound & upper bound \\
  $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
@@ -79,6 +79,76 @@ For this evaluation, we assume each leaf contains a one-time public key (i.e. th
 
 \subsection{NIST Parameter Results}
 After determining the parameters for each tree concept in the section before, the parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results. The performance calculation is also implemented in a Python script, see Appendix~\ref{cha:appendix2_performance_calc}.
+The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_merkle_tree_NIST}, for the \tftree and \extree in Table~\ref{table:eval_t5_NIST}, for the lower/upper bound Merkle Trees in Table~\ref{table:eval_upper_lower_bound_nist}.
+
+\begin{table}
+\centering
+\begin{tabular}{c l c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{Evaluation Results NIST: Merkle Tree}} \\
+ \noalign{\smallskip} 
+  Leaves $\ell$ & Tree Generation & Auth.path Length & Verify \\
+% $\ell$ & (in hash calls) & (in elements) & (in hash calls) \\
+ \hline\noalign{\smallskip}
+ $2^5$ & 31 & 5 & 5 \\
+ $2^{10}$ & 1023 & 10 & 10 \\
+ $2^{15}$ & 32767 & 15 & 15 \\ 
+ $2^{20}$ & 1048575 & 20 & 20 \\ 
+ $2^{25}$ & 33554431 & 25 & 25 \\ 
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{Evaluation results for the standard Merkle Tree, given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_each_tree}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
+\label{table:eval_merkle_tree_NIST}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c l c c} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{Evaluation Results NIST: \tftree\xspace/ \extree}} \\
+ \noalign{\smallskip} 
+  Leaves & Tree Generation & Auth.path Length & Verify \\
+ $\ell$ & & aggr. / more aggr. & agg./ more aggr. \\
+ \hline\noalign{\smallskip}
+ $5^5$ & 2343 & 15 / 14 & 10 / 9 \\
+ $5^{10}$ & 7324218 & 30 / 28 & 20 / 18 \\
+ $5^{15}$ & 22888183593 & 45 / 42 & 30 / 27 \\ 
+ $5^{20}$ & 71525573730468 & 60 / 56 & 40 / 36 \\ 
+ $5^{25}$ & 223517417907714880 & 75 / 70 & 50 / 45 \\ 
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{Evaluation results for \tftree and \extree given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_each_tree}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
+\label{table:eval_t5_NIST}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{c l l l} 
+ \hline\noalign{\smallskip}
+ \multicolumn{4}{c}{\textbf{Evaluation Results NIST: Lower / Upper Bound Merkle Tree}} \\
+ \noalign{\smallskip} 
+  $\ell$ & Tree Generation & Auth.path Length & Verify \\
+ % $\ell$ & & & \\
+ \hline\noalign{\smallskip}
+ $2^{11} $ & 2047 & in elements & verify \\
+ $2^{12}$ & 4095 & in elements & verify \\
+ \hline\noalign{\smallskip} 
+ $2^{23}$ & 8388607 & authpath & Verify \\
+ $2^{24}$ & 16777215 & authpath & verify \\
+ \hline\noalign{\smallskip} 
+ $2^{34}$ & 17179869183 & in elements & Verify \\ 
+ $2^{35}$ & 34359738367 & in elements & Verify \\ 
+ \hline\noalign{\smallskip} 
+ $2^{46}$ & 70368744177663 & in elements & Verify \\ 
+ $2^{47}$ & 140737488355327 & in elements & Verify \\
+ \hline\noalign{\smallskip}  
+ $2^{58}$ & 288230376151711743 & in elements & Verify \\ 
+ $2^{59}$ & 576460752303423487 & in elements & Verify \\
+ \hline\noalign{\smallskip}
+ \end{tabular}
+\caption{Evaluation results for \tftree and \extree given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_each_tree}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
+\label{table:eval_upper_lower_bound_nist}
+\end{table}
 
 
 % \section{Discussion}
