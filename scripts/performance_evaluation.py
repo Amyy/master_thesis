@@ -1,6 +1,9 @@
 # performance calculation of Binary Merkle Tree, T5 Tree, T5 Tree+
 from typing import List
 import math
+import matplotlib.pyplot as plt
+
+plt.rcParams.update({'font.size': 15})
 
 
 # tree generation hash calls: standard Merkle Tree
@@ -76,6 +79,47 @@ def power_of_five(exponents: List[int]):
     return powered_list
 
 
+# NIST parameter: evaluation results plotted
+def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[int],
+                             up_bound_leaves: List[int], t5_leaves: List[int],
+                             merkle_hash_calls: List[int], low_bound_hash_calls: List[int],
+                             up_bound_hash_calls: List[int], t5_hash_calls: List[int]):
+    # merkle tree plot
+    x1 = merkle_leaves
+    y1 = merkle_hash_calls
+    plt.plot(x1, y1, 'go', label="Merkle Tree")
+
+    # lower bound plot
+    x2 = low_bound_leaves
+    y2 = low_bound_hash_calls
+    plt.plot(x2, y2, 'bo', label="Lower Bound: Merkle Tree")
+
+    # upper bound plot
+    x3 = up_bound_leaves
+    y3 = up_bound_hash_calls
+    plt.plot(x3, y3, 'co', label="Upper Bound: Merkle Tree")
+
+    # t5 plot
+    x4 = t5_leaves
+    y4 = t5_hash_calls
+    plt.plot(x4, y4, 'ro', label="T5 Tree")
+
+    # make axes logarithmic
+    plt.xscale('log', base=2)
+    plt.yscale('log', base=2)
+
+    # labeling the axes
+    plt.xlabel('leaves')
+    plt.ylabel('# hash calls')
+
+    # add legend
+    plt.legend(loc="lower right")
+
+    plt.title(label="Performance Evaluation: Tree Generation")
+    plt.grid()
+    plt.show()
+
+
 if __name__ == '__main__':
     param_set_d = [5, 10, 15, 20, 25]  # height in LMS parameter set for standard Merkle tree
     lower_bound_d = [11, 23, 34, 46, 58]  # height in LMS parameter set for lower bound Merkle trees
@@ -141,3 +185,7 @@ if __name__ == '__main__':
     print('upper bound: hash calls verify', hash_calls_verify_up_bound)
     print('t5/aggr: hash calls verify', hash_calls_verify_t5_aggr)
     print('t5/more aggr: hash calls verify', hash_calls_verify_t5_more_aggr)
+
+    plot_hash_calls_tree_gen(leaves_list_merkle_standard, leaves_list_low_bound,
+                             leaves_list_up_bound, leaves_list_t5, hash_calls_tree_gen_merkle_tree,
+                             hash_calls_tree_gen_low_bound, hash_calls_tree_gen_up_bound, hash_calls_tree_gen_T5)
