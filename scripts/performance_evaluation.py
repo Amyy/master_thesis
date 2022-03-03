@@ -137,7 +137,7 @@ if __name__ == '__main__':
     hash_calls_verify_t5_more_aggr = t5_tree_more_aggr_verify(leaves_list_t5)
 
     print('Merkle tree: hash calls verify', hash_calls_verify_merkle_tree)
-    print('upper bound: hash calls verify', hash_calls_verify_up_bound)
     print('lower bound: hash calls verify', hash_calls_verify_low_bound)
+    print('upper bound: hash calls verify', hash_calls_verify_up_bound)
     print('t5/aggr: hash calls verify', hash_calls_verify_t5_aggr)
     print('t5/more aggr: hash calls verify', hash_calls_verify_t5_more_aggr)
