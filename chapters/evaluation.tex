@@ -27,13 +27,9 @@ The general performance of the different tree concepts depending on the leaves $
 \label{table:general_formulas_t5_merkle}
 \end{table}
 
-\subsection{NIST Parameter Set}
+\section{NIST Parameter Set}
 There exist standardized sets of values that are used for the proposed signature systems. One common example is the LMS SHA-256 parameter set proposed by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}: It is denoted in Table~\ref{table:nist_param_lms}. 
 % maybe also add the one for xmss
-Notably, the values given in the LMS parameter set refer to the height $d$ of the Merkle Tree. However, the height $d$ of the \tftree and \extree is not directly comparable to the height $d$ of the Merkle Tree, because the same $d$ does \textit{not} result in the same amount of leaves. When used as digital signature scheme, the leaves of the tree correspond to the amount of one-time keys. Therefore, comparing the performance of the standard Merkle Tree, \tftree and \extree based on the amount of leaves $\ell$ is the best evaluation concept. 
-The leaves $\ell$ are derived from $d$ in the LMS parameter set, but for a binary Merkle Tree.
-
-% power of 2 table -> lower/upper bound for power of 5 children
 
 \begin{table}
 \centering
@@ -53,13 +49,21 @@ The leaves $\ell$ are derived from $d$ in the LMS parameter set, but for a binar
 \label{table:nist_param_lms}
 \end{table}
 
+\subsection{NIST Parameter Adaption}
+\label{sec:nist_param_to_leaves}
+% explain derivation NIST param set -> leaves
+Notably, the values given in the LMS parameter set refer to the height $d$ of the Merkle Tree. When used as digital signature scheme, the leaves of the tree correspond to the amount of one-time keys. Therefore, comparing the performance of the standard Merkle Tree, \tftree and \extree based on the amount of leaves $\ell$ is the better evaluation concept than comparing the height $d$. 
+The leaves $\ell$ for each tree concept are derived from $d$ in the LMS parameter set, see Table~\ref{table:nist_param_each_tree}. 
+
+For this evaluation, we assume each leaf contains a one-time public key (i.e. there are no empty nodes). It is not possible to get the same amount of leaves for each concept, because the leaves of a perfect Merkle Tree are always a power of two, whereas the leaves of a perfect \extree always are always a  power of five. In order to still get a similar amount of leaves, the closest power of 2 to a given power of $5^d$ is additionally used for performance evaluation with the NIST LMS parameter set. For a given $5^d$, these \textit{upper bounds} and \textit{lower bounds} are calculated by $2^{\floor{\log_2(5^d)}}$ and $2^{\ceil{\log_2(5^d)}}$ respectively. They are shown in the columns \textit{lower bound} and \textit{upper bound} in Table~\ref{table:nist_param_each_tree}.
+
 \begin{table}
 \centering
 \begin{tabular}{c l l c c} 
  \hline\noalign{\smallskip}
  \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set}} \\
  \noalign{\smallskip} 
- & Merkle Tree & \extree & lower bound & upper bound \\
+ & Merkle Tree & \tftree\xspace/ \extree & lower bound & upper bound \\
  $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
   \hline\noalign{\smallskip}
  5 & $2^5 = 32$ & $5^5 = 3125$ & $2^{11}$ & $2^{12}$\\
@@ -69,9 +73,13 @@ The leaves $\ell$ are derived from $d$ in the LMS parameter set, but for a binar
  25 & $2^{25} = 33554432$ & $5^{25} = 298023223876953125$ & $2^{58}$ & $2^{59}$ \\ 
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms} converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.} % insert reference to LMS section here
-\label{table:nist_param_comparison}
+\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms}) converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.}
+\label{table:nist_param_each_tree}
 \end{table}
+
+\subsection{NIST Parameter Results}
+After determining the parameters for each tree concept in the section before, the parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results.
+
 
 % \section{Discussion}
 
