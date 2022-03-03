@@ -108,7 +108,7 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
  \multicolumn{4}{c}{\textbf{Evaluation Results NIST: \tftree\xspace/ \extree}} \\
  \noalign{\smallskip} 
   Leaves & Tree Generation & Auth.path Length & Verify \\
- $\ell$ & & aggr. / more aggr. & agg./ more aggr. \\
+ $\ell$ & & aggr. / more aggr. & aggr./ more aggr. \\
  \hline\noalign{\smallskip}
  $5^5$ & 2343 & 15 / 14 & 10 / 9 \\
  $5^{10}$ & 7324218 & 30 / 28 & 20 / 18 \\
@@ -123,33 +123,32 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
 
 \begin{table}
 \centering
-\begin{tabular}{c l l l} 
+\begin{tabular}{l c l l l} 
  \hline\noalign{\smallskip}
- \multicolumn{4}{c}{\textbf{Evaluation Results NIST: Lower / Upper Bound Merkle Tree}} \\
+ \multicolumn{5}{c}{\textbf{Evaluation Results NIST: Lower / Upper Bound Merkle Tree}} \\
  \noalign{\smallskip} 
-  $\ell$ & Tree Generation & Auth.path Length & Verify \\
+  \extree:$\ell$ & $\ell$ & Tree Generation & Auth.path Length & Verify \\
  % $\ell$ & & & \\
  \hline\noalign{\smallskip}
- $2^{11} $ & 2047 & in elements & verify \\
- $2^{12}$ & 4095 & in elements & verify \\
+ \multirow{2}{*}{$5^5$} & $2^{11} $ & 2047 & 11 & 11 \\
+ & $2^{12}$ & 4095 & 12 & 12 \\
  \hline\noalign{\smallskip} 
- $2^{23}$ & 8388607 & authpath & Verify \\
- $2^{24}$ & 16777215 & authpath & verify \\
+ \multirow{2}{*}{$5^{10}$} & $2^{23}$ & 8388607 & 23 & 23 \\
+ & $2^{24}$ & 16777215 & 24 & 24 \\
  \hline\noalign{\smallskip} 
- $2^{34}$ & 17179869183 & in elements & Verify \\ 
- $2^{35}$ & 34359738367 & in elements & Verify \\ 
+ \multirow{2}{*}{$5^{15}$}& $2^{34}$ & 17179869183 & 34 & 34 \\ 
+ & $2^{35}$ & 34359738367 & 35 & 35 \\ 
  \hline\noalign{\smallskip} 
- $2^{46}$ & 70368744177663 & in elements & Verify \\ 
- $2^{47}$ & 140737488355327 & in elements & Verify \\
+ \multirow{2}{*}{$5^{20}$} & $2^{46}$ & 70368744177663 & 46 & 46 \\ 
+ & $2^{47}$ & 140737488355327 & 47 & 47 \\
  \hline\noalign{\smallskip}  
- $2^{58}$ & 288230376151711743 & in elements & Verify \\ 
- $2^{59}$ & 576460752303423487 & in elements & Verify \\
+  \multirow{2}{*}{$5^{25}$} & $2^{58}$ & 288230376151711743 & 58 & 58 \\ 
+ & $2^{59}$ & 576460752303423487 & 59 & 59 \\
  \hline\noalign{\smallskip}
  \end{tabular}
 \caption{Evaluation results for \tftree and \extree given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_each_tree}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
 \label{table:eval_upper_lower_bound_nist}
 \end{table}
-
 
 % \section{Discussion}
 
