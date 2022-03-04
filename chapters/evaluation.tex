@@ -60,7 +60,7 @@ These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calc
 \centering
 \begin{tabular}{r c l c c} 
  \hline\noalign{\smallskip}
- \multicolumn{5}{c}{\textbf{Merkle Tree - Lower / Upper Bound \extree}} \\
+ \multicolumn{5}{c}{\textbf{Evaluation Results: Lower / Upper Bound \tftree\xspace/\xspace\extree}} \\
  \noalign{\smallskip} 
  & lower / upper  & Tree & Auth.path Length & Verify \\
  \noalign{\smallskip}
@@ -82,29 +82,10 @@ These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calc
  & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & 36621093 & 33 / 31 & 22 / 20 \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \extree and the evaluation results for tree generation, length of the authentication path and path generation (verify).}
+\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \tftree\xspace/\xspace\extree and the evaluation results for tree generation, length of the authentication path and path generation (verify).}
 \label{table:nist_upper_lower_bound}
 \end{table}
 
-%\begin{table}
-%\centering
-%\begin{tabular}{c l l c c} 
-% \hline\noalign{\smallskip}
-% \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set, LMS}} \\
-% \noalign{\smallskip} 
-% & Merkle Tree & \tftree\xspace/ \extree & lower bound & upper bound \\
-% $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
-%  \hline\noalign{\smallskip}
-% 5 & $2^5 = 32$ & $5^5 = 3125$ & $2^{11}$ & $2^{12}$\\
-% 10 & $2^{10} = 1024$ & $5^{10} = 9765625$ & $2^{23}$ & $2^{24}$\\
-% 15 & $2^{15} = 32768$ & $5^{15} = 30517578125$ & $2^{34}$ & $2^{35}$\\ % 5^{15} 
-% 20 & $2^{20} = 1048576$ & $5^{20} = 95367431640625$ & $2^{46}$ & $2^{47}$\\ % 5^20 
-% 25 & $2^{25} = 33554432$ & $5^{25} = 298023223876953125$ & $2^{58}$ & $2^{59}$ \\ 
-% \hline\noalign{\smallskip}
-% \end{tabular}
-%\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms}) converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.}
-%\label{table:nist_param_each_tree}
-%\end{table}
 
 \subsection{NIST Parameter Results}
 After determining the parameters for each tree concept in the section before, the parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results. The performance calculation is also implemented in a Python script, see Appendix~\ref{cha:appendix2_performance_calc}.
@@ -149,34 +130,6 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
 \caption{Evaluation results NIST - wrong leaves! NIST param for merkle tree}
 \label{table:eval_t5_NIST}
 \end{table}
-
-%\begin{table}
-%\centering
-%\begin{tabular}{c c l c c} 
-% \hline\noalign{\smallskip}
-% \multicolumn{5}{c}{\textbf{Evaluation Results NIST: Lower / Upper Bound Merkle Tree}} \\
-% \noalign{\smallskip} 
-% & lower, upper bound: $\ell$ & Tree Generation & Auth.path Length & Verify \\
-% \hline\noalign{\smallskip}
-% \multirow{2}{*}{$5^5$} & $\rightarrow 2^{\floor{\log_2(5^5)}} = 2^{11} $ & 2047 & 11 & 11 \\
-% & $\rightarrow 2^{\ceil{\log_2(5^5)}} = 2^{12}$ & 4095 & 12 & 12 \\
-% \hline\noalign{\smallskip} 
-% \multirow{2}{*}{$5^{10}$} & $\rightarrow 2^{\floor{\log_2(5^10)}} = 2^{23}$ & 8388607 & 23 & 23 \\
-% & $\rightarrow 2^{\ceil{\log_2(5^{10})}} = 2^{24}$ & 16777215 & 24 & 24 \\
-% \hline\noalign{\smallskip} 
-% \multirow{2}{*}{$5^{15}$}& $\rightarrow 2^{\floor{\log_2(5^{15})}} = 2^{34}$ & 17179869183 & 34 & 34 \\ 
-% & $\rightarrow 2^{\ceil{\log_2(5^{15})}} = 2^{35}$ & 34359738367 & 35 & 35 \\ 
-% \hline\noalign{\smallskip} 
-% \multirow{2}{*}{$5^{20}$} & $\rightarrow 2^{\floor{\log_2(5^{20})}} = 2^{46}$ & 70368744177663 & 46 & 46 \\ 
-% & $\rightarrow 2^{\ceil{\log_2(5^{20})}} = 2^{47}$ & 140737488355327 & 47 & 47 \\
-% \hline\noalign{\smallskip}  
-%  \multirow{2}{*}{$5^{25}$} & $\rightarrow 2^{\floor{\log_2(5^{25})}} =  2^{58}$ & 288230376151711743 & 58 & 58 \\ 
-% & $\rightarrow 2^{\ceil{\log_2(5^{25})}} = 2^{59}$ & 576460752303423487 & 59 & 59 \\
-% \hline\noalign{\smallskip}
-% \end{tabular}
-%\caption{Evaluation results for upper / lower bound Merkle Trees (given the NIST SHA-256 parameter sets as leaves $\ell$, see Table~\ref{table:nist_param_lms}). The leftmost column denotes the leaves of the \extree in between lower and upper bound Merkle Trees, see Section~\ref{sec:nist_param_to_leaves} and Table~\ref{table:nist_param_each_tree}.}
-%\label{table:eval_upper_lower_bound_nist}
-%\end{table}
 
 The effort for tree generation for each tree concept is depicted in Figure~\ref{img:performance_tree_gen}.
 
