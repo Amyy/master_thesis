@@ -80,7 +80,7 @@ These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calc
  & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & up tree generation & up auth & up verify \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \extree.}
+\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \extree and the evaluation results for tree generation, length of the authentication path and path generation (verify).}
 \label{table:nist_upper_lower_bound}
 \end{table}
 
@@ -172,7 +172,7 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
  & $\rightarrow 2^{\ceil{\log_2(5^{25})}} = 2^{59}$ & 576460752303423487 & 59 & 59 \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Evaluation results for upper / lower bound Merkle Trees (given the NIST SHA-256 parameter sets as leaves $\ell$, see Table~\ref{table:nist_param_each_tree}). The leftmost column denotes the leaves of the \extree in between lower and upper bound Merkle Trees, see Section~\ref{sec:nist_param_to_leaves} and Table~\ref{table:nist_param_each_tree}.}
+\caption{Evaluation results for upper / lower bound Merkle Trees (given the NIST SHA-256 parameter sets as leaves $\ell$, see Table~\ref{table:nist_param_lms}). The leftmost column denotes the leaves of the \extree in between lower and upper bound Merkle Trees, see Section~\ref{sec:nist_param_to_leaves} and Table~\ref{table:nist_param_each_tree}.}
 \label{table:eval_upper_lower_bound_nist}
 \end{table}
 
