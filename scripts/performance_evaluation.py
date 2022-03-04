@@ -35,7 +35,7 @@ def t5_tree_gen_hash_calls(t5_leaves_list: List[int]):
 def t5_tree_aggr_len_auth_path(t5_leaves_list: List[int]):
     t5_tree_aggr_len_auth_path_list = []
     for leaves in t5_leaves_list:
-        t5_tree_aggr_len_auth_path_list.append(3 * math.log(leaves, 5))  # == 1.86 * log(leaves)
+        t5_tree_aggr_len_auth_path_list.append(round(3 * math.log(leaves, 5)))  # == 1.86 * log(leaves)
     return t5_tree_aggr_len_auth_path_list  # ! returns float
 
 
@@ -43,7 +43,7 @@ def t5_tree_aggr_len_auth_path(t5_leaves_list: List[int]):
 def t5_tree_more_aggr_len_auth_path(t5_leaves_list: List[int]):
     t5_tree_more_aggr_len_auth_path_list = []
     for leaves in t5_leaves_list:
-        t5_tree_more_aggr_len_auth_path_list.append(2.8 * math.log(leaves, 5))  # == 1.74 * log(leaves)
+        t5_tree_more_aggr_len_auth_path_list.append(round(2.8 * math.log(leaves, 5)))  # == 1.74 * log(leaves)
     return t5_tree_more_aggr_len_auth_path_list
 
 
@@ -51,7 +51,7 @@ def t5_tree_more_aggr_len_auth_path(t5_leaves_list: List[int]):
 def t5_tree_aggr_verify(t5_leaves_list: List[int]):
     t5_aggr_verify_hash_calls_list = []
     for leaves in t5_leaves_list:
-        t5_aggr_verify_hash_calls_list.append(2 * math.log(leaves, 5))  # == 1.24 * log(leaves)
+        t5_aggr_verify_hash_calls_list.append(round(2 * math.log(leaves, 5)))  # == 1.24 * log(leaves)
     return t5_aggr_verify_hash_calls_list
 
 
@@ -59,7 +59,7 @@ def t5_tree_aggr_verify(t5_leaves_list: List[int]):
 def t5_tree_more_aggr_verify(t5_leaves_list: List[int]):
     t5_more_aggr_verify_hash_calls_list = []
     for leaves in t5_leaves_list:
-        t5_more_aggr_verify_hash_calls_list.append(1.8 * math.log(leaves, 5))  # == 1.12 * log(leaves)
+        t5_more_aggr_verify_hash_calls_list.append(round(1.8 * math.log(leaves, 5)))  # == 1.12 * log(leaves)
     return t5_more_aggr_verify_hash_calls_list
 
 
@@ -138,11 +138,6 @@ if __name__ == '__main__':
     leaves_list_low_bound = power_of_five(lower_bound_d)
     leaves_list_up_bound = power_of_five(upper_bound_d)
 
-    # print('LMS list of possible leaves for binary merkle tree:', leaves_list_merkle_standard)
-    # print('upper bound leaves:', leaves_list_up_bound)
-    # print('lower bound leaves:', leaves_list_low_bound)
-    # print('LMS list of possible leaves for t5 tree:', leaves_list_t5)
-
     # ---- hash calls tree generation ----
     # hash calls tree generation: merkle tree
     hash_calls_tree_gen_merkle_tree = merkle_tree_gen_hash_calls(leaves_list_merkle_standard)
@@ -189,15 +184,10 @@ if __name__ == '__main__':
     hash_calls_verify_aggr_up_bound = t5_tree_aggr_verify(leaves_list_up_bound)
     hash_calls_verify_more_aggr_up_bound = t5_tree_more_aggr_verify(leaves_list_up_bound)
 
-    # t5 / aggressive: hash calls for path generation / verify
-    # hash_calls_verify_t5_aggr = t5_tree_aggr_verify(leaves_list_t5)
-    # # t5 / more aggressive: hash calls for path generation / verify
-    # hash_calls_verify_t5_more_aggr = t5_tree_more_aggr_verify(leaves_list_t5)
-
     print('Merkle tree: hash calls verify', hash_calls_verify_merkle_tree)
 
     print('lower bound: aggr verify', hash_calls_verify_aggr_low_bound)
-    print('lower bound: more aggr verify', hash_calls_verify_more_aggr_up_bound)
+    print('lower bound: more aggr verify', hash_calls_verify_more_aggr_low_bound)
 
     print('upper bound: aggr verify', hash_calls_verify_aggr_up_bound)
     print('upper bound: more aggr verify', hash_calls_verify_more_aggr_up_bound)
