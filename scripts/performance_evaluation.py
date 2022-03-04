@@ -81,9 +81,9 @@ def power_of_five(exponents: List[int]):
 
 # NIST parameter: evaluation results plotted
 def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[int],
-                             up_bound_leaves: List[int], t5_leaves: List[int],
+                             up_bound_leaves: List[int],
                              merkle_hash_calls: List[int], low_bound_hash_calls: List[int],
-                             up_bound_hash_calls: List[int], t5_hash_calls: List[int]):
+                             up_bound_hash_calls: List[int]):
     # merkle tree plot
     x1 = merkle_leaves
     y1 = merkle_hash_calls
@@ -99,10 +99,10 @@ def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[in
     y3 = up_bound_hash_calls
     plt.plot(x3, y3, 'co', label="Upper Bound: Merkle Tree")
 
-    # t5 plot
-    x4 = t5_leaves
-    y4 = t5_hash_calls
-    plt.plot(x4, y4, 'ro', label="T5 Tree")
+    # # t5 plot
+    # x4 = t5_leaves
+    # y4 = t5_hash_calls
+    # plt.plot(x4, y4, 'ro', label="T5 Tree")
 
     # make axes logarithmic
     plt.xscale('log', base=2)
@@ -120,72 +120,88 @@ def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[in
     plt.show()
 
 
+# NIST parameter: elements in auth.path for each tree concept
+# ! aggr, more aggr
+def plot_auth_path_length(merkle_leaves: List[int], low_bound_leaves: List[int],
+                          up_bound_leaves: List[int], t5_leaves: List[int]):
+    pass
+
+
 if __name__ == '__main__':
     param_set_d = [5, 10, 15, 20, 25]  # height in LMS parameter set for standard Merkle tree
-    lower_bound_d = [11, 23, 34, 46, 58]  # height in LMS parameter set for lower bound Merkle trees
-    upper_bound_d = [12, 24, 35, 47, 59]  # height in LMS parameter set for upper bound Merkle trees
+    lower_bound_d = [2, 4, 6, 8, 10]  # height for lower bound t5 trees
+    upper_bound_d = [3, 5, 7, 9, 11]  # height for upper bound t5 trees
 
     # lists of possible leaves for each tree construct,
     # based on LMS param. set
     leaves_list_merkle_standard = power_of_two(param_set_d)
-    leaves_list_t5 = power_of_five(param_set_d)
-    leaves_list_low_bound = power_of_two(lower_bound_d)
-    leaves_list_up_bound = power_of_two(upper_bound_d)
+    leaves_list_low_bound = power_of_five(lower_bound_d)
+    leaves_list_up_bound = power_of_five(upper_bound_d)
 
     # print('LMS list of possible leaves for binary merkle tree:', leaves_list_merkle_standard)
-    # print('LMS list of possible leaves for t5 tree:', leaves_list_t5)
     # print('upper bound leaves:', leaves_list_up_bound)
     # print('lower bound leaves:', leaves_list_low_bound)
+    # print('LMS list of possible leaves for t5 tree:', leaves_list_t5)
 
     # ---- hash calls tree generation ----
     # hash calls tree generation: merkle tree
     hash_calls_tree_gen_merkle_tree = merkle_tree_gen_hash_calls(leaves_list_merkle_standard)
-    hash_calls_tree_gen_low_bound = merkle_tree_gen_hash_calls(leaves_list_low_bound)
-    hash_calls_tree_gen_up_bound = merkle_tree_gen_hash_calls(leaves_list_up_bound)
-    # hash calls tree generation: t5 tree
-    hash_calls_tree_gen_T5 = t5_tree_gen_hash_calls(leaves_list_t5)
+    # hash calls tree generation: t5 upper/lower bound tree
+    hash_calls_tree_gen_low_bound = t5_tree_gen_hash_calls(leaves_list_low_bound)
+    hash_calls_tree_gen_up_bound = t5_tree_gen_hash_calls(leaves_list_up_bound)
 
     # get int values for hash calls in t5 -> only when leaves are power of 5!
-    hash_calls_tree_gen_T5 = [int(leaves) for leaves in hash_calls_tree_gen_T5]
+    hash_calls_tree_gen_low_bound = [int(leaves) for leaves in hash_calls_tree_gen_low_bound]
+    hash_calls_tree_gen_up_bound = [int(leaves) for leaves in hash_calls_tree_gen_up_bound]
 
     print('merkle tree: hash calls tree gen.', hash_calls_tree_gen_merkle_tree)
     print('lower bound merkle tree: hash calls tree gen.', hash_calls_tree_gen_low_bound)
     print('upper bound merkle tree: hash calls tree gen.', hash_calls_tree_gen_up_bound)
-    print('t5 tree: hash calls tree gen.', hash_calls_tree_gen_T5)
 
     # ---- auth.path length ----
     # amount elements in auth.path: merkle tree
     len_auth_path_list_merkle_tree = merkle_tree_len_auth_path_and_verify(leaves_list_merkle_standard)
-    len_auth_path_list_up_bound = merkle_tree_len_auth_path_and_verify(leaves_list_up_bound)
-    len_auth_path_list_low_bound = merkle_tree_len_auth_path_and_verify(leaves_list_low_bound)
-    # amount elements in auth.path: t5 tree / aggressive
-    len_auth_path_list_t5_aggr = t5_tree_aggr_len_auth_path(leaves_list_t5)
-    # amount elements in auth.path: t5 tree / more aggressive
-    len_auth_path_list_t5_more_aggr = t5_tree_more_aggr_len_auth_path(leaves_list_t5)
+
+    # amount elements in auth.path: lower bound / (more) aggressive
+    len_auth_path_list_low_aggr = t5_tree_aggr_len_auth_path(leaves_list_low_bound)
+    len_auth_path_list_low_more_aggr = t5_tree_more_aggr_len_auth_path(leaves_list_low_bound)
+
+    # amount elements in auth.path: upper bound / (more) aggressive
+    len_auth_path_list_up_more_aggr = t5_tree_aggr_len_auth_path(leaves_list_up_bound)
+    len_auth_path_list_up_aggr = t5_tree_more_aggr_len_auth_path(leaves_list_up_bound)
 
     print('merkle tree: length auth.path:', len_auth_path_list_merkle_tree)
-    print('lower bound: length auth.path:', len_auth_path_list_low_bound)
-    print('upper bound: length auth.path:', len_auth_path_list_up_bound)
-    print('t5/aggr: length auth.path:', len_auth_path_list_t5_aggr)
-    print('t5/more aggr: length auth.path:', len_auth_path_list_t5_more_aggr)
+
+    print('lower bound: aggr. length auth.path:', len_auth_path_list_low_aggr)
+    print('lower bound: more aggr. length auth.path:', len_auth_path_list_low_more_aggr)
+
+    print('upper bound: aggr. length auth.path:', len_auth_path_list_up_more_aggr)
+    print('upper bound: more aggr. length auth.path:', len_auth_path_list_up_aggr)
 
     # ---- hash calls verify ----
     # Merkle tree: hash calls for path generation / verify
     # for Merkle tree: is same calculation as for length of auth.path
     hash_calls_verify_merkle_tree = len_auth_path_list_merkle_tree
-    hash_calls_verify_low_bound = len_auth_path_list_low_bound
-    hash_calls_verify_up_bound = len_auth_path_list_up_bound
+
+    hash_calls_verify_aggr_low_bound = t5_tree_aggr_verify(leaves_list_low_bound)
+    hash_calls_verify_more_aggr_low_bound = t5_tree_more_aggr_verify(leaves_list_low_bound)
+
+    hash_calls_verify_aggr_up_bound = t5_tree_aggr_verify(leaves_list_up_bound)
+    hash_calls_verify_more_aggr_up_bound = t5_tree_more_aggr_verify(leaves_list_up_bound)
+
     # t5 / aggressive: hash calls for path generation / verify
-    hash_calls_verify_t5_aggr = t5_tree_aggr_verify(leaves_list_t5)
-    # t5 / more aggressive: hash calls for path generation / verify
-    hash_calls_verify_t5_more_aggr = t5_tree_more_aggr_verify(leaves_list_t5)
+    # hash_calls_verify_t5_aggr = t5_tree_aggr_verify(leaves_list_t5)
+    # # t5 / more aggressive: hash calls for path generation / verify
+    # hash_calls_verify_t5_more_aggr = t5_tree_more_aggr_verify(leaves_list_t5)
 
     print('Merkle tree: hash calls verify', hash_calls_verify_merkle_tree)
-    print('lower bound: hash calls verify', hash_calls_verify_low_bound)
-    print('upper bound: hash calls verify', hash_calls_verify_up_bound)
-    print('t5/aggr: hash calls verify', hash_calls_verify_t5_aggr)
-    print('t5/more aggr: hash calls verify', hash_calls_verify_t5_more_aggr)
+
+    print('lower bound: aggr verify', hash_calls_verify_aggr_low_bound)
+    print('lower bound: more aggr verify', hash_calls_verify_more_aggr_up_bound)
+
+    print('upper bound: aggr verify', hash_calls_verify_aggr_up_bound)
+    print('upper bound: more aggr verify', hash_calls_verify_more_aggr_up_bound)
 
     plot_hash_calls_tree_gen(leaves_list_merkle_standard, leaves_list_low_bound,
-                             leaves_list_up_bound, leaves_list_t5, hash_calls_tree_gen_merkle_tree,
-                             hash_calls_tree_gen_low_bound, hash_calls_tree_gen_up_bound, hash_calls_tree_gen_T5)
+                             leaves_list_up_bound, hash_calls_tree_gen_merkle_tree,
+                             hash_calls_tree_gen_low_bound, hash_calls_tree_gen_up_bound)
