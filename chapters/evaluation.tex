@@ -56,34 +56,30 @@ When used as digital signature scheme, the leaves of the Merkle Tree, \tftree an
 In order to still get a similar amount of leaves, all $2^d, d \in \{5,10,15,20,25\}$ are paired with their lower and upper closest power of 5:
 These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calculated by $5^{\floor{\log_5(2^d)}}$ and $5^{\ceil{\log_5(2^d)}}$ respectively. The results are shown in Table~\ref{table:nist_upper_lower_bound}. 
 
-
-% lower bound merkle tree: hash calls tree gen. [18, 468, 11718, 292968, 7324218]
-% upper bound merkle tree: hash calls tree gen. [93, 2343, 58593, 1464843, 36621093]
-
 \begin{table}
 \centering
 \begin{tabular}{r c l c l} 
  \hline\noalign{\smallskip}
  \multicolumn{5}{c}{\textbf{Merkle Tree - Lower / Upper Bound \extree}} \\
  \noalign{\smallskip} 
- & lower / upper  & Tree Generation & Auth.path Length & Verify \\
+ & lower / upper  & Tree & Auth.path Length & Verify \\
  \noalign{\smallskip}
- & bound: $\ell$  & & aggr. / more aggr. & aggr. / more aggr.\\
+ & bound: $\ell$  & Generation & aggr. / more aggr. & aggr. / more aggr.\\
  \hline\noalign{\smallskip}
- \multirow{2}{*}{$2^5$} & $\rightarrow 5^{\floor{\log_5(2^5)}} = 5^{2} $ & lower tree generation & low auth & low verify \\
- & $\rightarrow 5^{\ceil{\log_5(2^5)}} = 5^{3}$ & up tree generation & up auth & up verify \\
+ \multirow{2}{*}{$2^5$} & $\rightarrow 5^{\floor{\log_5(2^5)}} = 5^{2} $ & 18 & low auth & low verify \\
+ & $\rightarrow 5^{\ceil{\log_5(2^5)}} = 5^{3}$ & 93 & up auth & up verify \\
  \hline\noalign{\smallskip} 
- \multirow{2}{*}{$2^{10}$} & $\rightarrow 5^{\floor{\log_5(2^{10})}} = 5^{4}$ & lower tree generation & low auth & low verify \\
- & $\rightarrow 5^{\ceil{\log_5(2^{10})}} = 5^{5}$ & up tree generation & up auth & up verify \\
+ \multirow{2}{*}{$2^{10}$} & $\rightarrow 5^{\floor{\log_5(2^{10})}} = 5^{4}$ & 468 & low auth & low verify \\
+ & $\rightarrow 5^{\ceil{\log_5(2^{10})}} = 5^{5}$ & 2343 & up auth & up verify \\
  \hline\noalign{\smallskip} 
- \multirow{2}{*}{$2^{15}$}& $\rightarrow 5^{\floor{\log_5(2^{15})}} = 5^{6}$ & lower tree generation & low auth & low verify \\ 
- & $\rightarrow 5^{\ceil{\log_5(2^{15})}} = 5^{7}$ & up tree generation & up auth & up verify \\ 
+ \multirow{2}{*}{$2^{15}$}& $\rightarrow 5^{\floor{\log_5(2^{15})}} = 5^{6}$ & 11718 & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{15})}} = 5^{7}$ & 58593 & up auth & up verify \\ 
  \hline\noalign{\smallskip} 
- \multirow{2}{*}{$2^{20}$} & $\rightarrow 5^{\floor{\log_5(2^{20})}} = 5^{8}$ & lower tree generation & low auth & low verify \\ 
- & $\rightarrow 5^{\ceil{\log_5(2^{20})}} = 5^{9}$ & up tree generation & up auth & up verify \\
+ \multirow{2}{*}{$2^{20}$} & $\rightarrow 5^{\floor{\log_5(2^{20})}} = 5^{8}$ & 292968 & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{20})}} = 5^{9}$ & 1464843 & up auth & up verify \\
  \hline\noalign{\smallskip}  
-  \multirow{2}{*}{$2^{25}$} & $\rightarrow 5^{\floor{\log_5(2^{25})}} =  5^{10}$ & lower tree generation & low auth & low verify \\ 
- & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & up tree generation & up auth & up verify \\
+  \multirow{2}{*}{$2^{25}$} & $\rightarrow 5^{\floor{\log_5(2^{25})}} =  5^{10}$ & 7324218 & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & 36621093 & up auth & up verify \\
  \hline\noalign{\smallskip}
  \end{tabular}
 \caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \extree and the evaluation results for tree generation, length of the authentication path and path generation (verify).}
