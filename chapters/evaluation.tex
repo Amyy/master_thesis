@@ -111,26 +111,6 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
 \label{table:eval_merkle_tree_NIST}
 \end{table}
 
-\begin{table}
-\centering
-\begin{tabular}{c l c c} 
- \hline\noalign{\smallskip}
- \multicolumn{4}{c}{\textbf{Evaluation Results NIST: \tftree\xspace/ \extree}} \\
- \noalign{\smallskip} 
-  Leaves & Tree Generation & Auth.path Length & Verify \\
- $\ell$ & & aggr. / more aggr. & aggr./ more aggr. \\
- \hline\noalign{\smallskip}
- $5^5$ & 2343 & 15 / 14 & 10 / 9 \\
- $5^{10}$ & 7324218 & 30 / 28 & 20 / 18 \\
- $5^{15}$ & 22888183593 & 45 / 42 & 30 / 27 \\ 
- $5^{20}$ & 71525573730468 & 60 / 56 & 40 / 36 \\ 
- $5^{25}$ & 223517417907714880 & 75 / 70 & 50 / 45 \\ 
- \hline\noalign{\smallskip}
- \end{tabular}
-\caption{Evaluation results NIST - wrong leaves! NIST param for merkle tree}
-\label{table:eval_t5_NIST}
-\end{table}
-
 The effort for tree generation for each tree concept is depicted in Figure~\ref{img:performance_tree_gen}.
 
 \begin{figure}
