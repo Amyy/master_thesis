@@ -4,7 +4,8 @@ In Chapter~\ref{cha:background}, the two most common quantum secure hash-based s
 % ! xmss not so easy possible -> bitmasks!
 
 \section{Performance Comparison}
-The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the formulas in Tables~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}.
+The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the formulas in Table~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}. 
+
 
 \begin{table}
 \centering
@@ -28,54 +29,80 @@ The general performance of the different tree concepts depending on the leaves $
 \end{table}
 
 \section{NIST Parameter Set}
-There exist standardized sets of values that are used for the proposed signature systems. One common example is the LMS SHA-256 parameter set proposed by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}: It is denoted in Table~\ref{table:nist_param_lms}. 
-% maybe also add the one for xmss
+There exist standardized sets of values that are used for the proposed signature systems. One common example is the LMS SHA-256 parameter set by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}: It is denoted in Table~\ref{table:nist_param_lms}. 
 
 \begin{table}
 \centering
-\begin{tabular}{l c c l} 
+\begin{tabular}{l c c c l} 
  \hline\noalign{\smallskip}
- \multicolumn{4}{c}{\textbf{NIST Parameter Set, LMS}} \\
- Parameter Set Name & Numeric Identifier & $n$ & $d$\\
+ \multicolumn{5}{c}{\textbf{NIST Parameter Set, LMS}} \\
+ Parameter Set Name & Numeric Identifier & $n$ & $d$ & $\ell$\\
  \hline\noalign{\smallskip}
- LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 \\
- LMS\_SHA256\_M32\_H10 & 0x00000006  & 32 & 10 \\
- LMS\_SHA256\_M32\_H15 & 0x00000007  & 32 & 15 \\
- LMS\_SHA256\_M32\_H20 & 0x00000008  & 32 & 20 \\
- LMS\_SHA256\_M32\_H35 & 0x00000009  & 32 & 25 \\
+ LMS\_SHA256\_M32\_H5 & 0x00000005  & 32 & 5 & 32 \\
+ LMS\_SHA256\_M32\_H10 & 0x00000006  & 32 & 10 & 1024 \\
+ LMS\_SHA256\_M32\_H15 & 0x00000007  & 32 & 15 & 32768 \\
+ LMS\_SHA256\_M32\_H20 & 0x00000008  & 32 & 20 & 1048576 \\
+ LMS\_SHA256\_M32\_H35 & 0x00000009  & 32 & 25 & 33554432 \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{NIST SHA-256 parameter sets for LMS.~\cite{stateful_hashbased_sign_schemes_NIST_2020}. The variable $n$ denotes the number of bytes associated with each node in the (standard binary) Merkle tree, the parameter $d$ denotes the height of the Merkle Tree.}
+\caption{NIST SHA-256 parameter sets for LMS.~\cite{stateful_hashbased_sign_schemes_NIST_2020}. The variable $n$ denotes the number of bytes associated with each node in the (standard binary) Merkle tree, the parameter $d$ denotes the height and the parameter $\ell$ the leaves of the Merkle Tree.}
 \label{table:nist_param_lms}
 \end{table}
 
 \subsection{NIST Parameter Adaption}
 \label{sec:nist_param_to_leaves}
-% explain derivation NIST param set -> leaves
-Notably, the values given in the LMS parameter set refer to the height $d$ of the Merkle Tree. When used as digital signature scheme, the leaves of the tree correspond to the amount of one-time keys. Therefore, comparing the performance of the standard Merkle Tree, \tftree and \extree based on the amount of leaves $\ell$ is the better evaluation concept than comparing the height $d$. 
-The leaves $\ell$ for each tree concept are derived from $d$ in the LMS parameter set, see Table~\ref{table:nist_param_each_tree}. 
-
-For this evaluation, we assume each leaf contains a one-time public key (i.e. there are no empty nodes). It is not possible to get the same amount of leaves for each concept, because the leaves of a perfect Merkle Tree are always a power of two, whereas the leaves of a perfect \extree always are always a  power of five. In order to still get a similar amount of leaves, the Merkle Trees with the closest power of 2 to a given power of $5^d$ is additionally used for performance evaluation with the NIST LMS parameter set: For a given $5^d$, these \textit{upper bounds} and \textit{lower bounds} are calculated by $2^{\floor{\log_2(5^d)}}$ and $2^{\ceil{\log_2(5^d)}}$ respectively. They are shown in the columns \textit{lower bound} and \textit{upper bound} in Table~\ref{table:nist_param_each_tree}.
+When used as digital signature scheme, the leaves of the Merkle Tree, \tftree and \extree correspond to the amount of one-time keys. For this evaluation, we assume each leaf contains a one-time public key (i.e. there are no empty nodes). When comparing the performance of the standard Merkle Tree with \tftree and \extree based on the amount of leaves $\ell$, it is not possible to get the same amount of leaves for each concept, because the leaves of a perfect Merkle Tree are always a power of two, whereas the leaves of a perfect \tftree\xspace/\xspace\extree are always a power of five. 
+ 
+In order to still get a similar amount of leaves, all $2^d, d \in \{5,10,15,20,25\}$ are paired with their lower and upper closest power of 5:
+These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calculated by $5^{\floor{\log_5(2^d)}}$ and $5^{\ceil{\log_5(2^d)}}$ respectively. The results are shown in Table~\ref{table:nist_upper_lower_bound}. 
 
 \begin{table}
 \centering
-\begin{tabular}{c l l c c} 
+\begin{tabular}{c c l c c} 
  \hline\noalign{\smallskip}
- \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set, LMS}} \\
+ \multicolumn{5}{c}{\textbf{Merkle Tree - Lower / Upper Bound \extree}} \\
  \noalign{\smallskip} 
- & Merkle Tree & \tftree\xspace/ \extree & lower bound & upper bound \\
- $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
-  \hline\noalign{\smallskip}
- 5 & $2^5 = 32$ & $5^5 = 3125$ & $2^{11}$ & $2^{12}$\\
- 10 & $2^{10} = 1024$ & $5^{10} = 9765625$ & $2^{23}$ & $2^{24}$\\
- 15 & $2^{15} = 32768$ & $5^{15} = 30517578125$ & $2^{34}$ & $2^{35}$\\ % 5^{15} 
- 20 & $2^{20} = 1048576$ & $5^{20} = 95367431640625$ & $2^{46}$ & $2^{47}$\\ % 5^20 
- 25 & $2^{25} = 33554432$ & $5^{25} = 298023223876953125$ & $2^{58}$ & $2^{59}$ \\ 
+ & lower, upper bound: $\ell$ & Tree Generation & Auth.path Length & Verify \\
+ \hline\noalign{\smallskip}
+ \multirow{2}{*}{$2^5$} & $\rightarrow 5^{\floor{\log_5(2^5)}} = 5^{2} $ & lower tree generation & low auth & low verify \\
+ & $\rightarrow 5^{\ceil{\log_5(2^5)}} = 5^{3}$ & up tree generation & up auth & up verify \\
+ \hline\noalign{\smallskip} 
+ \multirow{2}{*}{$2^{10}$} & $\rightarrow 5^{\floor{\log_5(2^{10})}} = 5^{4}$ & lower tree generation & low auth & low verify \\
+ & $\rightarrow 5^{\ceil{\log_5(2^{10})}} = 5^{5}$ & up tree generation & up auth & up verify \\
+ \hline\noalign{\smallskip} 
+ \multirow{2}{*}{$2^{15}$}& $\rightarrow 5^{\floor{\log_5(2^{15})}} = 5^{6}$ & lower tree generation & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{15})}} = 5^{7}$ & up tree generation & up auth & up verify \\ 
+ \hline\noalign{\smallskip} 
+ \multirow{2}{*}{$2^{20}$} & $\rightarrow 5^{\floor{\log_5(2^{20})}} = 5^{8}$ & lower tree generation & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{20})}} = 5^{9}$ & up tree generation & up auth & up verify \\
+ \hline\noalign{\smallskip}  
+  \multirow{2}{*}{$2^{25}$} & $\rightarrow 5^{\floor{\log_5(2^{25})}} =  5^{10}$ & lower tree generation & low auth & low verify \\ 
+ & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & up tree generation & up auth & up verify \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms}) converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.}
-\label{table:nist_param_each_tree}
+\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \extree.}
+\label{table:nist_upper_lower_bound}
 \end{table}
+
+%\begin{table}
+%\centering
+%\begin{tabular}{c l l c c} 
+% \hline\noalign{\smallskip}
+% \multicolumn{5}{c}{\textbf{Leaves $\ell$: NIST Parameter Set, LMS}} \\
+% \noalign{\smallskip} 
+% & Merkle Tree & \tftree\xspace/ \extree & lower bound & upper bound \\
+% $d$ & $\ell = 2^d$ & $\ell = 5^d$ & $\ell = 2^{\floor{\log_2(5^d)}}$ & $\ell = 2^{\ceil{\log_2(5^d)}}$ \\
+%  \hline\noalign{\smallskip}
+% 5 & $2^5 = 32$ & $5^5 = 3125$ & $2^{11}$ & $2^{12}$\\
+% 10 & $2^{10} = 1024$ & $5^{10} = 9765625$ & $2^{23}$ & $2^{24}$\\
+% 15 & $2^{15} = 32768$ & $5^{15} = 30517578125$ & $2^{34}$ & $2^{35}$\\ % 5^{15} 
+% 20 & $2^{20} = 1048576$ & $5^{20} = 95367431640625$ & $2^{46}$ & $2^{47}$\\ % 5^20 
+% 25 & $2^{25} = 33554432$ & $5^{25} = 298023223876953125$ & $2^{58}$ & $2^{59}$ \\ 
+% \hline\noalign{\smallskip}
+% \end{tabular}
+%\caption{Tree height $d$ out of NIST SHA-256 parameter sets for LMS (see Table~\ref{table:nist_param_lms}) converted to amount of leaves $\ell$ for for Merkle Tree, \extree. Lower bound denotes the closest power of 2 lesser than $5^d$. Upper bound denotes the closest power of 2 greater than $5^d$.}
+%\label{table:nist_param_each_tree}
+%\end{table}
 
 \subsection{NIST Parameter Results}
 After determining the parameters for each tree concept in the section before, the parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results. The performance calculation is also implemented in a Python script, see Appendix~\ref{cha:appendix2_performance_calc}.
@@ -162,4 +189,7 @@ The effort for tree generation for each tree concept is depicted in Figure~\ref{
 
 % \section{Future Work}
 % idea for xmss, not only calculating the speedup but also concept
+
 % concept for T5 tree when not every leaf is "filled"
+
+% It is possible to adopt the \extree concept into SPHINCS simple, because SPHINCS simple does not contain bitmasks. Would work like LMS+T5 concept.
