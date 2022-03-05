@@ -18,10 +18,9 @@ Notably, these formulas do not take into consideration that, depending on the tr
   &  & Aggr. & More Aggr. & \\
  \hline\noalign{\smallskip}
  \# hash calls keygen & $\ell-1$ & \multicolumn{2}{c}{$\frac{3}{4}(\ell-1)$} & Eq.~\ref{eq:lms_hashcalls_tree_treegen}, \ref{eq:t5_tree_gen_hashcalls} \\
-% \# saved nodes (whole tree) & $2\ell-1$ & \multicolumn{2}{c}{$10\ell-1$} \\ % check if really true
-% \# hash calls sign & $\emptyset$ & \multicolumn{2}{c}{$\emptyset$} & \\ % auth.path generation -> remove because not really information necessary in this table
+ \# hash calls verify & $1.44\log(\ell)$ & $1.24\log(\ell)$ & $1.12\log(\ell)$ & Eq. \ref{eq:lms_hashcalls_verify}, \ref{eq:t5_path_calc_hashcalls}, \ref{eq:ext_t5_hashcalls_verify} \\ 
+\hline\noalign{\smallskip}
  \# el. in auth.path & $1.44\log(\ell) $ & $1.86\log(\ell)$ & $1.74\log(\ell)$ & Eq. \ref{eq:lms_authpath_el}, \ref{eq:t5_el_authpath}, \ref{eq:ext_t5_len_authpath} \\
- \# hash calls verify & $1.44\log(\ell)$ & $1.24\log(\ell)$ & $1.12\log(\ell)$ & Eq. \ref{eq:lms_hashcalls_verify}, \ref{eq:t5_path_calc_hashcalls}, \ref{eq:ext_t5_hashcalls_verify} \\  % path calculation
  \hline
 \end{tabular}
 \caption{Performance of the the standard Merkle Tree (used in LMS) and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and \ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}
@@ -38,6 +37,7 @@ Notably, these formulas do not take into consideration that, depending on the tr
  \hline\noalign{\smallskip}
  hash calls: key gen. & \multicolumn{2}{c}{$-25\%$} \\
  hash calls: verify & $-14\%$ & $-22\%$ \\ 
+ \hline\noalign{\smallskip}
  length auth. path & $+ 29\%$ & $+ 20\%$ \\
  \hline
 \end{tabular}
