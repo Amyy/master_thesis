@@ -32,18 +32,16 @@ Notably, these formulas do not take into consideration that, depending on the tr
 \centering
 \begin{tabular}{l c c } 
  \hline\noalign{\smallskip}
- \multicolumn{3}{c}{\textbf{Speed Up \tftree, \extree}} \\
-\hline\noalign{\smallskip}
-  & \tftree & \extree \\
+ \multicolumn{3}{c}{\textbf{General Performance Comparison}} \\
  \noalign{\smallskip}
-  & Aggr. & More Aggr. \\
+  & \tftree & \extree \\
  \hline\noalign{\smallskip}
- efficiency hash calls keygen & \multicolumn{2}{c}{$+25\%$} \\
- length efficiency & $- 29\%$ & $- 20\%$ \\
- efficiency hash calls verify & $+14\%$ & $+22\%$ \\ 
+ hash calls: key gen. & \multicolumn{2}{c}{$-25\%$} \\
+ hash calls: verify & $-14\%$ & $-22\%$ \\ 
+ length auth. path & $+ 29\%$ & $+ 20\%$ \\
  \hline
 \end{tabular}
-\caption{Performance comparison of the \tftree and \extree, based on the Merkle Tree.} 
+\caption{Performance of \tftree and \extree in comparison to the Merkle Tree:  The amount of hash calls for tree generation and verification decreases for \tftree and \extree respectively, while the length of the authentication path increases.} 
 \label{table:perform_differences}
 \end{table}
 
