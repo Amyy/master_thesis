@@ -15,3 +15,6 @@ In this work, the goal was to speed up common hash-based signature systems.
 % It is possible to adopt the \extree concept into SPHINCS simple, because SPHINCS simple does not contain bitmasks. Would work like LMS+T5 concept.
 
 % Concept for T5 tree when not every leaf is "filled" ? -> Possible to use a more variants of one-time key sets, because NIST Parameter set (reference here) fits to binary tree and not leaves = power of 5 tree.
+% Idea: do not calculate all "subtrees" of T5 tree.
+
+% Tradeoff: what the signer/verifier generates in one T5 block. For example, signer gives verifier c,d instead of a,b -> signer has to calculate 2 XORs, not verifier or vise versa.
