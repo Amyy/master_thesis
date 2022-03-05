@@ -3,7 +3,7 @@ from typing import List
 import math
 import matplotlib.pyplot as plt
 
-plt.rcParams.update({'font.size': 15})
+plt.rcParams.update({'font.size': 20})
 
 
 # tree generation hash calls: standard Merkle Tree
@@ -84,38 +84,43 @@ def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[in
                              up_bound_leaves: List[int],
                              merkle_hash_calls: List[int], low_bound_hash_calls: List[int],
                              up_bound_hash_calls: List[int]):
-    # merkle tree plot
-    x1 = merkle_leaves
-    y1 = merkle_hash_calls
-    plt.plot(x1, y1, 'go', label="Merkle Tree")
+    markers_list = ["X", "o", "D", "^", "s"]
 
     # lower bound plot
     x2 = low_bound_leaves
     y2 = low_bound_hash_calls
-    plt.plot(x2, y2, 'bo', label="Lower Bound: Merkle Tree")
+    for (x, y, marker) in zip(x2, y2, markers_list):
+        plt.plot(x, y, marker=marker,  markersize=9, linestyle='None', color='b',
+                 label=r"low. bound T$_5$-Tree$^+$, d = " + str(round(math.log(y, 5))))
+
+    # merkle tree plot
+    x1 = merkle_leaves
+    y1 = merkle_hash_calls
+    for (x, y, marker) in zip(x1, y1, markers_list):
+        plt.plot(x, y, marker=marker, markersize=9, linestyle='None', color='g',
+                 label='Merkle Tree, d =' + str(round(math.log2(y))))
 
     # upper bound plot
     x3 = up_bound_leaves
     y3 = up_bound_hash_calls
-    plt.plot(x3, y3, 'co', label="Upper Bound: Merkle Tree")
-
-    # # t5 plot
-    # x4 = t5_leaves
-    # y4 = t5_hash_calls
-    # plt.plot(x4, y4, 'ro', label="T5 Tree")
+    for (x, y, marker) in zip(x3, y3, markers_list):
+        plt.plot(x, y, marker=marker,  markersize=9, linestyle='None', color='c',
+                 label=r"upper bound T$_5$-Tree, d = " + str(round(math.log(y, 5))))
 
     # make axes logarithmic
     plt.xscale('log', base=2)
     plt.yscale('log', base=2)
 
     # labeling the axes
-    plt.xlabel('leaves')
+    plt.xlabel(r'leaves $\ell$')
     plt.ylabel('# hash calls')
 
     # add legend
-    plt.legend(loc="lower right")
+    # plt.legend(loc='upper left')
+    plt.subplots_adjust(right=0.7)
+    plt.legend(bbox_to_anchor=(1.02, 0.5), loc='center left')
 
-    plt.title(label="Performance Evaluation: Tree Generation")
+    plt.title(label="Performance Evaluation: Merkle Tree, upper/lower bound T$_5$-Tree")
     plt.grid()
     plt.show()
 
