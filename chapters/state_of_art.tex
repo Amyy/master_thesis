@@ -5,8 +5,10 @@ In this chapter, state-of-the-art works regarding \textit{hash-based signature s
 These HBS are separated into two categories: \textit{Stateful} hash-based signature schemes and \textit{stateless} hash-based signature schemes.  
 
 \section{Stateful HBS}
-Most common digital signature systems currently in use are stateless signature systems: The signer does not need to update the secret key, it is reused. 
-the signer needs to maintain a dynamic state while signing messages. They do not fit the standard definition of a signature scheme in cryptography..~\cite{properties_stateless_HBS_2022}
+Most common digital signature systems currently in use are stateless signature systems: The signer has one secret key that is used multiple times for signing. In stateful signature schemes, one secret key is only used once, therefore referred to as one-time key. If the key same key is used more than once, the security will be compromised. 
+To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature).
+The disadvantage of the stateful HBS is the careful treatment of its states. On the other hand, it increases the amount of possible design choices and yields more efficient schemes.~\cite{properties_stateless_HBS_2022}
+
 The most recent stateful HBS include LMS and XMSS~\cite{stateful_hashbased_sign_schemes_NIST_2020}
 
 % BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
