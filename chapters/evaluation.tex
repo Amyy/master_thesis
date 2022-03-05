@@ -4,8 +4,8 @@ In Chapter~\ref{cha:background}, the two most common quantum secure hash-based s
 % ! xmss not so easy possible -> bitmasks!
 
 \section{Performance Comparison}
-The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the formulas in Table~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}. 
-
+The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the equations in Table~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}.
+Notably, these formulas do not take into consideration that, depending on the tree concept, the leaves have a power of two or five. Still, they state a general speedup of each tree concept regarding tree generation, length of authentication path and verification. The general speedup is denoted in Table~\ref{table:perform_differences}.
 
 \begin{table}
 \centering
@@ -26,6 +26,25 @@ The general performance of the different tree concepts depending on the leaves $
 \end{tabular}
 \caption{Performance of the the standard Merkle Tree (used in LMS) and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and \ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}
 \label{table:general_formulas_t5_merkle}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{l c c } 
+ \hline\noalign{\smallskip}
+ \multicolumn{3}{c}{\textbf{Speed Up \tftree, \extree}} \\
+\hline\noalign{\smallskip}
+  & \tftree & \extree \\
+ \noalign{\smallskip}
+  & Aggr. & More Aggr. \\
+ \hline\noalign{\smallskip}
+ efficiency hash calls keygen & \multicolumn{2}{c}{$+25\%$} \\
+ length efficiency & $- 29\%$ & $- 20\%$ \\
+ efficiency hash calls verify & $+14\%$ & $+22\%$ \\ 
+ \hline
+\end{tabular}
+\caption{Performance comparison of the \tftree and \extree, based on the Merkle Tree.} 
+\label{table:perform_differences}
 \end{table}
 
 \section{NIST Parameter Set}
@@ -116,15 +135,7 @@ The effort for tree generation for each tree concept is depicted in Figure~\ref{
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{images/Evaluation/performance_tree_generation.png}
-\caption{Performance of each tree concept for tree generation. The values are given in the NIST parameter set (see Table~\ref{table:nist_param_lms}), the performance equations are shown in Table~\ref{table:general_formulas_t5_merkle}.}
+\caption{Amount of hash calls for tree generation of each concept. Notably, \tftree and \extree have the same performance for tree calculation, therefore they are not mentioned separately here. The height $d$ of the Merkle Tree is directly based on the NIST parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the NIST parameter set, see Table~\ref{table:nist_upper_lower_bound}. For equations used for performance calculation, see Table~\ref{table:general_formulas_t5_merkle}.}
 \label{img:performance_tree_gen}
 \end{figure}
 
-% \section{Discussion}
-
-% \section{Future Work}
-% idea for xmss, not only calculating the speedup but also concept
-
-% concept for T5 tree when not every leaf is "filled"
-
-% It is possible to adopt the \extree concept into SPHINCS simple, because SPHINCS simple does not contain bitmasks. Would work like LMS+T5 concept.
