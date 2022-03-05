@@ -1,29 +1,33 @@
 \chapter{Related Work}
 \label{cha:stateOfTheArt}
 
-In this chapter, state-of-the-art works regarding \textit{hash-based signature systems (HBS)} are proposed. 
-These HBS are separated into two categories: \textit{Stateful} hash-based signature schemes and \textit{stateless} hash-based signature schemes.  
+In this chapter, state-of-the-art works regarding quantum-secure \textit{hash-based signature systems (HBS)} and their performance improvement are proposed. 
+First, the two categories \textit{stateful}- and \textit{stateless} HBS are explained. % Afterwards ...
 
-\section{Stateful HBS}
+\section{Stateful HBS} % maybe put part of this stateful explanation in introduction
 Most common digital signature systems currently in use are stateless signature systems: The signer has one secret key that is used multiple times for signing. In stateful signature schemes, one secret key is only used once, therefore referred to as one-time key. If the key same key is used more than once, the security will be compromised. 
 To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature).
-The disadvantage of the stateful HBS is the careful treatment of its states. On the other hand, it increases the amount of possible design choices and yields more efficient schemes.~\cite{properties_stateless_HBS_2022}
-
-The most recent stateful HBS include LMS and XMSS~\cite{stateful_hashbased_sign_schemes_NIST_2020}
-
-% BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
+A stateful scheme is therefore less practical than a stateless scheme, as a careful treatment of its one-time key states is required. 
+In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature is smaller, and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
+The most recent stateful HBS are the  Leighton-Micali Signature Scheme (LMS)~\cite{LMS_RFC8554} and the eXtended Merkle Signature Scheme (XMSS)~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS, see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
 
 \section{Stateless HBS}
-The most common stateless HBS includes SPHINCS+~\cite{tweakable_basispaper_sphincs_2019}. 
-
-% SPHINCS / SPHINCS+ [zustandslos/frei] (hypertrees) -> übersichtlich mit LMS/XMSS vergleichen
+% is the typical / common signature system
+The most common stateless HBS is SPHINCS+~\cite{tweakable_basispaper_sphincs_2019}. It is recommended and standardized by NIST. 
+% SPHINCS / SPHINCS+ [zustandslos/frei] (hypertrees) 
 % wird "künstlich" stateless gemacht durch hypertrees -> unwahrscheinlich 2x gleichen one-time key zu bekommen
+
+% multi tree variant XMSS -> stateless?
+
 % ab hier -> versch. implementierungen / versionen von LMS, XMSS, SPHINCS+
-% also (if exist): lattice based (RSA) ? -> check NIST competition 
 
 
-%The Leighton-Micali Hash-Based Signature Scheme (LMS)~\cite{LMS_RFC8554} is based on the idea of Leighton and Micali~\cite{LMS_patent_leighton1995}. 
-%As LMS is a major building block of this thesis, it is explained in detail in Chapter~\ref{cha:background}.-> add reference to LMS+XMSS section here, (when LMS section is created)
+% other variants (maybe introduction):
+% picnic -> ZKP scheme?
+% Rainbow, GeMMs -> MultiVariate
+% crystals-dilithium, falcon -> Lattice
+% BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
+
 
 % https://eprint.iacr.org/2020/898.pdf -> read state of art here
 
@@ -45,5 +49,5 @@ The most common stateless HBS includes SPHINCS+~\cite{tweakable_basispaper_sphin
 % The focus will not be on works regarding solely other classical digital signature systems (e.g. RSA) as these generally outperform hash-based signature systems (performance, signature/key size), but do not fulfill the requirement to be quantum secure~\cite{RSA_pq-attack_examples_2018,comparison_performance_RSA_ECDSA_Merkle_WOTS_2021}.
 
 % maybe add examples/cases where Merkle tree outperforms RSA/ECDSA. -> https://link.springer.com/chapter/10.1007/978-3-540-85893-5_8 , year 2008
-% -> add attacks to RSA to introduction
+% -> or add attacks to RSA to introduction
 
