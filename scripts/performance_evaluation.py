@@ -79,7 +79,7 @@ def power_of_five(exponents: List[int]):
     return powered_list
 
 
-# NIST parameter: evaluation results plotted
+# NIST parameter: tree generation evaluation results plotted
 def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[int],
                              up_bound_leaves: List[int],
                              merkle_hash_calls: List[int], low_bound_hash_calls: List[int],
@@ -125,13 +125,6 @@ def plot_hash_calls_tree_gen(merkle_leaves: List[int], low_bound_leaves: List[in
     plt.show()
 
 
-# NIST parameter: elements in auth.path for each tree concept
-# ! aggr, more aggr
-def plot_auth_path_length(merkle_leaves: List[int], low_bound_leaves: List[int],
-                          up_bound_leaves: List[int], t5_leaves: List[int]):
-    pass
-
-
 if __name__ == '__main__':
     param_set_d = [5, 10, 15, 20, 25]  # height in LMS parameter set for standard Merkle tree
     lower_bound_d = [2, 4, 6, 8, 10]  # height for lower bound t5 trees
@@ -155,8 +148,8 @@ if __name__ == '__main__':
     hash_calls_tree_gen_up_bound = [int(leaves) for leaves in hash_calls_tree_gen_up_bound]
 
     print('merkle tree: hash calls tree gen.', hash_calls_tree_gen_merkle_tree)
-    print('lower bound merkle tree: hash calls tree gen.', hash_calls_tree_gen_low_bound)
-    print('upper bound merkle tree: hash calls tree gen.', hash_calls_tree_gen_up_bound)
+    print('lower bound t5: hash calls tree gen.', hash_calls_tree_gen_low_bound)
+    print('upper bound t5: hash calls tree gen.', hash_calls_tree_gen_up_bound)
 
     # ---- auth.path length ----
     # amount elements in auth.path: merkle tree
@@ -172,11 +165,11 @@ if __name__ == '__main__':
 
     print('merkle tree: length auth.path:', len_auth_path_list_merkle_tree)
 
-    print('lower bound: aggr. length auth.path:', len_auth_path_list_low_aggr)
-    print('lower bound: more aggr. length auth.path:', len_auth_path_list_low_more_aggr)
+    print('lower bound t5: aggr. length auth.path:', len_auth_path_list_low_aggr)
+    print('lower bound t5: more aggr. length auth.path:', len_auth_path_list_low_more_aggr)
 
-    print('upper bound: aggr. length auth.path:', len_auth_path_list_up_more_aggr)
-    print('upper bound: more aggr. length auth.path:', len_auth_path_list_up_aggr)
+    print('upper bound t5: aggr. length auth.path:', len_auth_path_list_up_more_aggr)
+    print('upper bound t5: more aggr. length auth.path:', len_auth_path_list_up_aggr)
 
     # ---- hash calls verify ----
     # Merkle tree: hash calls for path generation / verify
@@ -191,11 +184,11 @@ if __name__ == '__main__':
 
     print('Merkle tree: hash calls verify', hash_calls_verify_merkle_tree)
 
-    print('lower bound: aggr verify', hash_calls_verify_aggr_low_bound)
-    print('lower bound: more aggr verify', hash_calls_verify_more_aggr_low_bound)
+    print('lower bound t5: aggr verify', hash_calls_verify_aggr_low_bound)
+    print('lower bound t5: more aggr verify', hash_calls_verify_more_aggr_low_bound)
 
-    print('upper bound: aggr verify', hash_calls_verify_aggr_up_bound)
-    print('upper bound: more aggr verify', hash_calls_verify_more_aggr_up_bound)
+    print('upper bound t5: aggr verify', hash_calls_verify_aggr_up_bound)
+    print('upper bound t5: more aggr verify', hash_calls_verify_more_aggr_up_bound)
 
     plot_hash_calls_tree_gen(leaves_list_merkle_standard, leaves_list_low_bound,
                              leaves_list_up_bound, hash_calls_tree_gen_merkle_tree,
