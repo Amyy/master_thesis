@@ -2,24 +2,32 @@
 \label{cha:stateOfTheArt}
 
 In this chapter, state-of-the-art works regarding quantum-secure \textit{hash-based signature systems (HBS)} and their performance improvement are proposed. 
-First, the two categories \textit{stateful}- and \textit{stateless} HBS are explained. % Afterwards ...
+First, the two categories \textit{stateful}- and \textit{stateless} HBS and their corresponding HBS are introduced. % Afterwards ...
 
 \section{Stateful HBS} % maybe put part of this stateful explanation in introduction
-Most common digital signature systems currently in use are stateless signature systems: The signer has one secret key that is used multiple times for signing. In stateful signature schemes, one secret key is only used once, therefore referred to as one-time key. If the key same key is used more than once, the security will be compromised. 
-To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature).
-A stateful scheme is therefore less practical than a stateless scheme, as a careful treatment of its one-time key states is required. 
-In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature is smaller, and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
-The most recent stateful HBS are the  Leighton-Micali Signature Scheme (LMS)~\cite{LMS_RFC8554} and the eXtended Merkle Signature Scheme (XMSS)~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS, see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
+Most common digital signature systems currently in use are stateless signature systems: The signer has one secret key that is used multiple times for signing. In stateful signature schemes, the secret key is only used once, therefore referred to as one-time key. If the key same key is used more than once, the security will be compromised. 
+To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature). To generate each one-time key, a one-time signature scheme (OTS) is used (e.g. WOTS and WOTS+, explained in detail in Section~\ref{sec:wots_general} and \ref{sec:wots+_general}).
+A stateful scheme is less practical than a stateless scheme, as a careful treatment of its one-time key states is required. 
+In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature size is smaller, and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
+The most recent stateful HBS are the \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} and the \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
+% lms / xmss paper pic?
 
 \section{Stateless HBS}
 % is the typical / common signature system
-The most common stateless HBS is SPHINCS+~\cite{tweakable_basispaper_sphincs_2019}. It is recommended and standardized by NIST. 
-% SPHINCS / SPHINCS+ [zustandslos/frei] (hypertrees) 
-% wird "künstlich" stateless gemacht durch hypertrees -> unwahrscheinlich 2x gleichen one-time key zu bekommen
+The most common quantum-secure stateless HBS recommended and standardized by NIST is \textit{SPHINCS+}~\cite{tweakable_basispaper_sphincs_2019} (an improvement of SPHINCS~\cite{sphincs_old_version_2015}).
+SPHINCS+ uses a few-time signature scheme (FTS) to sign more than one message.
+SPHINCS+ replaces the generation of leaves with an OTS (the one-time signature schemes used for generating the leaves in stateful HBS) with a FTS.
+The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS+ is Forest of Random Subsets (FORS). The idea is to authenticate a huge number of few-time keys using a so-called hyper-tree (a tree of trees). The root of the hyper-tree is the public key of the signature system.
+~\cite{tweakable_basispaper_sphincs_2019,sphincs+_submission_nist_round2}
+% sphincs pic?
 
 % multi tree variant XMSS -> stateless?
 
-% ab hier -> versch. implementierungen / versionen von LMS, XMSS, SPHINCS+
+\section{Performance Improvements of HBS}
+% ab hier -> versch. implementierungen / versionen / verbesserungen von LMS, XMSS, 
+
+% SPHINCS+ performance:
+
 
 
 % other variants (maybe introduction):
