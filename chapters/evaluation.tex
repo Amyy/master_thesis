@@ -132,12 +132,12 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
 \caption{Evaluation results for the standard Merkle Tree, given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_lms}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
 \label{table:eval_merkle_tree_NIST}
 \end{table}
-The performance for tree generation is additionally depicted in Figure~\ref{img:performance_tree_gen}: 
+The performance for tree generation is additionally depicted in Figure~\ref{img:performance_tree_gen}: Notably, \tftree and \extree have the same performance for tree calculation, therefore they are not mentioned separately in the Figure. The height $d$ of the Merkle Tree is directly based on the LMS parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the LMS parameter set, see Table~\ref{table:nist_upper_lower_bound}. The equations used for calculating the tree generation performance, see Table~\ref{table:general_formulas_t5_merkle}. Please note that the scales on each axis are logarithmic for better readability.
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{images/Evaluation/performance_tree_generation.png}
-\caption{Amount of hash calls for tree generation of each concept. Notably, \tftree and \extree have the same performance for tree calculation, therefore they are not mentioned separately here. The height $d$ of the Merkle Tree is directly based on the LMS parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the LMS parameter set, see Table~\ref{table:nist_upper_lower_bound}. For equations used for performance calculation, see Table~\ref{table:general_formulas_t5_merkle}.}
+\caption{Amount of hash calls for tree generation of Merkle Tree, upper/lower \tftree (inlcudes \extree, not mentioned separately). The height $d$ of the Merkle Tree is based on the LMS parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the LMS parameter set, see Table~\ref{table:nist_upper_lower_bound}.}
 \label{img:performance_tree_gen}
 \end{figure}
 
