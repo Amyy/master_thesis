@@ -2,7 +2,8 @@
 \label{cha:stateOfTheArt}
 
 In this chapter, state-of-the-art works regarding quantum-secure \textit{hash-based signature systems (HBS)} and their performance improvement are proposed. 
-First, the two categories \textit{stateful}- and \textit{stateless} HBS and their corresponding HBS are introduced. % Afterwards ...
+The focus will be on works regarding solely HBS and no other classical digital signature systems (e.g. RSA) as these generally outperform hash-based signature systems (performance, signature/key size), but do not fulfill the requirement to be quantum secure~\cite{RSA_pq-attack_examples_2018,comparison_performance_RSA_ECDSA_Merkle_WOTS_2021}.
+First, the two categories \textit{stateful}- and \textit{stateless} HBS and their corresponding HBS are introduced. Afterwards, current works improving the performance of HBS are proposed.
 
 \section{Stateful HBS} % maybe put part of this stateful explanation in introduction
 Most common digital signature systems currently in use are stateless signature systems: The signer has one secret key that is used multiple times for signing. In stateful signature schemes, the secret key is only used once, therefore referred to as one-time key. If the key same key is used more than once, the security will be compromised. 
@@ -12,7 +13,7 @@ In some situations, managing states is acceptable for meeting other demands: In 
 \\ \\
 The most recent stateful HBS are the \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} and the \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
 % lms / xmss paper pic?
-
+\\ \\
 An extension of XMSS is \textit{Multi Tree XMSS (XMSS$^{MT}$)}, a hash-based
 signature scheme that can be used to sign a larger (but still fixed) number of messages.
 XMSS$^{MT}$ uses hyper-tree, a tree of several layers of XMSS trees. The root nodes of the lower layers are signed by the trees on top and intermediate layers. To sign a message, the trees on the lowest layer are used respectively.~\cite{xmss_multitree_2013,xmss_RFC8391}
@@ -27,12 +28,17 @@ The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS
 % sphincs pic?
 
 \section{Performance Improvements HBS}
-% versch. implementierungen / versionen / verbesserungen von LMS, XMSS, SPHICNS 
+In this section, different implementations and performance improvements of the proposed HBS are proposed.
+\\ \\
+% xmss improvements
+% 1
+Hülsing et al.~\cite{xmss+_2018} propose \textit{XMSS+}, a HBS based on XMSS. Compared to XMSS, the key generation time is reduced from $\mathcal{O}(n)$ to $\mathcal{O}(\sqrt{n})$, with $n$ being the number of signatures that can be created with one key pair.
+\\ \\
+% 2
+Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method which is speeding up the XMSS signature verification. It is based one the PZMCM technique, which changes the XMSS signing algorithm to find verifiable signatures.
 
-% https://eprint.iacr.org/2020/898.pdf -> read state of art here
-
-% SPHINCS+ performance:
-
+% SPHINCS+ improvements
+% armed sphincs+: https://eprint.iacr.org/eprint-bin/getfile.pl?entry=2015/1042&version=20151028:210900&file=1042.pdf
 
 
 % other variants (maybe introduction):
@@ -57,7 +63,7 @@ The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS
 %\label{table:stateless_statful}
 %\end{table}
 
-% The focus will not be on works regarding solely other classical digital signature systems (e.g. RSA) as these generally outperform hash-based signature systems (performance, signature/key size), but do not fulfill the requirement to be quantum secure~\cite{RSA_pq-attack_examples_2018,comparison_performance_RSA_ECDSA_Merkle_WOTS_2021}.
+% .
 
 % maybe add examples/cases where Merkle tree outperforms RSA/ECDSA. -> https://link.springer.com/chapter/10.1007/978-3-540-85893-5_8 , year 2008
 % -> or add attacks to RSA to introduction
