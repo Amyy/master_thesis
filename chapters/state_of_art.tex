@@ -9,8 +9,13 @@ Most common digital signature systems currently in use are stateless signature s
 To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature). To generate each one-time key, a one-time signature scheme (OTS) is used (e.g. WOTS and WOTS+, explained in detail in Section~\ref{sec:wots_general} and \ref{sec:wots+_general}).
 A stateful scheme is less practical than a stateless scheme, as a careful treatment of its one-time key states is required. 
 In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature size is smaller, and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
+\\ \\
 The most recent stateful HBS are the \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} and the \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
 % lms / xmss paper pic?
+
+An extension of XMSS is \textit{Multi Tree XMSS (XMSS$^{MT}$)}, a hash-based
+signature scheme that can be used to sign a larger (but still fixed) number of messages.
+XMSS$^{MT}$ uses hyper-tree, a tree of several layers of XMSS trees. The root nodes of the lower layers are signed by the trees on top and intermediate layers. To sign a message, the trees on the lowest layer are used respectively.~\cite{xmss_multitree_2013,xmss_RFC8391}
 
 \section{Stateless HBS}
 % is the typical / common signature system
@@ -21,10 +26,10 @@ The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS
 ~\cite{tweakable_basispaper_sphincs_2019,sphincs+_submission_nist_round2}
 % sphincs pic?
 
-% multi tree variant XMSS -> stateless?
+\section{Performance Improvements HBS}
+% versch. implementierungen / versionen / verbesserungen von LMS, XMSS, SPHICNS 
 
-\section{Performance Improvements of HBS}
-% ab hier -> versch. implementierungen / versionen / verbesserungen von LMS, XMSS, 
+% https://eprint.iacr.org/2020/898.pdf -> read state of art here
 
 % SPHINCS+ performance:
 
@@ -36,8 +41,6 @@ The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS
 % crystals-dilithium, falcon -> Lattice
 % BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
 
-
-% https://eprint.iacr.org/2020/898.pdf -> read state of art here
 
 % table has a little few information:
 %\begin{table}
