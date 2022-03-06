@@ -35,7 +35,28 @@ In this section, different implementations and performance improvements of the p
 Hülsing et al.~\cite{xmss+_2018} propose \textit{XMSS+}, a HBS based on XMSS. Compared to XMSS, the key generation time is reduced from $\mathcal{O}(n)$ to $\mathcal{O}(\sqrt{n})$, with $n$ being the number of signatures that can be created with one key pair.
 \\ \\
 % 2
-Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method which is speeding up the XMSS signature verification. It is based one the PZMCM technique, which changes the XMSS signing algorithm to find verifiable signatures.
+Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method \textit{Rapidly Verifiable XMSS Signatures} which is speeding up the XMSS signature verification. It is based one the PZMCM technique~\cite{PZMCM_speedup_wots_2018}, which changes the XMSS signing algorithm to find verifiable signatures: In XMSS, the amount of hash calls for generating a signature and afterwards verifying it always sums up to the same value. This \textit{counter value} is added to the input of the message hash, then $T$ different counter values are tried. Afterwards, the counter value leading to the fastest signature is chosen out of the $T$ possibilities.
+%The improvement of verification time with this method is shown in Table~\ref{table:fast_ver_xmss_sign}. 
+
+% not sure exactly what values in this table do
+%\begin{table}
+%\centering
+%\begin{tabular}{c l c c} 
+% \hline\noalign{\smallskip}
+% \multicolumn{4}{c}{\textbf{Rapidly Verifiable XMSS Signatures - Performance Results}} \\
+% \# msg. hashes & Signature Gen.& Max. & Min. \\
+% \hline\noalign{\smallskip}
+%$2^{10}$ & $\sim 0.04$ sec. & $421.64$ $(-16.1\%)$ & $335.66$ $(-33.2\%)$ \\
+%$2^{21}$ & $\sim 1$ sec.& $348.77$ $(-30.6\%)$ & $289.84$ $(-42.3\%)$ \\
+%$2^{27}$ & $\sim 1$ min. & & \\
+%$2^{33}$ & $\sim 1$ hour & & \\
+%$2^{37.5}$ & $\sim 1$ day & & \\
+%$2^{40.5}$ & $\sim 1$ week & & \\
+% \hline
+%\end{tabular}
+%\caption{Speed up of signature generation time and verification using the method of Bos et al.~\cite{xmss_rapidly_verif_sign_2020} with $2^T$ different counter values (i.e. \# message hashes). Improvement in $\%$ compared to standard XMSS is displayed in brackets.} 
+%\label{table:fast_ver_xmss_sign}
+%\end{table}
 
 % SPHINCS+ improvements
 % armed sphincs+: https://eprint.iacr.org/eprint-bin/getfile.pl?entry=2015/1042&version=20151028:210900&file=1042.pdf
@@ -46,24 +67,6 @@ Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method which is speedin
 % Rainbow, GeMMs -> MultiVariate
 % crystals-dilithium, falcon -> Lattice
 % BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
-
-
-% table has a little few information:
-%\begin{table}
-%\centering
-%\begin{tabular}{l c} 
-% \hline\noalign{\smallskip}
-% \multicolumn{2}{c}{\textbf{Categories HBS}} \\
-% \hline\noalign{\smallskip}
-% Statful: & SPHINCS+  \\
-% Stateless & LMS, XMSS \\
-% \hline
-%\end{tabular}
-%\caption{The two categories in which hash-based signature schemes (HBS) are divided.} 
-%\label{table:stateless_statful}
-%\end{table}
-
-% .
 
 % maybe add examples/cases where Merkle tree outperforms RSA/ECDSA. -> https://link.springer.com/chapter/10.1007/978-3-540-85893-5_8 , year 2008
 % -> or add attacks to RSA to introduction
