@@ -1,11 +1,12 @@
 \chapter{Evaluation}
 \label{cha:evaluation}
-In Chapter~\ref{cha:background}, the two most common quantum secure hash-based signature systems based on binary Merkle Trees are explained: LMS (see Section~\ref{sec:lms}) and XMSS (see Section~\ref{sec:xmss}). In Chapter~\ref{cha:methods}, the concepts \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and \extree (see Section~\ref{sec:ext_t5_tree}) are proposed in order to speed up the common binary Merkle Tree and therefore the signature systems LMS and XMSS. 
+In Chapter~\ref{cha:background}, the two most common quantum-secure hash-based signature systems based on binary Merkle Trees are explained: LMS (see Section~\ref{sec:lms}) and XMSS (see Section~\ref{sec:xmss}). In Chapter~\ref{cha:methods}, the concepts \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and \extree (see Section~\ref{sec:ext_t5_tree}) are proposed. In this chapter, the different tree concepts are compared in general and for specific use cases: The performance of the \tftree and \extree is compared with the standard Merkle Tree, see Section~\ref{sec:performance_comparison}). 
+The speedup of using the \tftree and \extree in LMS for key generation, signing and verification is shown in Section~\ref{sec:lms_nist_param_set}. 
 % ! xmss not so easy possible -> bitmasks!
 
 \section{Performance Comparison}
+\label{sec:performance_comparison}
 The general performance of the different tree concepts depending on the leaves $\ell$ is calculated with the equations in Table~\ref{table:general_formulas_t5_merkle}. The derivation of each formula is referenced in the column \textit{Source}.
-Notably, these formulas do not take into consideration that, depending on the tree concept, the leaves have a power of two or five. Still, they state a general speedup of each tree concept regarding tree generation, length of authentication path and verification. The general speedup is denoted in Table~\ref{table:perform_differences}.
 
 \begin{table}
 \centering
@@ -26,7 +27,8 @@ Notably, these formulas do not take into consideration that, depending on the tr
 \caption{Performance of the the standard Merkle Tree (used in LMS) and \extree with the opening variants Aggressive Opening (Aggr.) and More Aggressive Opening (More Aggr.), see Sections~\ref{sec:more_aggr_opening} and \ref{sec:aggr_opening} respectively. The variable $\ell$ denotes the amount of leaves.}
 \label{table:general_formulas_t5_merkle}
 \end{table}
-
+Notably, these formulas do not take into consideration that, depending on the tree concept, the leaves have a power of two or five. Still, it is possible to derive the differences in performance for each tree concept, see Table~\ref{table:perform_differences}: For key generation (i.e. tree generation), both \tftree and \extree outperform the Merkle Tree by using $25\%$ fewer hash calls. For verification, \extree outperforms the other concepts, it needs $22\%$ less hash calls than the Merkle Tree. For signature generation, the length of the authentication path increases for both \tftree and \extree: \tftree has the longest authentication path ($+29\%$ in comparison to Merkle Tree), \extree has a $+20\%$ longer authentication path than the Merkle Tree.
+ 
 \begin{table}
 \centering
 \begin{tabular}{l c c } 
@@ -45,7 +47,9 @@ Notably, these formulas do not take into consideration that, depending on the tr
 \label{table:perform_differences}
 \end{table}
 
-\section{NIST Parameter Set}
+\section{LMS Parameter Set}
+\label{sec:lms_nist_param_set}
+As LMS is based on a Merkle Tree (see Section~\ref{sec:lms}), it is easily possible to replace the Merkle Tree in LMS with either the \tftree or \extree. Notably, this speedup is independent of the Winternitz parameters, as it only changes the tree structure of LMS, not the leaf generation.
 There exist standardized sets of values that are used for the proposed signature systems. One common example is the LMS SHA-256 parameter set by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}: It is denoted in Table~\ref{table:nist_param_lms}. 
 
 \begin{table}
@@ -99,13 +103,15 @@ These \textit{upper bounds} and \textit{lower bounds} for a given $2^d$ are calc
  & $\rightarrow 5^{\ceil{\log_5(2^{25})}} = 5^{11}$ & 36621093 & 33 / 31 & 22 / 20 \\
  \hline\noalign{\smallskip}
  \end{tabular}
-\caption{Correlation between Merkle leaves $\ell$ (given by the NIST SHA-256 parameter set, see Table~\ref{table:nist_param_lms}) and leaves of the corresponding upper / lower bound \tftree\xspace/\xspace\extree and the evaluation results for tree generation, length of the authentication path and path generation (verify).}
+\caption{In this table, the evaluation results of lower / upper \tftree, \extree for tree generation (key generation), length of the authentication path (signing) and path generation (verify) are shown.
+The first column shows the Merkle leaves predefined by the NIST SHA-256 parameter set (see Table~\ref{table:nist_param_lms}), the second column contains leaves of the upper / lower bound \tftree, \extree corresponding to the predefined Merkle Tree.}
 \label{table:nist_upper_lower_bound}
 \end{table}
 
 
-\subsection{NIST Parameter Results}
-After determining the parameters for each tree concept in the section before, the parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results. The performance calculation is also implemented in a Python script, see Appendix~\ref{cha:appendix2_performance_calc}.
+\subsection{LMS Parameter Results}
+In this section, the NIST LMS parameters are inserted into the equations for evaluation (see Table~\ref{table:general_formulas_t5_merkle}) to get tangible results. 
+This performance calculation is implemented in the Python script \mintinline{python}{performance_evaluation.py}, see Appendix~\ref{cha:appendix2_performance_calc}.
 The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_merkle_tree_NIST}, for the lower/upper bound \tftree and \extree in Table~\ref{table:nist_upper_lower_bound}.
 
 \begin{table}
@@ -115,7 +121,6 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
  \multicolumn{4}{c}{\textbf{Evaluation Results NIST: Merkle Tree}} \\
  \noalign{\smallskip} 
   Leaves $\ell$ & Tree Generation & Auth.path Length & Verify \\
-% $\ell$ & (in hash calls) & (in elements) & (in hash calls) \\
  \hline\noalign{\smallskip}
  $2^5$ & 31 & 5 & 5 \\
  $2^{10}$ & 1023 & 10 & 10 \\
@@ -127,13 +132,12 @@ The evaluation results for the Merkle Tree are shown in Table~\ref{table:eval_me
 \caption{Evaluation results for the standard Merkle Tree, given the NIST SHA-256 parameter sets as leaves $\ell$ (see Table~\ref{table:nist_param_lms}). The results contain the number of hash calls for tree generation and verify, as well as the length of the authentication path given the leaves $\ell$.}
 \label{table:eval_merkle_tree_NIST}
 \end{table}
-
-The effort for tree generation for each tree concept is depicted in Figure~\ref{img:performance_tree_gen}.
+The performance for tree generation is additionally depicted in Figure~\ref{img:performance_tree_gen}: 
 
 \begin{figure}
 \centering
 \includegraphics[width=\linewidth]{images/Evaluation/performance_tree_generation.png}
-\caption{Amount of hash calls for tree generation of each concept. Notably, \tftree and \extree have the same performance for tree calculation, therefore they are not mentioned separately here. The height $d$ of the Merkle Tree is directly based on the NIST parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the NIST parameter set, see Table~\ref{table:nist_upper_lower_bound}. For equations used for performance calculation, see Table~\ref{table:general_formulas_t5_merkle}.}
+\caption{Amount of hash calls for tree generation of each concept. Notably, \tftree and \extree have the same performance for tree calculation, therefore they are not mentioned separately here. The height $d$ of the Merkle Tree is directly based on the LMS parameter set (see Table~\ref{table:nist_param_lms}). The height $d$ of the upper- and lower bound \tftree is derived from the LMS parameter set, see Table~\ref{table:nist_upper_lower_bound}. For equations used for performance calculation, see Table~\ref{table:general_formulas_t5_merkle}.}
 \label{img:performance_tree_gen}
 \end{figure}
 
