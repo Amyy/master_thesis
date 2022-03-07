@@ -4,19 +4,21 @@ In this chapter, the motivation for this work, the quantum threat and an introdu
 
 \section{Quantum Threat}
 % maybe: what is a quantum computer / quantum computing here
-Quantum computing theory has been researched extensively and is considered the greatest threat to present modern cryptography~\cite{impact_quantum_crypto_2018}.
+Quantum computing theory has been researched extensively and is considered the greatest threat to present modern cryptography, also referred to as \textit{quantum threat}~\cite{impact_quantum_crypto_2018}.
 The beginning was in 1996, when Shor~\cite{shors_algo_original_1999} proposed a quantum algorithm for factorization that is exponentially faster than any known classical algorithm. In 1996, Grover~\cite{grovers_algo_basispaper_1997} proposed a quantum searching algorithm, speeding up search efficiency from classical $\mathcal{O}(N)$ to $\sqrt{N}$. 
 Based on these discoveries, further research shows that present asymmetric cryptographic schemes (whose security is based on the difficulty of factorizing large prime numbers and the discrete logarithm problem) can be broken, once a quantum computer with a sufficient number of qubits exists. 
 Symmetric cryptography is also effected by this quantum threat, however, its security can be increased by using larger key spaces.
 ~\cite{impact_quantum_crypto_2018} % also basic quantum comp. paper here
-Example quantum attacks on RSA, which security relies on the prime factorization problem, is shown by Soni et al.~\cite{RSA_pq-attack_examples_2018} and Wang et al.~\cite{RSA_pq-attack_without_factorization_2018}.
+Example quantum attacks on RSA (which security relies on the prime factorization problem) are shown by Soni et al.~\cite{RSA_pq-attack_examples_2018} and Wang et al.~\cite{RSA_pq-attack_without_factorization_2018}.
 
-% ECC Attack examples -> probably unnecessary
+% https://globalriskinstitute.org/publications/quantum-threat-timeline-report-2020/ -> timeline quantum threat, maybe insert
 
-% https://globalriskinstitute.org/publications/quantum-threat-timeline-report-2020/ -> nice timeline about quantum threat 
+There exist five main classes of cryptographic systems considered more resistant against quantum attacks, also denoted as \textit{quantum secure}: Hash-based cryptography, code-based cryptography, lattice-based cryptography, multivariate-quadratic-equations cryptography and secret-key cryptography.~\cite{book_pqc_bernstein_2004}
+In this work, 
 
-% \section{Motivation} / Goals, one section?
-% defeat quantum-threat -> good source: https://dl.acm.org/doi/fullHtml/10.1145/3398388
+\section{Goals} 
+% Finding possible improvements to existing hashbased signature systems / make them more efficient / faster / smaller signature size.
+% other works that make existing hash-based signature more efficient: See state of the art
 
 % performance PQC Algos -> worse than "classic" ones
 %Comparison RSA/ECDSA with WOTS/MSS:
@@ -25,10 +27,6 @@ Example quantum attacks on RSA, which security relies on the prime factorization
 % -> improve performance of PQC algorithm
 
 % -> look at HBS in this work
-
-\section{Goals} 
-% Finding possible improvements to existing hashbased signature systems / make them more efficient / faster / smaller signature size.
-% other works that make existing hash-based signature more efficient: See state of the art
 
 % T5 Paper hier bei Zielen -> Ziel ist Aufwand von Verfahren zu reduzieren, ohne Sicherheit zu beeinflussen
 
@@ -43,12 +41,3 @@ The goal is to substitute the standard Merkle Tree with the \tftree and \extree 
 % BPQS = blockchained post quantum signatures -> https://eprint.iacr.org/2018/658.pdf
 
 % maybe add examples/cases where Merkle tree outperforms RSA/ECDSA. -> https://link.springer.com/chapter/10.1007/978-3-540-85893-5_8 , year 2008
-
-%The common classes of quantum-secure cryptographic systems are as follows:~\cite{book_pqc_bernstein_2004}
-%\begin{enumerate}
-%\item Hash-based cryptography
-%\item Code-based cryptography
-%\item Lattice-based cryptography
-%\item Multivariate-quadratic-equations cryptography
-%\item Secret-key cryptography
-%\end{enumerate}
