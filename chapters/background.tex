@@ -304,41 +304,34 @@ Notably, $\sigma_0, \sigma_1$ depend only on the message digest bits $m_0, m_1$,
 For a general proof of security of the checksum, see Section 9.3 in McGrew et al.~\cite{LMS_RFC8554}.
 For LD-OTS, the checksum is not necessary because only one hash function call is used to get to the public key $Y$. Therefore, it is not possible to generate another valid signature $\sigma'$ by applying the hash function to the known signature $\sigma$ again.
 
-%For a general proof, see https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
-
-% Why checksum is necessary: This checksum is needed because an attacker can freely advance any of the Winternitz chains.  That is, if this checksum were not present, then an attacker who could find a hash that has every digit larger than the valid hash could replace it (and adjust the Winternitz chains).-> citation: RFC of LMS (https://www.rfc-editor.org/rfc/rfc8554.html#section-4)
-% genaue beschreibung checksum bsp angriff: https://datatracker.ietf.org/doc/html/rfc8554#section-9.3
-% https://crypto.stackexchange.com/questions/31696/winternitz-signature-in-standard-model -> stackoverflow frage + antwort genau dazu
-
 \section{Merkle Signature Scheme (MSS)} 
 \label{sec:mss}
-%!! Zitierung fehlt von Buchmann
-The main disadvantage of the one-time signature schemes introduced in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair (consisting of private key~$X$ and public key~$Y$) for only one signature. This is inadequate for most practical situations, because the key generation as well as the key distribution take a lot of time and effort that could be saved otherwise.
-To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair, the \textit{Merkle Signature Scheme (MSS)}. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. % achtung: bei RSA mehr, possibly unendlich
+This section is also based on the work of Buchmann et al.~\cite{book_pqc_bernstein_2004}.
+The main disadvantage of the one-time signature schemes presented in Section~\ref{sec:one-time_sign_schemes} is the restriction to use each key pair for only one signature. This is inadequate for most practical situations because the key generation as well as the key distribution take a lot of time and effort.
+To solve this problem, Merkle~\cite{cha:bg_merkletrees_Merkle_1979} proposed the concept of using a binary hash tree, where each leaf represents a different one-time key pair. The root of the tree is the public key $Y_{MSS}$  which combines the one-time key pairs at the leafs. With a tree depth $d$, $2^d$ one-time key pairs and corresponding signatures can be generated. 
 This concept is denoted as \textit{Merkle signature scheme (MSS)} and it works with any cryptographic hash function and any one-time signature scheme. 
-The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: When using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. Therefore, the chosen one-time signature scheme for MSS in this chapter is W-OTS. The cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
+The structure of the Winternitz one-time signature scheme fits better into MSS than the Lamport-Diffie one-time signature scheme: If using W-OTS, it is not necessary for the signer to put the public one-time signature key $Y_s$ in the one-time signature $\sigma_s$. The verifier will automatically calculate $Y_s$ from the given one-time signature. Therefore, the chosen one-time signature scheme for MSS in this chapter is W-OTS. The cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is used. 
 
-Notably, the combination of W-OTS with the Merkle Tree is also used in the \textit{Leighton-Micali Signature Scheme (LMS)}, see Section~\ref{sec:lms} (and with an advanced Merkle Tree in XMSS, see Section~\ref{sec:xmss}).
-% Moreover, when using LD-OTS: All X_s (for signature) + corresponding Y_s are needed. Not enough when verifier knows only the X_s that are needed for OTS-signature, moreover the rest of Y_s are needed (because all "leaves" are needed) to build the merkle tree.
+The combination of W-OTS with the Merkle Tree will be used in the \textit{Leighton-Micali Signature Scheme (LMS)}, see Section~\ref{sec:lms} (and with an advanced Merkle Tree in XMSS, see Section~\ref{sec:xmss}).
 
 \subsection{MSS Key Generation}
 \label{cha:mss_keygen}
-For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree}.
-The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$. 
+The Merkle tree referenced in this section is depicted in Figure~\ref{img:merkle_tree}.
+The signer chooses the tree depth~$d$ where $d \geq 2$, and generates $2^d$ one-time key pairs $(X_j, Y_j)$ where $0 \leq j \leq 2^d-1$, with $X_j$ being the private key and $Y_j$ being the corresponding public key. The \textit{leaves} of the Merkle tree are the hash digests $H_{i,j}$ of the public key $Y_j$. 
 
 \begin{gather}
 \label{eq:leaf_merkle_tree:hash_digest_publ_key_Y}
 H_{i,j} = h(Y_j) \\ 
-0 \leq j \leq 2^d - 1 \nonumber
+\text{for } 0 \leq j \leq 2^d - 1 \nonumber
 \end{gather}
 The \textit{inner nodes} of the Merkle tree are computed as follows: Each parent node $H_{i,j}$ is the hash digest of the concatenation of its direct two children: % $H_{i+1,j}$ and $H_{i+1,j+1}$.
 
-% ! wichtig dass 0 <= i < d weil Blätter zählen nicht mit
+% ! important that 0 <= i < d because leaves don't count
 \begin{gather}
 \label{eq:inner_nodes_merkle_tree_keygen}
 H_{i,j} = h(H_{i-1,2j} \concat H_{i-1,2j+1}) \\
-1 \leq i \leq d \nonumber \\ 
-0 \leq j < 2^{d - i} \nonumber
+\text{for } 1 \leq i \leq d \nonumber \\ 
+\text{for } 0 \leq j < 2^{d - i} \nonumber
 \end{gather} 
 The \textit{root} of the Merkle tree is the MSS public key~$Y_{MSS}$. The MSS private key~$X_{MSS}$ is the collection of one-time signature keys generated before constructing the Merkle tree.
 % Y_mss = H_d,0 because d=height of tree
@@ -357,7 +350,7 @@ The signer publishes the public key $Y_{MSS}$.
     level 1/.style = {sibling distance = 8cm},
     level 2/.style = {sibling distance = 4cm},
     level 3/.style = {sibling distance = 2.5cm},
-    level 4/.style = {level distance = 1cm, color = grey_tud}
+    level 4/.style = {level distance = 1cm}
 ]
 \node {$H_{3,0} = h(H_{2,0} \concat H_{2,1}) = Y_{MSS}$}
 	child { node {$H_{2,0} = h(H_{1,0} \concat H_{1,1})$} 
@@ -420,19 +413,19 @@ The signer publishes the public key $Y_{MSS}$.
 		}	
 	}
 	;
-\end{tikzpicture} % klarmachen dass h1,1 = hash(h2,1|h2,2) usw
-\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digests of their corresponding \textcolor{grey_tud}{one-time public key} (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}). Because W-OTS is used, the signer generates the \textcolor{grey_tud}{public one-time keys} by applying the hash function~$h$ for $2^w-1$ times to the corresponding \textcolor{grey_tud}{private one-time keys $X_i \in X_{MSS}$} (see Equations~\ref{eq:wots-generation-one-time-public-key} and~\ref{eq:xmss_priv_key}).}
+\end{tikzpicture}
+\caption{Merkle tree of depth $d=3$. The composition of the tree is depicted in detail on the left branch, each node consists of the hash digest of its concatenated children (see Equation~\ref{eq:inner_nodes_merkle_tree_keygen}). The leafs are the hash digests of their corresponding one-time public key (see Equation~\ref{eq:leaf_merkle_tree:hash_digest_publ_key_Y}). Because W-OTS is used, the signer generates the public one-time keys by applying the hash function~$h$ for $2^w-1$ times to the corresponding private one-time keys $X_i \in X_{MSS}$ (see Equations~\ref{eq:wots-generation-one-time-public-key} and Equation~\ref{eq:xmss_priv_key}).}
 \label{img:merkle_tree}
 \end{figure}
 
 \subsubsection{MSS Key Generation: Special Case}
 \label{sec:mss_special_keygen}
-For simplification, when explaining MSS, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain, $t = 1$). There exist two methods to transition from Winternitz one-time public key $Y_i$ (with $t > 1$, includes more than one Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. 
-These methods are explained in detail for LMS (hashing $p$ Winternitz chains together, see Section~\ref{sec:lms}) and XMSS (combining $l$ Winternitz chains with one L-Tree, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}). % ! reference to specific section in LMS, where transition from one-time key to leaf is explained
+For simplification, when explaining MSS, each Winternitz one-time key has \textit{one} value (i.e. contains only one Winternitz chain, $t = 1$). There are two methods to transition from Winternitz one-time public key $Y_i$ (with $t > 1$, includes more than one Winternitz chain) to a leaf $H_{0,j}$ in the Merkle Tree, depending on the specific signature scheme. 
+These methods are explained in detail for the Leighton-Micali Signature Scheme (hashing $p$ Winternitz chains together, see Section~\ref{sec:lms}) and XMSS (combining an amount of $l$ Winternitz chains with one L-Tree, see Section~\ref{sec:l_tree} and Figure~\ref{img:l_tree}). 
 
 \subsection{MSS Signature Generation}
 \label{sec:mss_sig_gen}
-For a depiction of the Merkle tree referenced in this section, see Figure~\ref{img:merkle_tree_signature_gen}. 
+The Merkle tree referenced in this section is depicted in Figure~\ref{img:merkle_tree_signature_gen}. 
 To sign a message $M$, the signer needs to generate the signature $\sigma_s$.
 First, the hash digest $m = h(M)$ of length $n$ (see Equation~\ref{eq:hash_message}) is calculated. Then, by using the chosen one-time signature scheme W-OTS, the one-time signature $\sigma_{s/OTS}$ of $m$ is generated with a one-time key $X_s, s \in \{0, \cdots, 2^d - 1\}, X_s \in X_{MSS}$. % somehow: move "s is part of the signature" here / as first sentence, makes more sense than mentioning that it's part of the signature later
 
@@ -546,14 +539,14 @@ In summary, one MSS signature contains the following elements:
 \end{tikzpicture}
 \caption{Example for Merkle signature generation and verification, tree depth $d=3$. The signer generates the Merkle tree and chooses $s=3$, then calculates the signature $\textcolor{cyan_tud}{\sigma_3 = (3, \sigma_{s/OTS},A_3)}$.
 The nodes $H_{0,2}, H_{1,0}, H_{2,1}$ are in the \textcolor{cyan_tud}{authentication path $A_3 = (a_0, a_1, a_2)$}. After receiving $\sigma_3$, the verifier uses the one-time signature \textcolor{cyan_tud}{$\sigma_{3/OTS}$} to calculate $\textcolor{darkblue_tud}{Y_3}$ by applying the hash function $h$ a specific amount of times to it (see also Section~\ref{sec:wots-verification}).
-Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}{Y_3}$, the verifier can calculate the path \textcolor{darkblue_tud}{path $P_s = (p_0, p_1, p_2, p_3)$}, also indicated by the arrows. If the root $p_3$ calculated by the verifier matches the public key $Y_{MSS}$, the signature $\sigma_3$ is valid.}
+Now, with the knowledge of $\textcolor{cyan_tud}{A_3}$ and $\textcolor{cyan_tud}{Y_3}$, the verifier can calculate the \textcolor{darkblue_tud}{path $P_s = (p_0, p_1, p_2, p_3)$}, also indicated by the arrows. If the root $p_3$ calculated by the verifier matches the public key $Y_{MSS}$, the signature $\sigma_3$ is valid.}
 \label{img:merkle_tree_signature_gen}
 \end{figure}
 
 
 \subsection{MSS Signature Verification}
 \label{sec:mss_sign_verif}
-When receiving $\sigma_s$ (see Equation~\ref{eq:complete_merkle_signature_for_one_Ys}), the verifier uses $\sigma_{s/OTS}$ to calculate $Y_s$. This works specifically because W-OTS is used in combination with the Merkle tree: Applying the hash function $h$ for a specific amount of times to $\sigma_s$ (this is determined by the underlying W-OTS, see section~\ref{sec:wots-verification}) automatically generates $Y_s$.
+When receiving $\sigma_s$ (see Equation~\ref{eq:complete_merkle_signature_for_one_Ys}), the verifier uses $\sigma_{s/OTS}$ to calculate $Y_s$. This works specifically because W-OTS is used in combination with the Merkle tree: Applying the hash function $h$ for a specific amount of times to $\sigma_s$ (this is determined by the underlying W-OTS, see Section~\ref{sec:wots-verification}) automatically generates $Y_s$.
 Because of the index $s$, the verifier knows the leaf-position of the calculated $Y_s$ in the Merkle tree. 
 In combination with the authentication path $A_s$, the verifier can construct a path from the leaf $Y_s$ to the root of the Merkle tree: 
 
@@ -590,7 +583,7 @@ The parameters of LMS are defined in Table~\ref{table:lms_param}.
  \multicolumn{2}{c}{\textbf{LMS Parameter}} \\
  symbol & meaning \\ 
  \hline\noalign{\smallskip}
- $n$ & security parameter / length of the hash digest \\
+ $n$ & security parameter, length of the hash digest \\
  $w$ & Winternitz parameter, $w \in \{1,2,4,8\}$ \\ % LMS RFC says $w \in \{1,2,4,8}$
  $d$ & height of Merkle Tree \\
  $t$ & amount of elements/Winternitz chains in a single one-time key \\
@@ -599,10 +592,9 @@ The parameters of LMS are defined in Table~\ref{table:lms_param}.
  $h$ & cryptographic secure hash function, see Equation~\ref{eq:basic_hashfunc} \\
  $X_{LMS}$ & LMS private key \\
  $Y_{LMS}$ & LMS public key \\
-% $hc_{LMS,key}$ & amount of hash calls used for generating $Y_{LMS}$ \\
  \hline
 \end{tabular}
-\caption{Parameter used for LMS, see Section~\ref{sec:lms}.~\cite{LMS_RFC8554}}
+\caption{Parameter used for LMS, see Section~\ref{sec:lms}~\cite{LMS_RFC8554}.}
 \label{table:lms_param}
 \end{table}
 
