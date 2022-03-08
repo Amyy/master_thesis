@@ -1,46 +1,45 @@
 \chapter{Related Work}
 \label{cha:stateOfTheArt}
 
-In this chapter, state-of-the-art works regarding quantum-secure \textit{hash-based signature systems (HBS)} and their performance improvement are proposed. 
-The focus will be on works regarding solely HBS and no other classical digital signature systems (e.g. RSA~\cite{rsa_patent}) as these generally outperform hash-based signature systems (performance, signature/key size), but do not fulfill the requirement to be quantum secure~\cite{RSA_pq-attack_examples_2018,comparison_performance_RSA_ECDSA_Merkle_WOTS_2021}.
-First, the two categories \textit{stateful}- and \textit{stateless} HBS and their corresponding HBS are introduced. Afterwards, current works improving the performance of HBS are proposed.
+In this chapter, state-of-the-art works regarding quantum-secure \textit{hash-based signature systems (HBS)} and their performance improvements are presented. The focus will be on works regarding solely HBS and no other classical digital signature systems (e.g. RSA~\cite{rsa_patent}), as these generally outperform hash-based signature systems (performance, signature/key size), but do not fulfill the requirement to be quantum secure~\cite{RSA_pq-attack_examples_2018,comparison_performance_RSA_ECDSA_Merkle_WOTS_2021}.
+First, the two categories \textit{stateful}- and \textit{stateless} HBS are introduced. Afterwards, current works improving the performance of HBS are proposed.
 
 \section{Stateful HBS}
 Most common digital signature systems currently in use are stateless signature systems: 
 The signer has one secret key that is used multiple times for signing. In stateful signature schemes, the secret key is only used once, therefore referred to as one-time key. 
-If the key same key is used more than once, the security will be compromised. 
-To achieve this, the signer needs to maintain a state (of the current key) while signing messages (that is updated after every signature). To generate each one-time key, a one-time signature scheme (OTS) is used (e.g. WOTS and WOTS+, explained in detail in Section~\ref{sec:wots_general} and \ref{sec:wots+_general}).
-A stateful scheme is less practical than a stateless scheme, as a careful treatment of its one-time key states is required. 
-In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature size is smaller, and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
+If the same key is used more than once, the security will be compromised. 
+To achieve this, the signer needs to maintain a state of the current key while signing messages. The state and hence the key are updated after every signature. To generate each one-time key, a one-time signature scheme (OTS) is used (e.g. WOTS and WOTS+, explained in detail in Section~\ref{sec:wots_general} and \ref{sec:wots+_general}).
+A stateful scheme is less practical than a stateless scheme, as its one-time key states require careful treatment.
+In some situations, managing states is acceptable for meeting other demands: In comparison with other quantum-secure stateless HBS, stateful HBS are more efficient, the signature size is smaller and there are more signing occasions.~\cite{properties_stateless_HBS_2022}
 \\ \\
-Common stateful HBS are the \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} and the \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work. For LMS see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}.
+Common stateful HBS are the \textit{Leighton-Micali Signature Scheme (LMS)}~\cite{LMS_RFC8554} and the \textit{eXtended Merkle Signature Scheme (XMSS)}~\cite{xmss_RFC8391}. They are standardized and recommended for usage as quantum-secure HBS by the National Institute of Standards and Technology (NIST)~\cite{stateful_hashbased_sign_schemes_NIST_2020}. Both these signature schemes are explained in detail as a part of this work (for LMS see Section~\ref{sec:lms}, for XMSS see Section~\ref{sec:xmss}).
 \\ \\
 An extension of XMSS is \textit{Multi Tree XMSS (XMSS$^{MT}$)}, a hash-based
-signature scheme that can be used to sign a larger (but still fixed) number of messages.
-XMSS$^{MT}$ uses hyper-tree, a tree of several layers of XMSS trees. The root nodes of the lower layers are signed by the trees on top and intermediate layers. To sign a message, the trees on the lowest layer are used respectively.~\cite{xmss_multitree_2013,xmss_RFC8391}
+signature scheme that can be used to sign a larger (but still fixed) number of messages. XMSS$^{MT}$ has a broader possible parameter set, therefore it is possible so select an optimal parameter set for a given scenario.
+XMSS$^{MT}$ uses a hyper-tree, a tree containing several layers of XMSS trees. The root nodes of the lower layers are signed by the trees on top and intermediate layers. To sign a message, the trees on the lowest layer are used.~\cite{xmss_multitree_2013,xmss_RFC8391}
 
 \section{Stateless HBS}
 Bernstein et al.~\cite{tweakable_basispaper_sphincs_2019} propose \textit{SPHINCS+}, a stateless HBS. It is an improvement of SPHINCS~\cite{sphincs_old_version_2015}.
 SPHINCS+ uses a few-time signature scheme (FTS) to sign more than one message.
-SPHINCS+ replaces the generation of leaves with an OTS (the one-time signature schemes used for generating the leaves in stateful HBS) with a FTS.
-The FTS used in SPHINCS is HORS/HORST (HORS with trees), the FTS used in SPHINCS+ is Forest of Random Subsets (FORS). The idea is to authenticate a huge number of few-time keys using a so-called hyper-tree (a tree of trees). The root of the hyper-tree is the public key of the signature system.
+SPHINCS+ replaces the leaf generation by an OTS (like for stateful HBS) with a FTS.
+The FTS used in SPHINCS is HORS/HORST (HORS with trees), while the FTS used in SPHINCS+ is Forest of Random Subsets (FORS). The idea of SPHINCS+ is to authenticate a huge number of few-time keys using a hyper-tree. The root of the hyper-tree is the public key of the signature system.
 ~\cite{tweakable_basispaper_sphincs_2019,sphincs+_submission_nist_round2}
 % sphincs pic?
 
 \section{Related Work: HBS}
-Kampanakis \& Fluhrer~\cite{comparison_xmss_lms_2017} compare general properties of LMS and XMSS: Security assumptions, signature- and public key sizes as well as computation overhead. They conclude that LMS performs significantly better than XMSS, and XMSS (with equivalent parameter sets to LMS) has slightly smaller signature sizes than LMS. Therefore, LMS allows more options for selecting parameter sets that fit the specific use cases.
+Kampanakis \& Fluhrer~\cite{comparison_xmss_lms_2017} compare general properties of LMS and XMSS: Security assumptions, signature- and public key sizes as well as computation overhead. They conclude that LMS performs significantly better than XMSS and XMSS (with equivalent parameter sets to LMS) has slightly smaller signature sizes than LMS. Therefore, LMS allows more options for selecting parameter sets that fit the specific use cases.
 \\ \\
 Oliveira et al.~\cite{perform_HBS_lms_xmss_2017} improve the performance of LMS and XMSS by optimizing and therefore speeding up the underlying hash functions (SHA-2 or SHA-23) and other building block functions. This leads to higher performance for signature operations in LMS and XMSS. The results show that both HBS schemes can achieve high performance using vector instructions on modern processors.
 \\ \\
-Hülsing et al.~\cite{xmss+_2018} propose \textit{XMSS+}, a HBS based on XMSS. Compared to XMSS, the key generation time is reduced from $\mathcal{O}(n)$ to $\mathcal{O}(\sqrt{n})$, with $n$ being the number of signatures that can be created with one key pair.
+Hülsing et al.~\cite{xmss+_2018} propose \textit{XMSS+}, an HBS based on XMSS. Compared to XMSS, the key generation time is reduced from $\mathcal{O}(n)$ to $\mathcal{O}(\sqrt{n})$, with $n$ being the number of signatures that can be created with one key pair.
 \\  \\
-Wang et al.~\cite{xmss_embedded_systems_2020} propose a software-hardware co-design for XMSS on a RISC-V embedded processor. The implementation with the best performance generates a key pair in $3.44$ sec., achieving an over $54$ times speedup compared to the pure software version of XMSS. Signature generation takes $\leq 10$ms and verification takes less than $6$ms for such a key pair, resulting in a speed-up $\geq 42$ times and $\geq 17$ times respectively. 
+Wang et al.~\cite{xmss_embedded_systems_2020} propose a software-hardware co-design for XMSS on a RISC-V embedded processor. The implementation with the best performance generates a key pair in $3.44$ seconds, achieving an over $54$ times speedup compared to the pure software version of XMSS. Signature generation takes $\leq 10$ms and verification takes $< 6$ms for such a key pair, resulting in a speed-up of $\geq 42$ times and $\geq 17$ times respectively. 
 \\ \\
-Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method \textit{Rapidly Verifiable XMSS Signatures} which is speeding up the XMSS signature verification. It is based one the PZMCM technique~\cite{PZMCM_speedup_wots_2018}, which changes the XMSS signing algorithm to find verifiable signatures: In XMSS, the amount of hash calls for generating a signature and afterwards verifying it always sums up to the same value. This \textit{counter value} is added to the input of the message hash, then $T$ different counter values are tried. Afterwards, the counter value leading to the fastest signature is chosen out of the $T$ possibilities. As a result, verifying signatures is about $1.44$ times faster than traditionally generated signatures. The most optimized method reduces verification time by $\geq 2$ from $13.85$ million to $6.56$ million cycles.
+Bos et al.~\cite{xmss_rapidly_verif_sign_2020} propose a method \textit{Rapidly Verifiable XMSS Signatures} which is speeding up the XMSS signature verification. It is based on the PZMCM technique~\cite{PZMCM_speedup_wots_2018}, which changes the XMSS signing algorithm to find verifiable signatures: In XMSS, the amount of hash calls for generating a signature and afterwards verifying it always sums up to the same value. This \textit{counter value} is added to the input of the message hash, then $T$ different counter values are tried. Afterwards, the counter value leading to the fastest signature is chosen out of the $T$ possibilities. As a result, verifying signatures is about $1.44$ times faster than traditionally generated signatures. The most optimized method reduces verification time by $\geq 2$ from $13.85$ million to $6.56$ million cycles.
 \\  \\
-Campos et al.~\cite{fabio_paper_lms_vs_xmss} compared the performance of different implementations of LMS and XMSS on an ARM Cortex-M4. Moreover, they propose an optimized implementation of XMSS, for which the speed-up for key generation is up to 3.11 times, for signing 3.11 times, and for verifying 4.32 times.
+Campos et al.~\cite{fabio_paper_lms_vs_xmss} compared the performance of different implementations of LMS and XMSS on an ARM Cortex-M4. Moreover, they propose an optimized implementation of XMSS, for which the speed-up for key generation went up to 3.11 times, for signing 3.11 times, and for verifying 4.32 times.
 \\ \\
-Hülsing et al.~\cite{armed_sphincs_2015} compare the SPHINCS implementation SPHINCS-256 with the multi-tree variant of XMSS, XMSS$^{MT}$ on an ARM Cortex M3 micro-controller with a small RAM size of 16KB. They conclude that verification time is fast for both schemes. In XMSS$^{MT}$, signature generation is roughly $32$ times faster than producing a SPHINCS-256 signature. They state that this difference is not comparatively big, it may be a good trade-off using SPHINCS-256 anyway for getting the flexibility provided by a stateless scheme.
+Hülsing et al.~\cite{armed_sphincs_2015} compare the SPHINCS implementation SPHINCS-256 with XMSS$^{MT}$ on an ARM Cortex M3 micro-controller with a small RAM size of 16KB. They conclude that verification time is fast for both schemes. In XMSS$^{MT}$, signature generation is roughly $32$ times faster than producing a SPHINCS-256 signature. They state that this difference is not comparatively big using SPHINCS-256 and that might be a good trade-off for getting the flexibility provided by a stateless scheme anyway.
 
 
 
