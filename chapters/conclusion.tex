@@ -1,9 +1,13 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-In this work, the goal was to speed up common hash-based signature systems.
+In this work, the goal was to analyze quantum-secure hash-based signature systems (HBS) in detail to find opportunities for performance improvements and implementing them. 
+The $T_5$-Method of Dodis et al.~\cite{T5_paper} was used to to introduce the \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and implement a faster version, the \extree (see Section~\ref{sec:ext_t5_tree}).
+As all proposed HBS contain the Merkle Tree as a building block, the main idea is to replace the Merkle Tree with the \tftree and \extree and calculate the possible performance improvements.
 
-\section{Discussion}
+% \section{Discussion} % Results / Discussion Results ?
+
+% To substitute the standard Merkle Tree with the \tftree and \extree concepts, to speed up LMS, XMSS and potentially other signature schemes based on Merkle Trees.
 
 % it is possible to insert T5 idea into LMS. 
 % Hashcalls winternitz to get to leaves are not taken into account in this work, because 
@@ -11,11 +15,12 @@ In this work, the goal was to speed up common hash-based signature systems.
 % length authpath does not increase exponentially! tree generation: yes
 % ext. t5: authpath length not constant, please take into consideration
 
-\section{Future Work} % Future work: belongs here
+\section{Future Work}
 
 % t5 idea is possible in xmss: XMSS inspected in detail in this work, therefore -> would work with t5 but take into account bitmasks. Therefore, t5 tree concept will have to be adapted.
 
-% It is possible to adopt the \extree concept into SPHINCS simple, because SPHINCS simple does not contain bitmasks. Would work like LMS+T5 concept.
+% It is possible to adopt the \extree concept into SPHINCS simple, because SPHINCS simple does not contain bitmasks. Would work like LMS+T5 concept. 
+% (Maybe reference to sphincs+ explanation in related work)
 
 % Concept for T5 tree when not every leaf is "filled" ? -> Possible to use a more variants of one-time key sets, because NIST Parameter set (reference here) fits to binary tree and not leaves = power of 5 tree.
 % Idea: do not calculate all "subtrees" of T5 tree.
