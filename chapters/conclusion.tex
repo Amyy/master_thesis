@@ -8,11 +8,11 @@ It is shown that the Merkle Tree in LMS (and potentially XMSS and other signatur
 \section{Discussion}
 Both T$_5$ tree concepts outperform the classical Merkle Tree in key generation and verification time when used in LMS. \tftree needs $25\%$ fewer hash calls for key generation and $14\%$ fewer hash calls for verification. \extree also reduces the amount of hash calls for key generation by $25\%$ and achieves the best result for verification time with $22\%$ fewer hash calls.
 The length of the authentication path increases for \tftree and \extree by $29\%$ and $20\%$ respectively. The length of the authentication path for \extree is not constant. If a constant length is needed, \tftree is the better choice though \extree has better performance.
-Notably, key generation time increases exponentially, whereas verification time and length of the authentication path increase linear (dependent on the tree height). Therefore, the worse performance for authentication path length does not have as much impact. 
+Notably, key generation time increases exponentially, whereas verification time and length of the authentication path increases linear (dependent on the tree height). Therefore, the worse performance for authentication path length does not have as much impact. 
 % NIST param set LMS (notably, leaf generation/WOTS not taken into account)
 
 \section{Future Work}
-XMSS was inspected in detail in this work, but inserting the T$_5$ tree into XMSS is still an open task. As XMSS uses bitmasks in its Merkle Tree, the T$_5$ tree concepts would need to be adapted. One idea how to achieve this is by using the bitmasks as the node $m_5$ for one \tftree, as the bitmasks in XMSS are also inserted to the tree via XOR operation.
+XMSS was inspected in detail in this work, but inserting the T$_5$ tree into XMSS is still an open task. As XMSS uses bitmasks in its Merkle Tree, the T$_5$ tree concepts would need to be adapted. One idea how to achieve this, is using the bitmasks as node $m_5$ for one \tftree, as the bitmasks in XMSS are also inserted to the tree via XOR operation.
 % 2. idea
 Another idea worth exploring is adapting \tftree and \extree for not using each leaf as one-time key (i.e. not making them perfect trees). This would lead to a broader variety of possible one-time keys: With the current concept, the possible amount of one-time keys is has to be a power of five. This could be achieved by not calculating each sub-tree of a \tftree, but only parts of it.
 % 3. idea
