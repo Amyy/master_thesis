@@ -1,7 +1,6 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
-
-In this work, the goal was to analyze quantum-secure hash-based signature systems (HBS) in detail to find opportunities for performance improvements and implementing them. 
+In this work, the goal was to analyze quantum-secure hash-based signature systems (HBS) in detail and to find opportunities for performance improvements and implementing them. 
 To solve this task, the T$_5$-Method of Dodis et al.~\cite{T5_paper} is used to introduce the tree concepts \tftree (see Section~\ref{sec:dodis_t5_merkle_tree}) and \extree (see Section~\ref{sec:ext_t5_tree}). 
 It is shown that the Merkle Tree in LMS (and potentially XMSS and other signature schemes) can be substituted with these alternate tree concepts.
 
@@ -14,7 +13,7 @@ Notably, key generation time increases exponentially, whereas verification time 
 \section{Future Work}
 XMSS was inspected in detail in this work, but inserting the T$_5$ tree into XMSS is still an open task. As XMSS uses bitmasks in its Merkle Tree, the T$_5$ tree concepts would need to be adapted. One idea how to achieve this, is using the bitmasks as node $m_5$ for one \tftree, as the bitmasks in XMSS are also inserted to the tree via XOR operation.
 % 2. idea
-Another idea worth exploring is adapting \tftree and \extree for not using each leaf as one-time key (i.e. not making them perfect trees). This would lead to a broader variety of possible one-time keys: With the current concept, the possible amount of one-time keys is has to be a power of five. This could be achieved by not calculating each sub-tree of a \tftree, but only parts of it.
+Another idea worth exploring is adapting \tftree and \extree for not using each leaf as one-time key (i.e. not making them perfect trees). This would lead to a broader variety of possible one-time keys: With the current concept, the possible amount of one-time keys has to be a power of five. This could be achieved by not calculating each sub-tree of a \tftree, but only parts of it.
 % 3. idea
 To distribute the time and space effort between signer and verifier, the signing and authentication operations for one \tfblock could be adapted: 
 For example if the signer has more computing resources, the signer could directly calculate $c,d$ (of one \tfblock) instead of $a,b$ (see Figure~\ref{img:t5_more_aggr_opening}). As a result, the signer computes the two XOR computations during signing instead of the verifier during verification.
