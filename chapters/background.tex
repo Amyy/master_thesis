@@ -74,7 +74,6 @@ input that produces the same output, i.e. given any $x$ finding a second preimag
 \section{One-Time Signature Schemes}
 \label{sec:one-time_sign_schemes}
 This section is based on the work of Buchmann et al.~\cite{book_pqc_bernstein_2004}. 
-% ONE-Time Signature scheme anmerken / erklären
 The two signature schemes Lamport-Diffe and Winternitz are both \textit{one-time signature schemes (OTS)}, meaning the public and private key can be used \textbf{once}, for signing a single message. If they are used for generating more than one signature, the signature can be forged. % vlt rauslöschen einfach
 The following types of functions are used for the Lamport-Diffie OTS and the Winternitz One-Time Signature Scheme: 
 The cryptographic hash function~$h$ is preimage resistant, second preimage-resistant and collision resistant. It is applied to the original message and generates the message digest.
@@ -94,15 +93,13 @@ The one-way function~$f$ is a hash function that is at least preimage-resistant 
 The Lamport–Diffie One-Time Signature Scheme (LD-OTS) was first proposed by Leslie Lamport in 1979~\cite{lamport_signature_scheme_1979}. 
 
 \subsubsection{LD-OTS Key Generation}
-The private key~$X$ consists of $2n$ bit strings, each of length $n$, chosen at random. As the key size and signature size are dependent on $n$, it is also referred to as security parameter.
-% n ist security parameter
-% !! einfügen, was n für eine Rolle spielt
+The private key~$X$ consists of $2n$ bit strings of length $n$ chosen at random. Because the keys and the signature size depend on $n$, it is also referred to as the security parameter
 
 \begin{equation}
 \label{eq:ldots_sign_key}
 X = \left(x_{0}\left[0\right], x_{0}\left[1\right], x_{1}\left[0\right], x_{1}\left[1\right], \cdots, x_{n-1}\left[0\right], x_{n-1}\left[1\right] \right)
 \end{equation}
-The public key $Y$ is created out of the private key $X$. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~f (see Equation~\ref{eq:one-way-func}) is applied.
+The public key $Y$ is created from the private key $X$. For each $x_i[j] \in X, 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace$, the one-way function~$f$ (see Equation~\ref{eq:one-way-func}) is applied.
 
 \begin{equation}
 y_i[j] \in Y = f(x_i[j]), 0 \leq i \leq n-1, j \in \lbrace 0,1 \rbrace
@@ -122,9 +119,8 @@ The cryptographic hash function $h$ (see Equation~\ref{eq:basic_hashfunc}) is ap
 \begin{equation}
 \label{eq:hash_message}
 m = h(M) = (h_{0}, \cdots, h_{n-1})
-\end{equation} % Elemente von m ENTWEDER m_i ODER h_i
-For each bit $h_i \in m$, the corresponding $x_i[h_i]$ out of private key $X$ is chosen, resulting in signature $\sigma$ for message $m$.
-% h_i in m_i umbenennen oder umgekehrt -> konsequent bleiben
+\end{equation} % elements of m EITHER m_i OD h_i
+For each bit $h_i \in m$, the corresponding $x_i[h_i]$ is chosen from the private key $X$, resulting in the signature $\sigma$ for the message $m$.
 \begin{equation}
 \sigma = \left(
 x_0 \left[ h_0 \right], x_1\left[ h_1 \right], \cdots, x_{n-1}\left[ h_{n-1}\right]
@@ -144,21 +140,16 @@ y_0[h_0], \cdots, y_{n-1}[h_{n-1}]
 \end{equation}
 If the condition is true, the signature is valid.
 
-% nochmal extra auf Einmalverwendung hinweisen
-% table with properties i.e.
-% keygen+sign+verify time / aufwand / speicherverbrauch -> Positiv: schnelle signatur+keygen Negativ: Viel Speicherverbrauch
-% Überleitung zu Winternitz weil diese Vorteil kürzerer Signatur aufweisen
-
 \subsection{Winternitz One-Time Signature Scheme (W-OTS)}
 \label{sec:wots_general}
-LD-OTS signatures are efficient to calculate but have a huge size. % somewhere else explain that huge signature -> need much "memory"-> bad ? or is it obvious
-The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. %genauer beschreiben evtl
+LD-OTS signatures are efficient to calculate but have a large size.
+The Winternitz one-time signature scheme (W-OTS) generates signatures with substantially shorter size. W-OTS uses the same hash function (Equation~\ref{eq:basic_hashfunc}) and one-way function (Equation~\ref{eq:one-way-func}) as LD-OTS. To counter adaptive chosen-message attacks, a W-OTS contains a checksum, an example calculation is shown at the end of Section~\ref{sec:checksum_explained}.
 
 \subsubsection{W-OTS Key Generation}
 \label{sec:WOTS_keygen}
-First, two parameters are selected: The Winternitz-Parameter $w \geq 2$ and the security parameter $n$. As $n$ is the length of the message digest, increasing it leads to higher security because it increases the collision resistance of the hash function. The Winternitz parameter $w$ enables space/time trade-offs, for a detailed explanation see end of Section~\ref{sec:wots-verification}/W-OTS Verification.
+First, two parameters are selected: The Winternitz-Parameter $w \geq 2$ and the security parameter $n$. As $n$ is the length of the message digest, increasing it leads to higher security because it increases the collision resistance of the hash function. The Winternitz parameter $w$ enables space-time trade-offs (for a detailed explanation see W-OTS Verification in Section~\ref{sec:wots-verification}). 
 
-After selecting the parameters $w$ and $n$, the values $t_1, t_2, t$ are calculated.
+After selecting the parameters $w$ and $n$, the values $t_1, t_2$ and $t$ are calculated.
 The value $t_1$ determines the amount of blocks the message digest $m$ will be separated into (see Equation~\ref{eq:hash_digest_split}):
 \begin{equation}
 \label{eq:t1}
@@ -169,17 +160,17 @@ The value $t_2$ determines the amount of blocks the checksum $c$ will be separat
 \label{eq:t2}
 t_2 = \ceil*{\frac{\floor*{\log_2 t_1} + 1 + w}{w} }
 \end{equation}
-The value $t$ determines the total amount of blocks (see Equation~\ref{eq:block_B_out_of_M_and_C}) as well as the amount of elements in the private/public key (see Equation~\ref{eq:wots_privkey},\ref{eq:wots-generation-one-time-public-key}) and the signature (see Equation~\ref{eq:wots_sign_calc}):
+The value $t$ determines the total amount of blocks (see Equation~\ref{eq:block_B_out_of_M_and_C}) as well as the amount of elements in the private and public keys (see Equation~\ref{eq:wots_privkey},~\ref{eq:wots-generation-one-time-public-key}) and the signature (see Equation~\ref{eq:wots_sign_calc}):
 \begin{equation}
 \label{eq:t}
 t = t_1 + t_2
 \end{equation}
-The private key $X$ consists of $t$ bit strings, each of length $n$ chosen at random.
+The private key $X$ consists of $t$ randomly chosen bit strings of length $n$.
 \begin{equation}
 \label{eq:wots_privkey}
 X = (x_0, \cdots, x_{t-1})
 \end{equation}
-The public key $Y$ is generated by applying the one-way function~$f$ to each element $x_i  \in X$  consecutively $2^w - 1$ times. % hier sieht man dass höheres w -> höherer Aufwand Keygen
+The public key $Y$ is generated by applying the one-way function~$f$ to each element $x_i  \in X$  consecutively $2^w - 1$ times.
 \begin{equation}
 \label{eq:wots-generation-one-time-public-key}
 y_i \in Y =  f^{2^w-1}(x_i), 0 \leq i \leq t-1 
@@ -189,26 +180,26 @@ y_i \in Y =  f^{2^w-1}(x_i), 0 \leq i \leq t-1
 \label{eq:wots_pub_one-time-key}
 Y = (y_0, \cdots, y_{t-1})
 \end{equation}
-Each $y_i \in Y$ is a bit string of length $n$. The public key $Y$ has to be published before the signature can be generated. One value of the public key is corresponding to one full \textit{Winternitz chain}. % maybe introduce Winternitz chain another way?
+Each $y_i \in Y$ is a bit string of length $n$. The public key $Y$ has to be published before the signature can be generated. One value of the public key corresponds to one full \textit{Winternitz chain}. 
 
 \subsubsection{W-OTS Signature Generation}
-For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash function~h (see Equation~\ref{eq:basic_hashfunc}) is applied to $M$ (see Equation~\ref{eq:hash_message}). The resulting hash digest $m$ is split into $t_1$ bitstrings of length $w$. If $m$ is not divisible by $w$, it is necessary to add leading zeros to $m$ before splitting.
+For signing a message $M \in \lbrace 0,1 \rbrace^*$, the cryptographic hash function~$h$ (see Equation~\ref{eq:basic_hashfunc}) is applied to $M$ (see Equation~\ref{eq:hash_message}). The resulting hash digest $m$ is split into $t_1$ bit strings of length $w$. If $m$ is not divisible by $w$, it is necessary to add leading zeros to $m$ before splitting.
 
 \begin{equation}
 \label{eq:hash_digest_split}
 m = m_0 \concat m_1 \concat \cdots \concat m_{t_1-1}
 \end{equation}
-Each bitstring $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$. A detailed example why the checksum is necessary is shown at section~\ref{sec:checksum_explained}. % ! reference to subsubsection doesn't work: https://tex.stackexchange.com/questions/198800/how-to-number-and-cross-reference-subsubsection-level-headers and https://blog.chapagain.com.np/latex-numbering-subsubsection-and-showing-it-in-table-of-contents/
+Each bit string $m_i \in m$ is converted to its decimal representation in order to calculate the checksum $c$. A detailed example why the checksum is necessary is shown at the end of Section~\ref{sec:checksum_explained} in W-OTS Checksum Example. 
 
 \begin{equation}
 \label{eq:checksum_calculation}
 c = \sum_{i = 0}^{t_{1}-1}(2^w-m_i)
 \end{equation}
-The checksum $c$ is divided into $t_2$ bitstrings of length $w$. In order to divide $c$ this way, it can be necessary to add leading zeros to $c$ as a padding.
+The checksum $c$ is divided into $t_2$ bit strings of length $w$. In order to divide $c$ this way, it may be necessary to add leading zeros to $c$ as a padding.
 \begin{equation}
 c = c_0 \concat c_1 \concat \cdots \concat c_{t_2 - 1}
 \end{equation}
-Afterwards, $m$ and $c$ are concatenated to one block~$B$. This leads to $t$ bitstrings of length $w$ in total, as $t = t_1 + t_2$.
+Afterwards, $m$ and $c$ are concatenated to one block~$B$. This leads to $t$ bit strings of length $w$ in total, as $t = t_1 + t_2$.
 
 \begin{align}
 \label{eq:block_B_out_of_M_and_C}
@@ -225,7 +216,7 @@ The signature $\sigma$ is calculated by applying the one-way function~$f$ to eac
 
 \subsubsection{W-OTS Verification}
 \label{sec:wots-verification}
-Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see Equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see Equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$. This can also be described as advancing each Winternitz chain in the signature by applying~$f$, until the  values of the public key are reached.
+Given a signature $\sigma$ and message $M$, the hash digest $m$ is generated (see Equation~\ref{eq:hash_message}). Afterwards, the block $B$ is generated out of~$m$ as shown in the previous section (see Equations~\ref{eq:hash_digest_split} to~\ref{eq:block_B_out_of_M_and_C}). To check if the given signature is valid, the one-way function~$f$ is applied $2^w - 1 - b_i$ times to each $\sigma_i \in \sigma$. The result is compared to the corresponding $y_i \in Y$. This can also be interpreted as advancing each Winternitz chain in the signature by applying~$f$ until the  values of the public key are reached.
 
 \begin{equation}
 \label{eq:wots_verify}
@@ -235,25 +226,22 @@ If each $f^{2^w-1-b_i}(\sigma_i) = y_i$, the signature is valid because $\sigma_
 
 \begin{gather}
 f^{2^w-1-b_i}(\sigma_i) = f^{2^w-1}(x_i) = y_i \\
-0 \leq i \leq t-1 \nonumber
+\text{for  }0 \leq i \leq t-1 \nonumber
 \end{gather}
-As $w$ determines the block size of each block in $B$, $w$ is allowing a space/time trade-off: When increasing $w$, the signature size will decrease linearly (the total amount of blocks in $B$ will decrease) and the effort for key generation, signing and verification will increase exponentially (because $w-1$ hash function calls are necessary for public key generation, and $w-1$ hash function calls are necessary for signature generation+verification in total).
+As $w$ determines the block size of each block in $B$, $w$ is allowing a space-time trade-off: When increasing $w$, the signature size will decrease linearly (the total amount of blocks in $B$ will decrease) and the effort for key generation, signing and verification will increase exponentially. This is because $w-1$ hash function calls are necessary for public key generation, and $w-1$ hash function calls are necessary for signature generation and verification in total.
 
 \subsubsection{W-OTS Example Calculation}
 \label{sec:w-ots_example_calc}
-This section contains an example calculation of W-OTS, including key generation, signature generation, and signature verification.
-% ! explain that example one-way function is not cryptographic secure, is only example
+This section contains an example calculation of W-OTS, including key generation, signature generation, and signature verification. This example is not cryptographically secure, it exists for explanatory reasons only.
 
 \begin{enumerate}
 
-\item The first step is choosing the following parameters:
-$n=3, w=2, \text{message digest } m = 101, {\text{one-way function } f:\{0,1\}^{3} \rightarrow \{0,1\}^{3}, x \rightarrow x+2 \text{ mod } 8}$
+\item Choose the parameters $n=3, w=2, \text{message digest } m = 101, {\text{one-way function } f:\{0,1\}^{3} \rightarrow \{0,1\}^{3}, x \rightarrow x+2 \text{ mod } 8}$
 
-% ceilings of t_2 are a bit ugly. Maybe fix later
-\item Calculating $t_1, t_2, t$: \\
+\item Calculate $t_1, t_2$ and $t$: \\
 $t_1 = \ceil{\frac{n}{w}} = \ceil{\frac{3}{2}} = 2, t_2 = \ceil*{\frac{\floor*{\log_2 t_1} + 1 + w}{w} } = \ceil*{\frac{\floor*{\log_2 2} + 1 + 2}{2} } = 2, {t = t_1 + t_2 = 2+2 = 4}$
 
-\item Choosing the private key $X$ with $t=4$ random bit strings of length $n=3$: \\
+\item Choose the private key $X$ with $t=4$ random bit strings of length $n=3$: \\
 $X = (x_0, \cdots, x_{t-1}) = (x_0, x_1, x_2, x_3) = 
 \begin{psmallmatrix}
 1 & 1 & 0 & 1\\
@@ -261,7 +249,7 @@ $X = (x_0, \cdots, x_{t-1}) = (x_0, x_1, x_2, x_3) =
 1 & 1 & 1 & 0
 \end{psmallmatrix} \in \{0,1\}^{(3,4)} $
 
-\item Calculating the public key $Y$ from $X$ by applying $f$ to each element in $X$ for $2^w-1 = 3$ times:	
+\item Calculate the public key $Y$ from $X$ by applying $f$ to each element in $X$ for $2^w-1 = 3$ times:	
 $Y = (y_0, \cdots, y_{t-1}) = (y_0, y_1, y_2, y_3) = 
 \begin{psmallmatrix}
 0 & 1 & 0 & 1 \\
@@ -269,13 +257,11 @@ $Y = (y_0, \cdots, y_{t-1}) = (y_0, y_1, y_2, y_3) =
 1 & 1 & 1 & 0
 \end{psmallmatrix} \in \{0,1\}^{(3,4)} $ 
 
-\item To make $m$ divisible by $w$, a leading zero is inserted. Then it is split in blocks of length $w$: $m = 01 \concat 01 = m_0 \concat m_1$. These blocks are used for the checksum calculation: \\ $c = (2^w - m_0) + (2^w - m_1) = (4-1)+(4-1)=6$. To make $c$ divisible by $w$ as well, one leading zero is added to the binary representation of $c$. Then, splitting $c$ in blocks of length $w$ yields $c = 01 \concat 10 = c_0 \concat c_1$.
+\item Make $m$ divisible by $w$, by adding a leading zero. Then, split it into blocks of length $w$: $m = 01 \concat 01 = m_0 \concat m_1$. These blocks are used for the checksum calculation: \\ $c = (2^w - m_0) + (2^w - m_1) = (4-1)+(4-1)=6$. To make $c$ divisible by $w$ as well, one leading zero is added to the binary representation of $c$. Then, splitting $c$ in blocks of length $w$ yields $c = 01 \concat 10 = c_0 \concat c_1$.
 
-\item The block $B$ is generated by concatenating $m$ and $c$: \\ $B = m_0 \concat m_1 \concat c_0 \concat c_1 = b_0 \concat b_1 \concat b_2 \concat b_3 = 01 \concat 01 \concat 01 \concat 10 $.
+\item Generate the block $B$ by concatenating $m$ and $c$: \\ $B = m_0 \concat m_1 \concat c_0 \concat c_1 = b_0 \concat b_1 \concat b_2 \concat b_3 = 01 \concat 01 \concat 01 \concat 10 $.
 
-\item %The signature $\sigma$ is created by applying $f$ to each element in $X$.
-%The block $B$ determines the amount of applying $f$ to $X$
-The signature $\sigma$ of $m$ is determined by the parameter $B$ and one-way function $f$: \\ % hier besser erklären dass man dezimalrepr. von B und X nimmt?
+\item The signature $\sigma$ of $m$ is determined by the parameter $B$ and one-way function $f$: \\ 
 $\sigma = (f^{b_0}(x_0), f^{b_1}(x_1),f^{b_2}(x_2),f^{b_3}(x_3)) = (f^1(5),f^1(7),f^1(3),f^2(6)) = (\sigma_0, \sigma_1, \sigma_2, \sigma_3) = \\
 \begin{psmallmatrix}
 1 & 0 & 1 & 0 \\
@@ -283,7 +269,7 @@ $\sigma = (f^{b_0}(x_0), f^{b_1}(x_1),f^{b_2}(x_2),f^{b_3}(x_3)) = (f^1(5),f^1(7
 1 & 1 & 1 & 0
 \end{psmallmatrix} \in \{0,1\}^{(3,4)} $
 
-\item The verifier knows $Y, w, n$ and therefore $t_1, t_2$ and $t$. After receiving $m, \sigma$ from the signer, the block $B$ is calculated as explained in the previous steps. The validity of the signature $\sigma$ is checked by calculating: \\
+\item The verifier knows $Y, w, n$ and therefore $t_1, t_2$ and $t$. After receiving $m$ and $\sigma$ from the signer, the block $B$ is calculated as explained in the previous steps. The validity of the signature $\sigma$ is checked by calculating: \\
 $( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^{2^w-1-b_3}(\sigma_3)) = (f^2(7) , f^2(1), f^2(5), f^1(2)) = \\ \begin{psmallmatrix}
 0 & 1 & 0 & 1 \\
 1 & 0 & 0 & 0 \\
@@ -297,22 +283,22 @@ $( f^{2^w-1-b_0}(\sigma_0), f^{2^w-1-b_1}(\sigma_1), f^{2^w-1-b_2}(\sigma_2), f^
 \label{sec:checksum_explained}
 In this section, the necessity of the W-OTS checksum (see also Equation~\ref{eq:checksum_calculation}) is explained with an example. 
 The attack prevented by the checksum is an \textit{adaptive chosen-message attack}: It is possible for the attacker to generate new messages with matching signatures which depend on previously obtained signatures and messages~\cite{cha:bg_signature_schemes_book_menezes2018_1997}. 
-After obtaining a message and corresponding signature, the idea behind the attack is to increase the bits of the received message to generate a new message. The hash function is applied respectively to the corresponding digits in the signature, increasing the Winternitz chain. Then, without the checksum, a new valid signature would be generated for the message. For this example, the same parameters for W-OTS are used as in the the section before. % (see section~\ref{sec:w-ots_example_calc}. again_: need correct subsubsection label
+After obtaining a message and the corresponding signature, the idea behind the attack is to increase the bits of the received message to generate a new message. The hash function is applied respectively to the corresponding digits in the signature, increasing the Winternitz chain. Then, without the checksum, a new valid signature would be generated for the message. For this example, the same parameters for W-OTS are used as in the the section before. % (see section~\ref{sec:w-ots_example_calc}. again_: need correct subsubsection label
 
 \begin{enumerate}
-\item We assume the attacker knows the message digest $m = 101$, the corresponding signature $\sigma = (\sigma_0, \sigma_1, \sigma_2, \sigma_3)$ and the parameters $w=2, n=3, Y, f$ of the example in the section before. The attacker can get this information because a digital signature system does not ensure confidentiality of the message or the parameters, the premise is the secrecy of the private key. The goal of the attacker is to forge a signature $\sigma' = (\sigma_0', \sigma_1', \sigma_2', \sigma_3')$ to get a valid signature for a message $m'$ chosen by the attacker. 
+\item We assume the attacker knows the message digest $m = 101$, the corresponding signature $\sigma = (\sigma_0, \sigma_1, \sigma_2, \sigma_3)$ and the parameters $w=2, n=3, Y, f$ of the example in the section before. The attacker can get this information because a digital signature system does not ensure confidentiality of the message or the parameters, the premise is the secrecy of the private key. The goal of the attacker is to forge a signature $\sigma' = (\sigma_0', \sigma_1', \sigma_2', \sigma_3')$ which is a valid for a message $m'$ chosen by the attacker. 
 % (e.g. the attacker was also the receiver of the message or intercepted the channel where the message was sent)
 
-\item The attacker calculates $m  = m_0 \concat m_1 = 01 \concat 01$, $c = c_0 \concat c_1 = 01 \concat 10$ and therefore $B =  b_0 \concat b_1 \concat b_2 \concat b_3 = 01 \concat 01 \concat 01 \concat 10$ (see steps 1-6 in section before).
+\item The attacker calculates $m  = m_0 \concat m_1 = 01 \concat 01$, $c = c_0 \concat c_1 = 01 \concat 10$ and therefore $B =  b_0 \concat b_1 \concat b_2 \concat b_3 = 01 \concat 01 \concat 01 \concat 10$ (see steps 1-6 of section before).
 
-\item The original message $m = 101$ is increased by one: $m' = 111$. Make $m'$ divisible by $w = 2$, insert leading zero: $m' = m_0'\concat m_1' = 01 \concat 11$. Calculate checksum $c' = (2^w - m_0') + (2^w - m_1') = (4-1)+(4-3)=4$.
+\item The original message digest $m = 101$ is increased by two: $m' = 111$. Make $m'$ divisible by $w = 2$, insert leading zero: $m' = m_0'\concat m_1' = 01 \concat 11$. Calculate checksum $c' = (2^w - m_0') + (2^w - m_1') = (4-1)+(4-3)=4$.
 Insert leading zero to $c'$ to make it divisible by $w$: $c' = c_0' \concat c_1' = 01 \concat 00$. Therefore, $B' = b_0' \concat b_1' \concat b_2' \concat b_3' = 01 \concat 11 \concat 01 \concat 00$.
 
 Now, the attacker can forge $\sigma_0', \sigma_1'$ of the signature $\sigma'$:
 As $b_0 = b_0' = 01$, $\sigma_0' = \sigma_0$.
 Because the difference between $b_1 = 01$ and $b_1' = 11$ is $2$, applying $f$ two more times to $\sigma_1$ leads to $\sigma_1'$: $f^2(\sigma_1) = \sigma_1'$.
 
-Notably, $\sigma_0, \sigma_1$ depend only on the message bits $m_0, m_1$, not on the checksum. Therefore, the attacker could forge a signature for $m'$ without the checksum. But because of the checksum bit $c_3 = b_3 = 10, c_3' = b_3' = 00$, $b_3 > b_3'$, it is not possible to calculate $\sigma_3$: The attacker would have to calculate $f^{-2}(\sigma_3)$, that is finding two times a preimage to $\sigma_3$. As long as the hash function $f$ is preimage resistant, which is assumed (see also Equation~\ref{eq:one-way-func}), this is not possible. The attacker can not forge the complete signature $\sigma'$.
+Notably, $\sigma_0, \sigma_1$ depend only on the message digest bits $m_0, m_1$, not on the checksum. Therefore, the attacker could forge a signature for $m'$ without the checksum. But because of the checksum bit $c_3 = b_3 = 10, c_3' = b_3' = 00$, $b_3 > b_3'$, it is not possible to calculate $\sigma_3$: The attacker would have to calculate $f^{-2}(\sigma_3)$, that is finding two times a preimage to $\sigma_3$. As long as the hash function $f$ is preimage resistant, which is assumed (see also Equation~\ref{eq:one-way-func}), this is not possible. The attacker can not forge the complete signature $\sigma'$.
 
 \end{enumerate}
 For a general proof of security of the checksum, see Section 9.3 in McGrew et al.~\cite{LMS_RFC8554}.
