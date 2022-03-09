@@ -1,6 +1,6 @@
 \chapter{Methods}
 \label{cha:methods}
-In Chapter~\ref{cha:background}, the digital signature systems LMS and XMSS, based on a classical Merkle Tree, are introduced. Dodis et al.~\cite{T5_paper} propose a method \tf that can be used to speed up the classical Merkle Tree. In this chapter, the \tf method is explained in detail, equations for speed-up calculations are introduced, a new method More Aggressive Opening is proposed and the extended Merkle Tree scheme \extree is constructed. The goal is to substitute the standard Merkle Tree with the \tftree and \extree concepts to speed up LMS, XMSS and potentially other signature schemes based on Merkle Trees.
+In Chapter~\ref{cha:background} the digital signature systems LMS and XMSS, based on a classical Merkle Tree, were introduced. Dodis et al.~\cite{T5_paper} propose a method \tf that can be used to speed up the classical Merkle Tree. In this chapter the \tf method is explained in detail, equations for speed-up calculations are introduced, a new method called More Aggressive Opening is proposed and the extended Merkle Tree scheme \extree is constructed. The goal is to substitute the standard Merkle Tree with the \tftree and \extree concepts to speed up LMS, XMSS and potentially other signature schemes based on Merkle Trees.
 
 \section{\texorpdfstring{\tf}{T5} Hashing}
 Dodis et al.~\cite{T5_paper} propose a method called \tf for hashing five inputs with three hash compression calls. The $5n$-to-$n$ compression function \tf (with $n$ being the hash digest length) is constructed out of $2n$-to-$n$ compression functions $h_1, h_2, h_3$:
@@ -9,60 +9,60 @@ Dodis et al.~\cite{T5_paper} propose a method called \tf for hashing five inputs
 \label{eq:t5_basic}
 T_5(m_1, m_2, m_3, m_4, m_5) = h_3(h_1(m_1,m_2) \oplus m_5, h_2(m_3,m_4) \oplus m_5) \oplus m_5
 \end{equation}
-It is proven by Dodis et al.~\cite{T5_paper} that the \tf construction matches Stam’s bound~\cite{stams_bound2008}, providing $\tilde{\mathcal{O}}(q^2/2^n)$ collision security and $\mathcal{O}(q^3/2^{2n}+nq/2^n)$, $q \leq 2^{n/2}$ preimage security. It provides birthday security $\mathcal{O}(2^{n/2})$ (see also Section~\ref{sec:omit_coll_res}) for hashing 5 inputs using three $2n$-to-$n$ compression calls, instead of only 4 inputs (in prior constructions). For the full proof of collision resistance and preimage resistance of \tf, see Section~4.1 and Section~4.2 in~\cite{T5_paper}. % what is q not sure
-Therefore, \tf is improving the Merkle-D\aa mgard construction (with the initialization vector counted as message block) and Merkle trees by processing a fifth message block with the same number of compression function calls and basically the same level of collision security. 
+It is proven by Dodis et al.~\cite{T5_paper} that the \tf construction matches Stam’s bound~\cite{stams_bound2008}, providing $\tilde{\mathcal{O}}(q^2/2^n)$ collision security and $\mathcal{O}(q^3/2^{2n}+nq/2^n)$, $q \leq 2^{n/2}$ preimage security. It provides birthday security $\mathcal{O}(2^{n/2})$ (see also Section~\ref{sec:omit_coll_res}) for hashing five inputs using three $2n$-to-$n$ compression calls, instead of only four inputs in prior constructions. For the full proof of collision resistance and preimage resistance of \tf, see Section~4.1 and Section~4.2 in Brassard et al.~\cite{T5_paper}. 
+Therefore, \tf is improving the Merkle-D\aa mgard construction (with the initialization vector counted as message block) and Merkle trees by processing a fifth message block with the same number of compression function calls and essentially the same level of collision security. 
 For this work, the construction of \tf in combination with Merkle trees is of interest.  
 
 \subsection{\texorpdfstring{\tfblock}{T5-Block}}
 \label{sec:t5_block}
-In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \textit{\tfblock} out of a Merkle tree with height $d=2$ is shown:
+In Figure~\ref{img:t5_paper_block_depiction}, the construction of one \tfblock out of a Merkle tree with height $d=2$ is shown:
 
 \begin{itemize}
-\item The variables  $m_1, m_2$ (respectively $m_3, m_4$) denote the left and right halves of input to compression function $h_1$ (respectively $h_2$).
-\item The variable $a$ (respectively $b$) denotes the output of $h_1$ (respectively $h_2$).
-\item The variables $c$ and $d$ denote the left and right halves of input to $h_3$.
+\item The variables  $m_1, m_2$ (respectively $m_3, m_4$) denote the left and right halves of the input to compression function $h_1$ (respectively $h_2$).
+\item The variables $a$ and $b$ denote the output of $h_1$ and $h_2$ respectively.
+\item The variables $c$ and $d$ denote the left and right halves of the input to $h_3$.
 \item The variable $e$ denotes the output of $h_3$.
-\item The variable $f$ denotes the total output of $T5(m_1, m_2, m_3, m_4, m_5)$.
+\item The variable $f$ denotes the total output of $T_5(m_1, m_2, m_3, m_4, m_5)$.
 \end{itemize}
-Therefore, the calculation of $T_5(m_1, m_2, m_3, m_4, m_5)$ consists of the following steps:
+The calculation of $T_5(m_1, m_2, m_3, m_4, m_5)$ consists of the following steps:
 \begin{enumerate}
-\item Calculation of the first layer of one \tfblock(corresponds to compressing 4 leaves of a binary Merkle tree), two hash function calls $h_1, h_2$ are necessary:
+\item Calculating of the first layer of one \tfblock(corresponds to compressing 4 leaves of a binary Merkle tree). Two hash function calls $h_1, h_2$ are necessary:
 \begin{align}
 a = h_1(m_1, m_2) \\
 b = h_2(m_3, m_4)
 \end{align}
 
-\item Calculation of the first \tf-specific intermediate step, adding $m_5$:
+\item Calculating of the first \tf-specific intermediate step by adding $m_5$:
 \begin{align}
 c = a \oplus m_5 \\
 d = b \oplus m_5
 \end{align}
 
-\item Calculation of the second layer of one \tfblock (corresponds to compressing 2 nodes of a binary Merkle tree), one hash function calls $h_3$ is necessary:
+\item Calculating of the second layer of one \tfblock (i.e. compressing 2 nodes of a binary Merkle tree). One hash function call $h_3$ is necessary:
 \begin{align}
 e = h_3(c,d)
 \end{align}
 
-\item Adding $m_5$ again (the second \tf specific intermediate step) leads to the final result $f$:
+\item Addition of $m_5$ (the second \tf specific intermediate step). This leads to the final result $f$:
 \begin{align}
-f = e \oplus m_5 = T_5(m_1, m_2, m_3, m_4, m_5)
+T_5(m_1, m_2, m_3, m_4, m_5) = f = e \oplus m_5 
 \end{align}
 \end{enumerate}
 
 \begin{figure}
 \centering
 \includegraphics[]{images/Methods/abcd_paperT5_block_depiction.png}
-\caption{Modified Merkle tree $T_5(m_1, m_2, m_3, m_4, m_5)$ of height d = 2,   with an extra input $m_5$ for the same 3 hash calls $h_1, h_2, h_3$. In this work, it is referred to as one \tfblock.~\cite{T5_paper}}
+\caption{Modified Merkle tree $T_5(m_1, m_2, m_3, m_4, m_5)$ of height d = 2,   with an extra input $m_5$ for the same three hash calls $h_1, h_2, h_3$. In this work, this´ is referred to as one \tfblock.~\cite{T5_paper}}
 \label{img:t5_paper_block_depiction}
 \end{figure}
 
 \subsection{\texorpdfstring{\tf}{T5} Openings}
-To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen} ) in one \tfblock, two different approaches \textit{Conservative Opening} and \textit{Aggressive Opening} are shown by Dodis et al.~\cite{T5_paper}. These two versions are depicted in Figure~\ref{img:t5_conserv_aggr_opening}.
-The process of calculating an authentication path is here referred to as \textit{opening}. 
+To calculate the authentication path (see also Section~\ref{sec:mss_sig_gen} ) in one \tfblock, two different approaches Conservative Opening and Aggressive Opening are shown by Dodis et al.~\cite{T5_paper}. These two versions are depicted in Figure~\ref{img:t5_conserv_aggr_opening}.
+The process of calculating an authentication path is referred to as \textit{opening}. 
 
 \subsubsection{Conservative Opening}
 \label{sec:conserv_opening}
-Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the \tfblock is to provide the remaining four nodes $m_{j \neq i}$. This is denoted as Conservative Opening and depicted in Figure~\ref{img:t5_conserv_aggr_opening}: The current node on the path is $m_1$ (colored green), the remaining four nodes (colored red) necessary for the authentication path to open $m_1$ are $m_2, m_3, m_4, m_5$. The functions $h_1, h_2, h_3$ (colored red) have to be calculated. The performance of the Conservative Method is less attractive than of the other methods and even worse than using a standard Merkle Tree: For authenticating one \tfblock, three hash calls and five elements in the authentication path are necessary, see also Table~\ref{table:conserv_opening}. Therefore, this method is not further considered in this work. % reference to authentication method with merkle tree -> #hashcalls, el. in authpath in table
+Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the \tfblock is to provide the remaining four nodes $m_{j \neq i}$. This is denoted as Conservative Opening and depicted in Figure~\ref{img:t5_conserv_aggr_opening}. The current node on the path is $m_1$ (colored green), the remaining four nodes (colored red) necessary for the authentication path to open $m_1$ are $m_2, m_3, m_4, m_5$. The functions $h_1, h_2, h_3$ (colored red) have to be calculated. The performance of Conservative Opening is less attractive than of the other methods and even worse than using a standard Merkle Tree. This is because for authenticating one \tfblock, three hash calls and five elements in the authentication path are necessary (see also Table~\ref{table:conserv_opening}). Therefore, this method is not further considered in this work. 
 
 \begin{table}
 \centering
@@ -70,17 +70,17 @@ Given a node $m_i, i \in \{1,2,3,4\}$, the straightforward way to open the \tfbl
  \hline\noalign{\smallskip}
  \multicolumn{2}{c}{\textbf{Conservative Opening}} \\
  \hline\noalign{\smallskip}
- \# el. in auth. path & 4 \\
-  \# hashcalls verify & 3 \\
+ \# elements in auth. path & 4 \\
+  \# hash calls verify & 3 \\
  \hline
 \end{tabular}
-\caption{Performance of calculating the authentication path for one \tfblock with Conservative Opening: The necessary amount of hashcalls and amount of elements in the authentication path are given.}
+\caption{Performance of calculating the authentication path for one \tfblock with Conservative Opening: The necessary amount of hash calls and amount of elements in the authentication path are given.}
 \label{table:conserv_opening}
 \end{table}
 
 \subsubsection{Aggressive Opening}
 \label{sec:aggr_opening}
-The second version of opening a \tfblock with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decreases for this method, but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i, i \in \{1,2,3,4,5\}$, the function $open_{aggr}$ returns the authentication path elements for the corresponding \tfblock:
+The second version of opening a \tfblock with better performance than Conservative Opening is the Aggressive Opening. The provable security bounds decrease for this method but the security remains the same under plausible attack scenarios. It is defined as follows: For a given opening node $m_i$, where $i \in \{1,2,3,4,5\}$, the function $open_{aggr}$ returns the authentication path elements for the corresponding \tfblock:
 
 \begin{align}
 &open_{aggr}(m_1) = (m_2, m_5, h_2(m_3,m_4) \oplus m_5) = (m_2, m_5, d) \label{eq:aggr_open_m1_example} \\
@@ -89,8 +89,8 @@ The second version of opening a \tfblock with better performance than Conservati
 &open_{aggr}(m_4) = (m_3, m_5, h_1(m_1, m_2) \oplus m_5) = (m_3, m_5, c) \\ 
 &open_{aggr}(m_5) = (m_1, m_2, h_2(m_3, m_4) \oplus m_5) = (m_1, m_2, d) \label{eq:aggr_open_m5_example}
 \end{align}
-In Figure~\ref{img:t5_conserv_aggr_opening}, Aggressive Opening is depicted as example for opening node $m_1$ (colored green), see Equation~\ref{eq:aggr_open_m1_example}. 
-As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}, with the Aggressive Opening method the authentication path always contains three elements and the verifier needs two hash calls ($h_1$ or $h_2$ respectively and always $h_3$) to calculate the "root" $f$ of one \tfblock, see Table~\ref{table:aggr_opening}.
+In Figure~\ref{img:t5_conserv_aggr_opening}, Aggressive Opening is depicted as example for opening node $m_1$ (colored green, see Equation~\ref{eq:aggr_open_m1_example}). 
+As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{eq:aggr_open_m5_example}, the authentication path always contains three elements and the verifier needs two hash calls ($h_1$ or $h_2$ and always $h_3$) to calculate the "root" $f$ of one \tfblock, see Table~\ref{table:aggr_opening}.
 
 \begin{table}
 \centering
@@ -98,8 +98,8 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
  \hline\noalign{\smallskip}
  \multicolumn{2}{c}{\textbf{Aggressive Opening}} \\
  \hline\noalign{\smallskip}
- \# el. in auth. path & 3 \\
- \# hashcalls verify & 2 \\
+ \# elements in auth. path & 3 \\
+ \# hash calls verify & 2 \\
  \hline
 \end{tabular}
 \caption{Performance of calculating the authentication path for one \tfblock with Aggressive Opening.}
@@ -118,7 +118,7 @@ As shown for all opening nodes in Equations~\ref{eq:aggr_open_m1_example}-\ref{e
 
 \subsection{\texorpdfstring{\tftree}{T5 Merkle Tree}}
 \label{sec:dodis_t5_merkle_tree}
-Given the \tfblock construction in Section~\ref{sec:t5_block}, a complete \textit{$T_5$ Merkle Tree}, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper}, see Figure~\ref{img:t5_complete_tree_paper}. Notably, the compression functions $h_1, h_2, h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}: \textit{Build calls} denote the amount of hash calls necessary for building the whole $T_5$ Merkle Tree, \textit{opening} denotes thee length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
+Given the \tfblock construction in Section~\ref{sec:t5_block}, a complete \tf Merkle Tree, denoted as \textit{\tftree}, can be built. This is also shown by Dodis et al.~\cite{T5_paper} (see Figure~\ref{img:t5_complete_tree_paper}). Notably, the compression functions $h_1, h_2$ and $h_3$ are the same function, the different indices are used for readability. The performance of the \tftree (including Conservative- and Aggressive Opening variants) in comparison to the standard Merkle Tree is shown in Table~\ref{table:t5_merkletree_dodis_performance}. \textit{Build calls} denote the amount of hash calls necessary for building the whole \tf Merkle Tree, \textit{opening} denotes the length of the authentication path, \textit{verify} denotes the amount of hash calls needed to build the path (out of the authentication path). \textit{Tree depth} is the amount of layers in the binary Merkle tree compared with the amount of layers in \tftree - this corresponds to the amount of $T_5$ blocks $\times 2$ because one \tfblock corresponds to two Merkle tree layers (see also Figure~\ref{img:t5_paper_block_depiction}).
 
 In order to compare the performance of the \tftree to other tree variants (like binary Merkle Tree and \extree, see Chapter~\ref{cha:evaluation}), equations for performance calculations are constructed. 
 The amount of hash calls for constructing the whole \tftree works like for the \extree (for a detailed derivation of the formula see Section~\ref{sec:extree_sign_gen} and Equation~\ref{eq:t5_tree_gen_hashcalls}):
