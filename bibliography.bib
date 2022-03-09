@@ -34,8 +34,8 @@ doi={10.1007/s10623-005-6344-y},
 }
 
 @book{cha:bg_hashfunctions_thesis_matusiewicz2007,
-  title={Analysis of Modern Dedicated Cryptographic Hash Functions},
   author={Matusiewicz, Krystian},
+  title={Analysis of Modern Dedicated Cryptographic Hash Functions},
   year={2007},
   publisher={Macquarie University}
 }
@@ -118,7 +118,7 @@ numpages = {5}
 
 @techreport{xmss_RFC8391,
   author = {A. Huelsing and D. Butin and S. Gazdag and J. Rijneveld and A. Mohaisen},
-  title = {XMSS: eXtended Merkle Signature Scheme},
+  title = {{XMSS}: eXtended Merkle Signature Scheme},
   howpublished = {Internet Requests for Comments},
   type = {RFC},
   number = {8391},
@@ -192,7 +192,7 @@ numpages = {5}
    DOI={10.1007/bfb0054319},
    journal={Lecture Notes in Computer Science},
    publisher={Springer Berlin Heidelberg},
-   author={Brassard, Gilles and HØyer, Peter and Tapp, Alain},
+   author={Brassard, Gilles and Høyer, Peter and Tapp, Alain},
    year={1998},
    pages={163–169}
 }
@@ -210,7 +210,7 @@ pages="211--228"
 
 @inproceedings{tweakable_basispaper_sphincs_2019,
 author = {Bernstein, Daniel J. and H\"{u}lsing, Andreas and K\"{o}lbl, Stefan and Niederhagen, Ruben and Rijneveld, Joost and Schwabe, Peter},
-title = {The SPHINCS+ Signature Framework},
+title = {The {SPHINCS}+ Signature Framework},
 year = {2019},
 isbn = {9781450367479},
 publisher = {Association for Computing Machinery},
@@ -230,7 +230,7 @@ series = {CCS '19}
   and St{\"o}ttinger, Marc",
   editor="Nitaj, Abderrahmane
   and Youssef, Amr",
-  title={LMS vs XMSS: Comparison of Stateful Hash-Based Signature Schemes on ARM Cortex-M4},
+  title={{LMS} vs {XMSS}: Comparison of Stateful Hash-Based Signature Schemes on {ARM} {Cortex-M4}},
   booktitle="Progress in Cryptology -  AFRICACRYPT 2020",
   year="2020",
   publisher="Springer International Publishing",
@@ -288,7 +288,7 @@ doi={10.1109/ICSSIT.2018.8748675}
 @ARTICLE{RSA_pq-attack_without_factorization_2018,
   author={Wang, Yahui and Zhang, Huanguo and Wang, Houzhen},
   journal={China Communications}, 
-  title={Quantum polynomial-time fixed-point attack for RSA}, 
+  title={Quantum polynomial-time fixed-point attack for {RSA}}, 
   year={2018},
   volume={15},
   number={2},
@@ -336,18 +336,8 @@ pages="368--397",
 isbn="978-3-662-46800-5"
 }
 
-
-@misc{sphincs+_submission_nist_round2,
-title = "SPHINCS+ - Submission to the NIST post-quantum project",
-author = "Aumasson, Jean-Philippe and Bernstein, {Daniel J.} and Christoph Dobraunig and Maria Eichlseder and Scott Fluhrer and Stefan-Lukas Gazdag and Andreas H{\"u}lsing and Panos Kampanakis and Stefan K{\"o}lbl and Tanja Lange and Lauridsen, {Martin M.} and Florian Mendel and Ruben Niederhagen and Christian Rechberger and Joost Rijneveld and Peter Schwabe",
-year = "2019",
-month = "march",
-language = "English",
-type = "Other",
-}
-
 @inproceedings{xmss_multitree_2013,
-  title={Optimal Parameters for XMSS MT},
+  title={Optimal Parameters for {XMSS} MT},
   author={Andreas H{\"u}lsing and Lea Rausch and Johannes A. Buchmann},
   booktitle={CD-ARES Workshops},
   year={2013}
@@ -411,7 +401,7 @@ pages="523--550",
 
 @misc{comparison_xmss_lms_2017,
     author       = {Panos Kampanakis, Scott Fluhrer},
-    title        = {LMS vs XMSS: Comparion of two Hash-Based Signature Standards},
+    title        = {{LMS} vs {XMSS}: Comparion of two Hash-Based Signature Standards},
     howpublished = {Cryptology ePrint Archive, Report 2017/349},
     year         = {2017},
     note         = {\url{https://ia.cr/2017/349}},
@@ -459,7 +449,7 @@ pages="523--550",
 }
 
 @article{ecdsa_main_paper_2001,
-  title={The elliptic curve digital signature algorithm (ECDSA)},
+  title={The elliptic curve digital signature algorithm ({ECDSA})},
   author={Johnson, Don and Menezes, Alfred and Vanstone, Scott},
   journal={International journal of information security},
   volume={1},
@@ -467,4 +457,22 @@ pages="523--550",
   pages={36--63},
   year={2001},
   publisher={Springer}
+}
+
+@misc{sphincs+_submussion_nist_round3,
+    author = {Aumasson, Jean-Philippe and Bernstein, {Daniel J.} and Beullens, Ward and Christoph Dobraunig and Maria Eichlseder and Scott Fluhrer and Stefan-Lukas Gazdag and Andreas H{\"u}lsing and Panos Kampanakis and Stefan K{\"o}lbl and Tanja Lange and Lauridsen, {Martin M.} and Florian Mendel and Ruben Niederhagen and Christian Rechberger and Joost Rijneveld and Peter Schwabe and Bas Westerban},
+    title = {{SPHINCS}+ - Submission to the 3rd round of the NIST post-quantum project},
+    howpublished = {NIST PQC submission},
+    year = {2020},
+    month = {October},
+    type = {Other},
+}
+
+@misc{sphincs+_submission_nist_round2,
+title = "{SPHINCS}+ - Submission to the 2nd round of the NIST post-quantum project",
+author = "Aumasson, Jean-Philippe and Bernstein, {Daniel J.} and Christoph Dobraunig and Maria Eichlseder and Scott Fluhrer and Stefan-Lukas Gazdag and Andreas H{\"u}lsing and Panos Kampanakis and Stefan K{\"o}lbl and Tanja Lange and Lauridsen, {Martin M.} and Florian Mendel and Ruben Niederhagen and Christian Rechberger and Joost Rijneveld and Peter Schwabe",
+year = "2019",
+month = "march",
+language = "English",
+type = "Other",
 }
