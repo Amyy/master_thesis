@@ -4,12 +4,12 @@ In this chapter, the motivation and goals of this work are presented. First, the
 
 \section{Quantum Threat} % Motivation
 Quantum computing theory has been researched extensively and is considered the greatest threat to modern cryptography, also referred to as \textit{quantum threat}~\cite{impact_quantum_crypto_2018}.
-It was first mentioned in 1996, when Shor~\cite{shors_algo_original_1999} proposed a quantum algorithm for factorization that is exponentially faster than any known classical algorithm. In 1996, Grover~\cite{grovers_algo_basispaper_1997} proposed a quantum searching algorithm, speeding up search efficiency from classical $\mathcal{O}(N)$ to $\sqrt{N}$. 
+It was first mentioned in 1996, when Shor~\cite{shors_algo_original_1999} proposed a quantum algorithm for factorization and calculating the discrete logarithm that is exponentially faster than any known classical algorithm. In 1996, Grover~\cite{grovers_algo_basispaper_1997} proposed a quantum searching algorithm, speeding up search efficiency from classical $\mathcal{O}(N)$ to $\sqrt{N}$. 
 Based on these discoveries, further research shows that present asymmetric cryptographic schemes (whose security is based on the difficulty of factorizing large prime numbers and the discrete logarithm problem) can be broken, once a quantum computer with a sufficient number of quantum bits exists. 
 Symmetric cryptography is also effected by this quantum threat. However, its security can be increased by using larger key spaces.~\cite{impact_quantum_crypto_2018} % also basic quantum comp. paper here
 Example quantum attacks on RSA~\cite{rsa_patent} (whose security relies on the prime factorization problem) are shown by Soni et al.~\cite{RSA_pq-attack_examples_2018} and Wang et al.~\cite{RSA_pq-attack_without_factorization_2018}.
 
-There are some classes of cryptographic systems considered more resistant against quantum attacks, also denoted as \textit{quantum secure}: Hash-based cryptography, code-based cryptography, lattice-based cryptography, multivariate-quadratic-equations cryptography and symmetric cryptography.~\cite{book_pqc_bernstein_2004}
+There exist classes of cryptographic systems considered more resistant against quantum attacks, also denoted as \textit{quantum secure}: Hash-based cryptography, code-based cryptography, lattice-based cryptography, multivariate-quadratic-equations cryptography, symmetric cryptography and isogeny based cryptography.~\cite{book_pqc_bernstein_2004,isogeny_based_paper}
 This work focuses on hash-based cryptography used for digital signature systems, referred to as \textit{hash-based signature systems (HBS)}.
 
 \section{Goals} 
